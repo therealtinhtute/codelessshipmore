@@ -15,6 +15,7 @@ import {
 } from "@/lib/properties-utils"
 import { toast } from "sonner"
 import { IconCopy, IconDownload, IconCloud } from "@tabler/icons-react"
+import { EnvOutputList } from "./env-output-list"
 
 const EXAMPLES = {
   yaml: `app:
@@ -173,8 +174,8 @@ export function PropertiesConverter() {
                     mode === "spring-to-env"
                       ? "Enter Spring @Value annotations or property keys..."
                       : mode === "properties-to-yaml"
-                      ? "Enter Java properties..."
-                      : "Enter YAML or properties..."
+                        ? "Enter Java properties..."
+                        : "Enter YAML or properties..."
                   }
                   className="min-h-[400px] font-mono text-sm"
                 />
@@ -201,7 +202,32 @@ export function PropertiesConverter() {
             {/* Output Panel */}
             <Card>
               <CardHeader>
-                <CardTitle>Output</CardTitle>
+                <CardTitle className="flex items-center justify-between">
+                  <span>Output</span>
+                  {output && !asyncOperation.error && (
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleCopy(output)}
+                      >
+                        <IconCopy className="h-4 w-4 mr-2" />
+                        Copy All
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          const filename = mode.includes("yaml") ? "output.yaml" : "output.properties"
+                          handleDownload(output, filename)
+                        }}
+                      >
+                        <IconDownload className="h-4 w-4 mr-2" />
+                        Download
+                      </Button>
+                    </div>
+                  )}
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {!output && !asyncOperation.error && (
@@ -220,30 +246,15 @@ export function PropertiesConverter() {
 
                 {output && !asyncOperation.error && (
                   <>
-                    <Textarea
-                      value={output}
-                      readOnly
-                      className="min-h-[400px] font-mono text-sm"
-                    />
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        onClick={() => handleCopy(output)}
-                      >
-                        <IconCopy className="h-4 w-4 mr-2" />
-                        Copy
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          const filename = mode.includes("yaml") ? "output.yaml" : "output.properties"
-                          handleDownload(output, filename)
-                        }}
-                      >
-                        <IconDownload className="h-4 w-4 mr-2" />
-                        Download
-                      </Button>
-                    </div>
+                    {(mode === "yaml-to-env" || mode === "spring-to-env") ? (
+                      <EnvOutputList output={output} />
+                    ) : (
+                      <Textarea
+                        value={output}
+                        readOnly
+                        className="min-h-[400px] font-mono text-sm"
+                      />
+                    )}
                   </>
                 )}
               </CardContent>
