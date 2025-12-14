@@ -16,9 +16,7 @@ export function PageContainer({ title, description, children }: PageContainerPro
           <p className="text-muted-foreground mt-2">{description}</p>
         )}
       </div>
-      <Card>
-        <CardContent className="p-6">{children}</CardContent>
-      </Card>
+      {children}
     </div>
   )
 }

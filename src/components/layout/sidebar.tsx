@@ -1,13 +1,13 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 import {
   IconBraces,
   IconDatabase,
   IconFileCode,
-  IconAdjustments,
-  IconCode
+  IconAdjustments
 } from "@tabler/icons-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import {
@@ -40,17 +40,13 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
     <SidebarProvider>
       <Sidebar collapsible="icon">
         <SidebarHeader>
-          <SidebarMenuButton size="lg" asChild>
-            <Link href="/">
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-sm">
-                <IconCode className="size-4" />
-              </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">CodelessShipMore</span>
-                <span className="truncate text-xs text-muted-foreground">Dev Tools</span>
-              </div>
-            </Link>
-          </SidebarMenuButton>
+          <Link href="/" className="flex flex-col items-start gap-2 py-2">
+            <Image src="/pepe.svg" alt="Pepe" width={48} height={48} className="size-12" />
+            <div className="text-start">
+              <div className="font-semibold text-sm">CodelessShipMore</div>
+              <div className="text-xs text-muted-foreground">Dev Tools</div>
+            </div>
+          </Link>
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
@@ -59,7 +55,11 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
               <SidebarMenu>
                 {navigation.map((item) => (
                   <SidebarMenuItem key={item.name}>
-                    <SidebarMenuButton asChild isActive={pathname === item.href}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={pathname === item.href}
+                      className="data-active:bg-primary/10 data-active:text-primary data-active:font-medium hover:bg-accent"
+                    >
                       <Link href={item.href}>
                         <item.icon className="h-4 w-4" />
                         <span>{item.name}</span>
@@ -72,7 +72,7 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
           </SidebarGroup>
         </SidebarContent>
         <SidebarFooter>
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-end">
             <ThemeToggle />
           </div>
         </SidebarFooter>
