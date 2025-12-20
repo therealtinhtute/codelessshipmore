@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
@@ -7,10 +8,15 @@ import {
   IconBraces,
   IconDatabase,
   IconFileCode,
-  IconAdjustments
+  IconAdjustments,
+  IconSparkles,
+  IconLogin,
+  IconLogout
 } from "@tabler/icons-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { PageHeaderProvider, usePageHeader } from "@/components/layout/page-header-context"
+import { useAuth } from "@/contexts/auth-context"
+import { LoginDialog } from "@/components/auth/login-dialog"
 import {
   Sidebar,
   SidebarContent,
@@ -34,8 +40,14 @@ const navigation = [
   { name: "Record to Protobuf", href: "/record-protobuf", icon: IconFileCode },
 ]
 
+const protectedNavigation = [
+  { name: "Enhance Prompt", href: "/enhance-prompt", icon: IconSparkles },
+]
+
 export function AppSidebar({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
+  const { isAuthenticated, logout, isLoading } = useAuth()
+  const [loginOpen, setLoginOpen] = useState(false)
 
   return (
     <PageHeaderProvider>
@@ -78,14 +90,57 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
+            {!isLoading && isAuthenticated && (
+              <SidebarGroup>
+                <SidebarGroupLabel className="text-[0.625rem] font-bold">Pro Features</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    {protectedNavigation.map((item) => (
+                      <SidebarMenuItem key={item.name}>
+                        <SidebarMenuButton
+                          asChild
+                          isActive={pathname === item.href}
+                          className="data-active:bg-primary/10 data-active:text-primary data-active:font-medium hover:bg-accent"
+                        >
+                          <Link href={item.href}>
+                            <item.icon className="h-4 w-4" />
+                            <span>{item.name}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            )}
           </SidebarContent>
           <SidebarFooter>
-            <div className="flex items-center justify-end">
+            <div className="flex items-center justify-between">
+              {!isLoading && (
+                isAuthenticated ? (
+                  <button
+                    onClick={logout}
+                    className="flex items-center gap-2 text-sm cursor-pointer hover:text-primary hover:font-bold transition-all"
+                  >
+                    <IconLogout className="h-4 w-4" />
+                    <span className="group-data-[collapsible=icon]:hidden">Logout</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setLoginOpen(true)}
+                    className="flex items-center gap-2 text-sm cursor-pointer hover:text-primary hover:font-bold transition-all"
+                  >
+                    <IconLogin className="h-4 w-4" />
+                    <span className="group-data-[collapsible=icon]:hidden">Login</span>
+                  </button>
+                )
+              )}
               <ThemeToggle />
             </div>
           </SidebarFooter>
         </Sidebar>
         <SidebarInsetContent>{children}</SidebarInsetContent>
+        <LoginDialog open={loginOpen} onOpenChange={setLoginOpen} />
       </SidebarProvider>
     </PageHeaderProvider>
   )

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { AuthProvider } from "@/contexts/auth-context";
 import { AppSidebar } from "@/components/layout/sidebar";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -39,9 +40,11 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          <AppSidebar>
-            {children}
-          </AppSidebar>
+          <AuthProvider>
+            <AppSidebar>
+              {children}
+            </AppSidebar>
+          </AuthProvider>
           <Toaster />
         </ThemeProvider>
       </body>
