@@ -21,18 +21,17 @@ import {
   SelectValue
 } from "@/components/ui/select"
 import { ApiKeyInput } from "./api-key-input"
-import { useAISettings } from "@/contexts/ai-settings-context"
+import { useAISettings, type ExtendedProviderId } from "@/contexts/ai-settings-context"
 import { testConnection, type TestResult } from "@/lib/ai/test-connection"
 import { fetchModels, type FetchModelsResult } from "@/lib/ai/fetch-models"
-import { PROVIDERS, type ProviderId, type ProviderConfig } from "@/lib/ai/providers"
+import { PROVIDERS, type ProviderId } from "@/lib/ai/providers"
 
 interface ProviderCardProps {
-  providerId: ProviderId
+  providerId: ExtendedProviderId
 }
 
 export function ProviderCard({ providerId }: ProviderCardProps) {
-  const provider = PROVIDERS[providerId]
-  const { settings, updateProvider, setActiveProvider } = useAISettings()
+  const { settings, updateProvider, toggleProvider, getDecryptedApiKey } = useAISettings()
   const config = settings.providers[providerId]
 
   const [testResult, setTestResult] = useState<TestResult | null>(null)
@@ -41,21 +40,35 @@ export function ProviderCard({ providerId }: ProviderCardProps) {
   const [isFetchingModels, setIsFetchingModels] = useState(false)
   const [fetchModelsResult, setFetchModelsResult] = useState<FetchModelsResult | null>(null)
 
-  const isActive = settings.activeProvider === providerId
+  // Determine if this is a built-in or custom provider
+  const isBuiltIn = Object.values<ProviderId>(["openai", "anthropic", "google", "anthropic-custom", "cerebras"]).includes(providerId as ProviderId)
+  const provider = isBuiltIn ? PROVIDERS[providerId as ProviderId] : null
+
+  const isEnabled = config?.enabled || false
 
   const handleTestConnection = async () => {
     setIsTesting(true)
     setTestResult(null)
 
-    const result = await testConnection(providerId, config)
+    // Get decrypted API key
+    const decryptedKey = await getDecryptedApiKey(providerId)
+    const testConfig = {
+      id: providerId as ProviderId,
+      apiKey: decryptedKey,
+      model: config!.model,
+      baseUrl: config!.baseUrl,
+      enabled: config!.enabled
+    }
+
+    const result = await testConnection(providerId as ProviderId, testConfig)
     setTestResult(result)
 
     if (result.success) {
-      toast.success(`${provider.name} connected`, {
+      toast.success(`${provider?.name || 'Custom Provider'} connected`, {
         description: result.message
       })
     } else {
-      toast.error(`${provider.name} connection failed`, {
+      toast.error(`${provider?.name || 'Custom Provider'} connection failed`, {
         description: result.message
       })
     }
@@ -63,40 +76,25 @@ export function ProviderCard({ providerId }: ProviderCardProps) {
     setIsTesting(false)
   }
 
-  const handleToggleEnabled = () => {
-    const newEnabled = !config.enabled
-    updateProvider(providerId, { enabled: newEnabled })
-
-    if (newEnabled && !settings.activeProvider) {
-      setActiveProvider(providerId)
-    } else if (!newEnabled && isActive) {
-      setActiveProvider(null)
-    }
-  }
-
-  const handleSetActive = () => {
-    if (config.enabled) {
-      setActiveProvider(providerId)
-    }
-  }
-
   const handleFetchModels = async () => {
-    const baseUrlToUse = config.baseUrl || provider.fixedBaseUrl
-    if (!baseUrlToUse || !config.apiKey) return
-
     setIsFetchingModels(true)
     setFetchModelsResult(null)
 
-    const result = await fetchModels(baseUrlToUse, config.apiKey)
+    // Get decrypted API key
+    const decryptedKey = await getDecryptedApiKey(providerId)
+    const baseUrl = config!.baseUrl || provider?.fixedBaseUrl
+
+    const result = await fetchModels(baseUrl!, decryptedKey)
     setFetchModelsResult(result)
 
-    if (result.success && result.models.length > 0) {
+    if (result.success) {
       setFetchedModels(result.models)
-      if (!result.models.includes(config.model)) {
-        updateProvider(providerId, { model: result.models[0] })
+      // Update the model in the first fetched model
+      if (result.models.length > 0) {
+        await updateProvider(providerId, { model: result.models[0] })
       }
-      toast.success("Models fetched", {
-        description: result.message
+      toast.success("Models fetched successfully", {
+        description: `Found ${result.models.length} models`
       })
     } else {
       toast.error("Failed to fetch models", {
@@ -107,167 +105,151 @@ export function ProviderCard({ providerId }: ProviderCardProps) {
     setIsFetchingModels(false)
   }
 
-  const canFetchModels = provider.fixedBaseUrl || (provider.supportsCustomEndpoint && config.baseUrl)
-  const modelsToShow = canFetchModels && fetchedModels.length > 0
-    ? fetchedModels
-    : provider.models
+  const handleToggleEnabled = () => {
+    toggleProvider(providerId)
+  }
+
+  if (!config) return null
+
+  const availableModels = fetchedModels.length > 0 ? fetchedModels : (provider?.models || [])
 
   return (
-    <Card
-      className={`p-4 transition-all ${
-        isActive ? "ring-2 ring-primary" : ""
-      } ${config.enabled ? "" : "opacity-60"}`}
-    >
-      <div className="flex items-start justify-between mb-3">
-        <div>
-          <h3 className="font-medium text-sm">{provider.name}</h3>
-          <p className="text-xs text-muted-foreground">{provider.description}</p>
-        </div>
-        <div className="flex items-center gap-2">
-          {config.enabled && !isActive && (
+    <Card className={`relative ${isEnabled ? 'border-primary' : ''}`}>
+      <div className="p-6">
+        <div className="flex items-start justify-between mb-4">
+          <div>
+            <h3 className="text-lg font-semibold flex items-center gap-2">
+              {provider?.name || config.customName || providerId}
+              {!isBuiltIn && (
+                <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                  Custom
+                </span>
+              )}
+            </h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              {provider?.description || config.customName || 'Custom OpenAI-compatible provider'}
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            {isEnabled && (
+              <div className="flex items-center gap-1 text-green-600">
+                <IconCheck className="h-4 w-4" />
+                <span className="text-xs font-medium">Active</span>
+              </div>
+            )}
             <Button
               variant="outline"
-              size="xs"
-              onClick={handleSetActive}
+              size="sm"
+              onClick={handleToggleEnabled}
+              className={isEnabled ? 'text-green-600' : ''}
             >
-              Set Active
+              {isEnabled ? 'Disable' : 'Enable'}
             </Button>
-          )}
-          <Button
-            variant={config.enabled ? "default" : "outline"}
-            size="xs"
-            onClick={handleToggleEnabled}
-          >
-            {config.enabled ? "Enabled" : "Disabled"}
-          </Button>
-        </div>
-      </div>
-
-      <div className="space-y-3">
-        {provider.supportsCustomEndpoint && (
-          <div className="flex gap-1">
-            <button
-              type="button"
-              onClick={() => updateProvider(providerId, { baseUrl: "" })}
-              disabled={!config.enabled}
-              className={`px-2 py-0.5 text-xs rounded-full border transition-colors ${
-                !config.baseUrl
-                  ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-muted/50 text-muted-foreground border-border hover:bg-muted"
-              } disabled:opacity-50`}
-            >
-              Default
-            </button>
-            <button
-              type="button"
-              onClick={() => updateProvider(providerId, { baseUrl: config.baseUrl || "https://" })}
-              disabled={!config.enabled}
-              className={`px-2 py-0.5 text-xs rounded-full border transition-colors ${
-                config.baseUrl
-                  ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-muted/50 text-muted-foreground border-border hover:bg-muted"
-              } disabled:opacity-50`}
-            >
-              Custom
-            </button>
           </div>
-        )}
-
-        <div>
-          <Label className="text-xs mb-1.5 block">API Key</Label>
-          <ApiKeyInput
-            value={config.apiKey}
-            onChange={(apiKey) => updateProvider(providerId, { apiKey })}
-            placeholder={provider.placeholder}
-            disabled={!config.enabled}
-          />
         </div>
 
-        {provider.supportsCustomEndpoint && config.baseUrl && (
+        <div className="space-y-4">
+          {/* API Key */}
           <div>
-            <Label className="text-xs mb-1.5 block">Custom Endpoint URL</Label>
-            <Input
-              value={config.baseUrl || ""}
-              onChange={(e) =>
-                updateProvider(providerId, { baseUrl: e.target.value })
-              }
-              placeholder="https://api.example.com/v1"
-              disabled={!config.enabled}
-              className="text-xs"
+            <Label htmlFor={`api-key-${providerId}`}>API Key</Label>
+            <ApiKeyInput
+              value={config.apiKey}
+              onChange={(apiKey) => updateProvider(providerId, { apiKey })}
+              placeholder={provider?.placeholder || 'Enter API key'}
             />
           </div>
-        )}
 
-        <div>
-          <div className="flex items-center justify-between mb-1.5">
-            <Label className="text-xs">Model</Label>
-            {canFetchModels && (
-              <Button
-                variant="ghost"
-                size="xs"
-                onClick={handleFetchModels}
-                disabled={!config.enabled || !config.apiKey || isFetchingModels}
-                className="h-5 px-1.5 text-xs"
+          {/* Base URL (for providers that support it) */}
+          {(provider?.supportsCustomEndpoint || !isBuiltIn) && (
+            <div>
+              <Label htmlFor={`base-url-${providerId}`}>Base URL</Label>
+              <Input
+                id={`base-url-${providerId}`}
+                value={config.baseUrl || provider?.fixedBaseUrl || ''}
+                onChange={(e) => updateProvider(providerId, { baseUrl: e.target.value })}
+                placeholder={provider?.fixedBaseUrl || 'https://api.example.com/v1'}
+              />
+              {provider?.fixedBaseUrl && (
+                <p className="text-xs text-muted-foreground mt-1">
+                  This provider uses a fixed base URL
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* Model Selection */}
+          <div>
+            <Label htmlFor={`model-${providerId}`}>Model</Label>
+            <div className="flex gap-2">
+              <Select
+                value={config.model || provider?.defaultModel || ''}
+                onValueChange={(model) => updateProvider(providerId, { model })}
               >
-                {isFetchingModels ? (
-                  <IconLoader2 className="h-3 w-3 animate-spin" />
+                <SelectTrigger className="flex-1">
+                  <SelectValue placeholder="Select model" />
+                </SelectTrigger>
+                <SelectContent>
+                  {availableModels.map((model) => (
+                    <SelectItem key={model} value={model}>
+                      {model}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {provider && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleFetchModels}
+                  disabled={isFetchingModels || !config.apiKey}
+                  className="whitespace-nowrap"
+                >
+                  {isFetchingModels ? (
+                    <IconLoader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <IconRefresh className="h-4 w-4" />
+                  )}
+                  Fetch
+                </Button>
+              )}
+            </div>
+          </div>
+
+          {/* Connection Test */}
+          <div className="flex items-center gap-4 pt-2">
+            <Button
+              onClick={handleTestConnection}
+              disabled={isTesting || !config.apiKey}
+              variant="outline"
+              size="sm"
+            >
+              {isTesting ? (
+                <IconLoader2 className="h-4 w-4 animate-spin mr-2" />
+              ) : (
+                <IconPlugConnected className="h-4 w-4 mr-2" />
+              )}
+              Test Connection
+            </Button>
+
+            {testResult && (
+              <div className={`flex items-center gap-1 text-sm ${testResult.success ? 'text-green-600' : 'text-red-600'}`}>
+                {testResult.success ? (
+                  <IconCheck className="h-4 w-4" />
                 ) : (
-                  <IconRefresh className="h-3 w-3" />
+                  <IconX className="h-4 w-4" />
                 )}
-                Fetch
-              </Button>
+                <span>
+                  {testResult.success ? 'Connected' : 'Failed'} ({testResult.latencyMs || 0}ms)
+                </span>
+              </div>
             )}
           </div>
-          <Select
-            value={config.model}
-            onValueChange={(model) => updateProvider(providerId, { model })}
-            disabled={!config.enabled}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {modelsToShow.map((model) => (
-                <SelectItem key={model} value={model}>
-                  {model}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {fetchModelsResult && (
-            <p className={`text-xs mt-1 ${fetchModelsResult.success ? "text-green-600" : "text-destructive"}`}>
+
+          {/* Fetch Models Result */}
+          {fetchModelsResult && !fetchModelsResult.success && (
+            <div className="text-sm text-red-600 mt-2">
+              <IconX className="h-4 w-4 inline mr-1" />
               {fetchModelsResult.message}
-            </p>
-          )}
-        </div>
-
-        <div className="flex items-center gap-2 pt-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleTestConnection}
-            disabled={!config.enabled || !config.apiKey || isTesting}
-          >
-            {isTesting ? (
-              <IconLoader2 className="h-3 w-3 animate-spin" />
-            ) : (
-              <IconPlugConnected className="h-3 w-3" />
-            )}
-            Test Connection
-          </Button>
-
-          {testResult && (
-            <div
-              className={`flex items-center gap-1 text-xs ${
-                testResult.success ? "text-green-600" : "text-destructive"
-              }`}
-            >
-              {testResult.success ? (
-                <IconCheck className="h-3 w-3" />
-              ) : (
-                <IconX className="h-3 w-3" />
-              )}
-              <span>{testResult.message}</span>
             </div>
           )}
         </div>

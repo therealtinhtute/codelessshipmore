@@ -1,24 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CodelessShipMore
+
+A Next.js application with AI-powered features and multi-profile AI provider management.
+
+## Features
+
+- **Profile-First AI Settings**: Organize AI providers by profiles (Work, Personal, Development, etc.)
+- **Multi-Provider Support**: Configure multiple AI providers per profile (OpenAI, Anthropic, Google, custom OpenAI-compatible)
+- **Secure Storage**: API keys are encrypted and stored locally using localStorage
+- **Clean Migration**: Automatic migration from IndexedDB to localStorage
+- **TypeScript**: Full type safety throughout the application
+- **Modern UI**: Built with Tailwind CSS and shadcn/ui components
+
+## AI Provider Management
+
+The application supports a flexible profile-based system for managing AI providers:
+
+- **Built-in Providers**: OpenAI, Anthropic Claude, Google Gemini, Cerebras
+- **Custom Providers**: Add any OpenAI-compatible provider
+- **Profile Isolation**: Each profile has its own set of providers and configurations
+- **Multiple Active Providers**: Enable multiple providers simultaneously
 
 ## Getting Started
 
 First, run the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+bun run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3001](http://localhost:3001) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Data Storage
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+AI settings are stored in your browser using:
+- **localStorage**: For profile and provider configurations
+- **Encryption**: AES-GCM encryption for API keys
+- **Automatic Migration**: Seamless upgrade from previous IndexedDB implementation
+- **No Server Storage**: All data stays on your device
+
+## Development
+
+This project uses:
+- **Next.js 16**: with Turbopack for fast development
+- **TypeScript**: For type safety
+- **Tailwind CSS**: For styling
+- **shadcn/ui**: For UI components
+- **React Hooks**: For state management
 
 ## Learn More
 

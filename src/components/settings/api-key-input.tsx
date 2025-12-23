@@ -10,13 +10,15 @@ interface ApiKeyInputProps {
   onChange: (value: string) => void
   placeholder?: string
   disabled?: boolean
+  compact?: boolean
 }
 
 export function ApiKeyInput({
   value,
   onChange,
   placeholder = "Enter API key...",
-  disabled = false
+  disabled = false,
+  compact = false
 }: ApiKeyInputProps) {
   const [showKey, setShowKey] = useState(false)
 
@@ -30,7 +32,7 @@ export function ApiKeyInput({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         disabled={disabled}
-        className="pr-10 font-mono text-xs"
+        className={`pr-10 font-mono text-xs ${compact ? 'h-8' : ''}`}
       />
       {value && (
         <Button

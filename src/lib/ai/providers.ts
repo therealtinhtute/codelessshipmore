@@ -38,15 +38,19 @@ export const PROVIDERS: Record<ProviderId, ProviderDefinition> = {
   google: {
     id: "google",
     name: "Google (Gemini)",
-    description: "Gemini 1.5 Pro, Flash, and 2.0 models",
+    description: "Gemini 3, 2.5 Pro, Flash, and 2.0 models via OpenAI-compatible API",
     models: [
-      "gemini-2.0-flash-exp",
-      "gemini-1.5-pro",
-      "gemini-1.5-flash",
-      "gemini-1.5-flash-8b"
+      "gemini-2.5-pro",
+      "gemini-2.5-flash",
+      "gemini-2.5-flash-lite",
+      "gemini-2.0-flash",
+      "gemini-2.0-flash-lite",
+      "gemini-3-pro-preview",
+      "gemini-3-flash-preview"
     ],
     supportsCustomEndpoint: false,
-    defaultModel: "gemini-1.5-flash",
+    fixedBaseUrl: "https://generativelanguage.googleapis.com/v1beta/openai",
+    defaultModel: "gemini-3-flash-preview",
     placeholder: "AIza..."
   },
   "anthropic-custom": {
@@ -66,12 +70,14 @@ export const PROVIDERS: Record<ProviderId, ProviderDefinition> = {
   cerebras: {
     id: "cerebras",
     name: "Cerebras",
-    description: "Ultra-fast Llama inference via Cerebras Cloud",
+    description: "Ultra-fast Llama, Qwen, and GPT-OSS inference via Cerebras Cloud",
     models: [
       "llama-3.3-70b",
-      "llama3.1-70b",
       "llama3.1-8b",
-      "deepseek-r1-distill-llama-70b"
+      "gpt-oss-120b",
+      "qwen-3-32b",
+      "qwen-3-235b-a22b-instruct-2507",
+      "zai-glm-4.6"
     ],
     supportsCustomEndpoint: false,
     fixedBaseUrl: "https://api.cerebras.ai/v1",

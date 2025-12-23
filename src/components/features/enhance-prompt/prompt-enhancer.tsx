@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useClipboard } from "@/hooks/use-clipboard"
 import { useAI } from "@/hooks/use-ai"
-import { useAISettings } from "@/contexts/ai-settings-context"
+import { useAISettings, type ExtendedProviderId } from "@/contexts/ai-settings-context"
 import { toast } from "sonner"
 import { IconCopy, IconCheck, IconSparkles, IconSettings } from "@tabler/icons-react"
 import type { ProviderId } from "@/lib/ai/providers"
@@ -186,9 +186,9 @@ Return ONLY the enhanced prompt, nothing else.`
               <div>
                 <Label htmlFor="ai-provider">AI Provider</Label>
                 <Select
-                  value={providerId || settings.activeProvider || ""}
-                  onValueChange={(value: ProviderId) => {
-                    setProviderId(value)
+                  value={providerId || settings.enabledProviders[0] || ""}
+                  onValueChange={(value: ExtendedProviderId) => {
+                    setProviderId(value as ProviderId)
                     // Reset model when provider changes
                     const config = settings.providers[value]
                     if (config) {
@@ -198,12 +198,12 @@ Return ONLY the enhanced prompt, nothing else.`
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select AI provider">
-                      {providerId ? getProviderName(providerId) : settings.activeProvider ? getProviderName(settings.activeProvider) : "No provider"}
+                      {providerId ? getProviderName(providerId) : settings.enabledProviders[0] ? getProviderName(settings.enabledProviders[0] as ProviderId) : "No provider"}
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {Object.entries(settings.providers)
-                      .filter(([, config]) => config.enabled)
+                      .filter(([, config]) => config && config.enabled)
                       .map(([id]) => (
                         <SelectItem key={id} value={id}>
                           {getProviderName(id as ProviderId)}
@@ -215,29 +215,29 @@ Return ONLY the enhanced prompt, nothing else.`
               <div>
                 <Label htmlFor="ai-model">Model</Label>
                 <Select
-                  value={model || (providerId || settings.activeProvider) ? settings.providers[providerId || settings.activeProvider!]?.model || "" : ""}
+                  value={model || (providerId || settings.enabledProviders[0]) ? settings.providers[providerId || settings.enabledProviders[0]]?.model || "" : ""}
                   onValueChange={setModel}
-                  disabled={!providerId && !settings.activeProvider}
+                  disabled={!providerId && settings.enabledProviders.length === 0}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select model">
-                      {(providerId || settings.activeProvider)
-                        ? settings.providers[providerId || settings.activeProvider!]?.model || "No model"
+                      {(providerId || settings.enabledProviders[0])
+                        ? settings.providers[providerId || settings.enabledProviders[0]]?.model || "No model"
                         : "Select provider first"
                       }
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
-                    {(providerId || settings.activeProvider) && (
-                      <SelectItem value={settings.providers[providerId || settings.activeProvider!]?.model || ""}>
-                        {settings.providers[providerId || settings.activeProvider!]?.model || "No model"}
+                    {(providerId || settings.enabledProviders[0]) && (
+                      <SelectItem value={settings.providers[providerId || settings.enabledProviders[0]]?.model || ""}>
+                        {settings.providers[providerId || settings.enabledProviders[0]]?.model || "No model"}
                       </SelectItem>
                     )}
                   </SelectContent>
                 </Select>
               </div>
             </div>
-            {!settings.activeProvider && (
+            {settings.enabledProviders.length === 0 && (
               <p className="text-sm text-muted-foreground mt-2">
                 <IconSettings className="inline h-3 w-3 mr-1" />
                 Configure AI providers in{" "}
@@ -310,7 +310,7 @@ Return ONLY the enhanced prompt, nothing else.`
 
           <Button
             onClick={enhancePrompt}
-            disabled={isLoading || !originalPrompt.trim() || !settings.activeProvider}
+            disabled={isLoading || !originalPrompt.trim() || settings.enabledProviders.length === 0}
             className="w-full"
           >
             {isLoading ? (

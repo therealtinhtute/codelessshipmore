@@ -6,11 +6,11 @@ import { createOpenAICompatible } from "@ai-sdk/openai-compatible"
 import { createAnthropic } from "@ai-sdk/anthropic"
 import { createGoogleGenerativeAI } from "@ai-sdk/google"
 import { generateText, streamText, type CoreMessage } from "ai"
-import { useAISettings } from "@/contexts/ai-settings-context"
+import { useAISettings, type ExtendedProviderId } from "@/contexts/ai-settings-context"
 import type { ProviderId } from "@/lib/ai/providers"
 
 interface UseAIOptions {
-  providerId?: ProviderId
+  providerId?: ExtendedProviderId
 }
 
 interface GenerateOptions {
@@ -30,14 +30,21 @@ export function useAI(options: UseAIOptions = {}) {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  // Get the active provider (first enabled, or explicitly provided)
+  const activeProvider = options.providerId || settings.enabledProviders[0] || null
+
   const getProvider = useCallback(
-    async (overrideId?: ProviderId) => {
-      const providerId = overrideId || options.providerId || settings.activeProvider
+    async (overrideId?: ExtendedProviderId) => {
+      const providerId = overrideId || options.providerId || activeProvider
       if (!providerId) {
         throw new Error("No AI provider configured")
       }
 
       const config = settings.providers[providerId]
+      if (!config) {
+        throw new Error(`Provider ${providerId} not found`)
+      }
+
       if (!config.enabled) {
         throw new Error(`Provider ${providerId} is not enabled`)
       }
@@ -47,7 +54,25 @@ export function useAI(options: UseAIOptions = {}) {
         throw new Error(`No API key configured for ${providerId}`)
       }
 
-      switch (providerId) {
+      // Handle custom providers
+      const isBuiltIn = Object.values<ProviderId>(["openai", "anthropic", "google", "anthropic-custom", "cerebras"]).includes(providerId as ProviderId)
+
+      if (!isBuiltIn) {
+        // Custom provider - use OpenAI compatible
+        if (!config.baseUrl) {
+          throw new Error("Base URL required for custom provider")
+        }
+        const custom = createOpenAICompatible({
+          name: config.customName || providerId,
+          baseURL: config.baseUrl,
+          apiKey
+        })
+        return custom(config.model)
+      }
+
+      // Built-in providers
+      const id = providerId as ProviderId
+      switch (id) {
         case "openai": {
           const openai = createOpenAI({
             apiKey,
@@ -85,7 +110,7 @@ export function useAI(options: UseAIOptions = {}) {
           throw new Error("Unknown provider")
       }
     },
-    [settings, options.providerId, getDecryptedApiKey]
+    [settings, options.providerId, getDecryptedApiKey, activeProvider]
   )
 
   const generate = useCallback(
@@ -169,7 +194,8 @@ export function useAI(options: UseAIOptions = {}) {
     streamGenerate,
     isLoading,
     error,
-    activeProvider: settings.activeProvider,
-    isConfigured: settings.activeProvider !== null
+    activeProvider,
+    enabledProviders: settings.enabledProviders,
+    isConfigured: settings.enabledProviders.length > 0
   }
 }

@@ -1,30 +1,34 @@
 "use client"
 
 import { useState } from "react"
-import { IconLoader2, IconDeviceFloppy, IconAlertTriangle } from "@tabler/icons-react"
+import { IconLoader2, IconAlertTriangle, IconSettings } from "@tabler/icons-react"
 import { Button } from "@/components/ui/button"
-import { ProviderCard } from "./provider-card"
+import { ProfileList } from "./profile-list"
+import { ProfileConfiguration } from "./profile-configuration"
 import { useAISettings } from "@/contexts/ai-settings-context"
-import { PROVIDER_LIST } from "@/lib/ai/providers"
+import { Badge } from "@/components/ui/badge"
 
 export function AISettings() {
-  const { saveSettings, isLoading } = useAISettings()
-  const [isSaving, setIsSaving] = useState(false)
-  const [saveSuccess, setSaveSuccess] = useState(false)
+  const {
+    currentProfile,
+    isLoading,
+    isFallbackMode,
+  } = useAISettings()
+  const [selectedProfileForConfig, setSelectedProfileForConfig] = useState<string | null>(null)
 
-  const handleSave = async () => {
-    setIsSaving(true)
-    setSaveSuccess(false)
-
-    try {
-      await saveSettings()
-      setSaveSuccess(true)
-      setTimeout(() => setSaveSuccess(false), 3000)
-    } catch (error) {
-      console.error("Failed to save settings:", error)
-    }
-
-    setIsSaving(false)
+  if (isFallbackMode) {
+    return (
+      <div className="text-center py-12">
+        <IconAlertTriangle className="h-12 w-12 mx-auto text-amber-500 mb-4" />
+        <h3 className="text-lg font-semibold mb-2">Storage Unavailable</h3>
+        <p className="text-muted-foreground">
+          localStorage is not available. Please enable cookies and local storage in your browser settings.
+        </p>
+        <p className="text-sm text-muted-foreground mt-2">
+          Note: Private browsing mode may disable localStorage. Try using a regular browser window.
+        </p>
+      </div>
+    )
   }
 
   if (isLoading) {
@@ -37,33 +41,46 @@ export function AISettings() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-2 p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800">
-        <IconAlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-500 shrink-0" />
-        <p className="text-xs text-amber-800 dark:text-amber-200">
-          API keys are encrypted and stored in your browser. They are never sent to our servers.
-        </p>
-      </div>
+      {selectedProfileForConfig ? (
+        <ProfileConfiguration
+          profileId={selectedProfileForConfig}
+          onBack={() => setSelectedProfileForConfig(null)}
+        />
+      ) : (
+        <>
+          {/* Profile List - Profile First Flow */}
+          <ProfileList onConfigureProfile={setSelectedProfileForConfig} />
 
-      <div className="grid gap-4 md:grid-cols-2">
-        {PROVIDER_LIST.map((provider) => (
-          <ProviderCard key={provider.id} providerId={provider.id} />
-        ))}
-      </div>
-
-      <div className="flex items-center gap-3 pt-4 border-t">
-        <Button onClick={handleSave} disabled={isSaving}>
-          {isSaving ? (
-            <IconLoader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <IconDeviceFloppy className="h-4 w-4" />
+          {/* Quick Actions */}
+          {currentProfile && (
+            <div className="border-t pt-6">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h3 className="text-lg font-semibold">Quick Actions</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Current profile: <Badge variant="secondary">{currentProfile.name}</Badge>
+                  </p>
+                </div>
+                <Button
+                  variant="outline"
+                  onClick={() => setSelectedProfileForConfig(currentProfile.id)}
+                >
+                  <IconSettings className="h-4 w-4 mr-2" />
+                  Configure Current Profile
+                </Button>
+              </div>
+            </div>
           )}
-          Save Settings
-        </Button>
 
-        {saveSuccess && (
-          <span className="text-xs text-green-600">Settings saved successfully!</span>
-        )}
-      </div>
+          {/* Security Notice */}
+          <div className="flex items-center gap-2 p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800">
+            <IconAlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-500 shrink-0" />
+            <p className="text-xs text-amber-800 dark:text-amber-200">
+              API keys are encrypted and stored in your browser using localStorage. They are never sent to our servers.
+            </p>
+          </div>
+        </>
+      )}
     </div>
   )
 }
