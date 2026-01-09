@@ -7,8 +7,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: "IBM Plex Mono", monospace;
-  --font-mono: "IBM Plex Mono", monospace;
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -45,6 +45,28 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+
+  /* Geist Grid System */
+  --grid-columns: 12;
+  --grid-rows: auto;
+  --grid-gap: 1rem;
+  --max-width: 1200px;
+  --min-width: 320px;
+
+  /* Geist Color Families */
+  --color-ds-gray-100: var(--ds-gray-100);
+  --color-ds-gray-400: var(--ds-gray-400);
+  --color-ds-gray-700: var(--ds-gray-700);
+  --color-ds-gray-800: var(--ds-gray-800);
+  --color-ds-gray-1000: var(--ds-gray-1000);
+  --color-ds-blue-700: var(--ds-blue-700);
+  --color-ds-blue-800: var(--ds-blue-800);
+  --color-ds-purple-700: var(--ds-purple-700);
+  --color-ds-pink-800: var(--ds-pink-800);
+  --color-ds-red-800: var(--ds-red-800);
+  --color-ds-amber-800: var(--ds-amber-800);
+  --color-ds-green-800: var(--ds-green-800);
+  --color-ds-teal-800: var(--ds-teal-800);
 }
 
 :root {
@@ -80,6 +102,28 @@
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.705 0.015 286.067);
+
+  /* Geist Color System - Light Mode */
+  --ds-gray-100: oklch(0.98 0 0);
+  --ds-gray-400: oklch(0.85 0.005 286);
+  --ds-gray-700: oklch(0.55 0.015 286);
+  --ds-gray-800: oklch(0.40 0.01 286);
+  --ds-gray-1000: oklch(0.14 0.005 286);
+
+  --ds-blue-700: oklch(0.50 0.15 260);
+  --ds-blue-800: oklch(0.40 0.18 260);
+
+  --ds-purple-700: oklch(0.55 0.20 300);
+
+  --ds-pink-800: oklch(0.50 0.22 340);
+
+  --ds-red-800: oklch(0.55 0.22 25);
+
+  --ds-amber-800: oklch(0.65 0.15 70);
+
+  --ds-green-800: oklch(0.55 0.15 145);
+
+  --ds-teal-800: oklch(0.55 0.12 180);
 }
 
 .dark {
@@ -114,15 +158,40 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.552 0.016 285.938);
+
+  /* Geist Color System - Dark Mode */
+  --ds-gray-100: oklch(0.14 0.005 286);
+  --ds-gray-400: oklch(0.30 0.008 286);
+  --ds-gray-700: oklch(0.70 0.012 286);
+  --ds-gray-800: oklch(0.85 0.005 286);
+  --ds-gray-1000: oklch(0.98 0 0);
+
+  --ds-blue-700: oklch(0.60 0.18 260);
+  --ds-blue-800: oklch(0.50 0.20 260);
+
+  --ds-purple-700: oklch(0.65 0.22 300);
+
+  --ds-pink-800: oklch(0.60 0.24 340);
+
+  --ds-red-800: oklch(0.65 0.24 25);
+
+  --ds-amber-800: oklch(0.75 0.18 70);
+
+  --ds-green-800: oklch(0.65 0.18 145);
+
+  --ds-teal-800: oklch(0.65 0.14 180);
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/50 transition-colors duration-150 ease-in-out;
+  }
+  html {
+    transition: background-color 150ms ease-in-out, color 150ms ease-in-out;
   }
   body {
     @apply bg-background text-foreground text-sm font-normal leading-relaxed;
-    font-family: "IBM Plex Mono", monospace;
+    font-family: var(--font-geist-sans), sans-serif;
   }
   h1 {
     @apply text-2xl font-bold leading-tight;
@@ -141,8 +210,101 @@
   }
   code, pre, .font-mono {
     @apply text-xs font-normal leading-relaxed;
+    font-family: var(--font-geist-mono), monospace;
   }
   small {
     @apply text-xs font-normal;
+  }
+}
+
+@layer utilities {
+  /* Geist Semantic Typography Classes */
+  .text-heading-40 {
+    @apply text-4xl font-semibold leading-tight tracking-tight;
+  }
+  .text-heading-24 {
+    @apply text-2xl font-semibold leading-tight;
+  }
+  .text-heading-16 {
+    @apply text-base font-semibold leading-snug;
+  }
+  .text-copy-20 {
+    @apply text-xl font-normal leading-relaxed;
+  }
+  .text-copy-16 {
+    @apply text-base font-normal leading-relaxed;
+  }
+  .text-copy-14 {
+    @apply text-sm font-normal leading-relaxed;
+  }
+  .text-copy-12 {
+    @apply text-xs font-normal leading-relaxed;
+  }
+
+  /* Geist Color Utilities */
+  .bg-ds-gray-100 { background-color: var(--ds-gray-100); }
+  .bg-ds-gray-400 { background-color: var(--ds-gray-400); }
+  .bg-ds-gray-700 { background-color: var(--ds-gray-700); }
+  .bg-ds-gray-800 { background-color: var(--ds-gray-800); }
+  .bg-ds-gray-1000 { background-color: var(--ds-gray-1000); }
+
+  .text-ds-gray-100 { color: var(--ds-gray-100); }
+  .text-ds-gray-400 { color: var(--ds-gray-400); }
+  .text-ds-gray-700 { color: var(--ds-gray-700); }
+  .text-ds-gray-800 { color: var(--ds-gray-800); }
+  .text-ds-gray-1000 { color: var(--ds-gray-1000); }
+
+  .border-ds-gray-100 { border-color: var(--ds-gray-100); }
+  .border-ds-gray-400 { border-color: var(--ds-gray-400); }
+  .border-ds-gray-700 { border-color: var(--ds-gray-700); }
+  .border-ds-gray-800 { border-color: var(--ds-gray-800); }
+
+  .bg-ds-blue-700 { background-color: var(--ds-blue-700); }
+  .bg-ds-blue-800 { background-color: var(--ds-blue-800); }
+  .text-ds-blue-700 { color: var(--ds-blue-700); }
+  .text-ds-blue-800 { color: var(--ds-blue-800); }
+
+  .bg-ds-purple-700 { background-color: var(--ds-purple-700); }
+  .text-ds-purple-700 { color: var(--ds-purple-700); }
+
+  .bg-ds-pink-800 { background-color: var(--ds-pink-800); }
+  .text-ds-pink-800 { color: var(--ds-pink-800); }
+
+  .bg-ds-red-800 { background-color: var(--ds-red-800); }
+  .text-ds-red-800 { color: var(--ds-red-800); }
+
+  .bg-ds-amber-800 { background-color: var(--ds-amber-800); }
+  .text-ds-amber-800 { color: var(--ds-amber-800); }
+
+  .bg-ds-green-800 { background-color: var(--ds-green-800); }
+  .text-ds-green-800 { color: var(--ds-green-800); }
+
+  .bg-ds-teal-800 { background-color: var(--ds-teal-800); }
+  .text-ds-teal-800 { color: var(--ds-teal-800); }
+
+  /* Geist Grid System */
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-columns, 12), 1fr);
+    gap: var(--grid-gap, 1rem);
+    max-width: var(--max-width, 1200px);
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .grid-full {
+    grid-column: 1 / -1;
+  }
+
+  .grid-half {
+    grid-column: span 6;
+  }
+
+  .grid-third {
+    grid-column: span 4;
+  }
+
+  .grid-quarter {
+    grid-column: span 3;
   }
 }
