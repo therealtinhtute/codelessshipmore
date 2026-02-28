@@ -96,7 +96,7 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
                       >
                         <Link href={item.href}>
                           <item.icon className="h-4 w-4" />
-                          <span className="uppercase text-xs">{item.name}</span>
+                          <span className="text-xs">{item.name}</span>
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -120,7 +120,7 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
                         >
                           <Link href={item.href}>
                             <item.icon className="h-4 w-4" />
-                            <span className="uppercase text-xs">
+                            <span className="text-xs">
                               {item.name}
                             </span>
                           </Link>

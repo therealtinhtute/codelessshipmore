@@ -28,8 +28,50 @@ interface ProviderConfig {
   updatedAt: number
 }
 
-// Temporary IndexedDB access for migration
-let ProviderDB: IndexedDBProvider | null = null
+const DB_NAME = "ai-settings-db"
+const DB_VERSION = 1
+
+// Cached database connection
+let cachedDB: IDBDatabase | null = null
+let schemaValidated = false
+let schemaValid = false
+
+/**
+ * Get cached DB connection or open a new one
+ */
+async function getDB(): Promise<IDBDatabase | null> {
+  if (typeof indexedDB === "undefined") return null
+  if (cachedDB) return cachedDB
+
+  return new Promise((resolve) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION)
+
+    request.onerror = () => {
+      console.warn("Failed to open IndexedDB:", request.error)
+      resolve(null)
+    }
+
+    request.onblocked = () => {
+      console.warn("IndexedDB blocked by another tab")
+      resolve(null)
+    }
+
+    request.onsuccess = () => {
+      cachedDB = request.result
+      resolve(cachedDB)
+    }
+  })
+}
+
+/**
+ * Close the cached database connection
+ */
+function closeDB(): void {
+  if (cachedDB) {
+    cachedDB.close()
+    cachedDB = null
+  }
+}
 
 /**
  * Check if the IndexedDB database has the expected schema
@@ -37,255 +79,163 @@ let ProviderDB: IndexedDBProvider | null = null
  */
 async function hasValidIndexedDBSchema(): Promise<boolean> {
   if (typeof indexedDB === "undefined") return false
+  if (schemaValidated) return schemaValid
 
-  try {
-    const request = indexedDB.open("ai-settings-db", 1)
-
-    return new Promise<boolean>((resolve) => {
-      request.onsuccess = () => {
-        try {
-          const db = request.result
-          // Check if all required object stores exist
-          const requiredStores = ["profiles", "provider_configs", "app_metadata"]
-          const existingStores = Array.from(db.objectStoreNames)
-
-          const hasAllStores = requiredStores.every(store => existingStores.includes(store))
-
-          db.close()
-          resolve(hasAllStores)
-        } catch {
-          resolve(false)
-        }
-      }
-
-      request.onerror = () => resolve(false)
-      request.onblocked = () => resolve(false)
-    })
-  } catch {
+  const db = await getDB()
+  if (!db) {
+    schemaValidated = true
+    schemaValid = false
     return false
   }
+
+  // Check if all required object stores exist
+  const requiredStores = ["profiles", "provider_configs", "app_metadata"]
+  const existingStores = Array.from(db.objectStoreNames)
+  const hasAllStores = requiredStores.every(store => existingStores.includes(store))
+
+  schemaValidated = true
+  schemaValid = hasAllStores
+
+  if (!hasAllStores) {
+    console.warn("IndexedDB exists but has invalid schema. Skipping migration.")
+  }
+
+  return hasAllStores
 }
 
-// Initialize ProviderDB only if IndexedDB has valid schema
-let indexedDBSchemaValid = false
+/**
+ * Execute a function with a database transaction
+ */
+async function withTransaction<T>(
+  storeNames: string[],
+  mode: IDBTransactionMode,
+  callback: (store: IDBObjectStore) => IDBRequest<T>
+): Promise<T | null> {
+  const db = await getDB()
+  if (!db) return null
 
-try {
-  // Try to import IndexedDB only if available
-  if (typeof indexedDB !== "undefined") {
-    // Check schema validity before initializing
-    hasValidIndexedDBSchema().then(valid => {
-      indexedDBSchemaValid = valid
-      if (!valid) {
-        console.warn("IndexedDB exists but has invalid schema. Skipping migration.")
-      }
-    })
+  return new Promise((resolve, reject) => {
+    try {
+      const transaction = db.transaction(storeNames, mode)
+      const store = transaction.objectStore(storeNames[0])
+      const request = callback(store)
 
-    // Basic IndexedDB operations for migration
-    ProviderDB = {
-      isAvailable: () => indexedDBSchemaValid,
-      getAllProfiles: async (): Promise<ProfileRecord[]> => {
-        if (!indexedDBSchemaValid) return []
+      request.onerror = () => reject(request.error)
+      request.onsuccess = () => resolve(request.result)
 
-        return new Promise((resolve, reject) => {
-          const request = indexedDB.open("ai-settings-db", 1)
-          request.onerror = () => reject(request.error)
-          request.onsuccess = () => {
-            try {
-              const db = request.result
-              const transaction = db.transaction(["profiles"], "readonly")
-              const store = transaction.objectStore("profiles")
-              const getAllRequest = store.getAll()
-              getAllRequest.onerror = () => reject(getAllRequest.error)
-              getAllRequest.onsuccess = () => {
-                db.close()
-                resolve(getAllRequest.result)
-              }
-            } catch (error) {
-              reject(error)
-            }
-          }
-        })
-      },
-      getProviderConfigsByProfile: async (profileId: string): Promise<ProviderConfig[]> => {
-        if (!indexedDBSchemaValid) return []
+      transaction.onerror = () => reject(transaction.error)
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
 
-        return new Promise((resolve, reject) => {
-          const request = indexedDB.open("ai-settings-db", 1)
-          request.onerror = () => reject(request.error)
-          request.onsuccess = () => {
-            try {
-              const db = request.result
-              const transaction = db.transaction(["provider_configs"], "readonly")
-              const store = transaction.objectStore("provider_configs")
-              const index = store.index("by-profileId")
-              const getRequest = index.getAll(profileId)
-              getRequest.onerror = () => reject(getRequest.error)
-              getRequest.onsuccess = () => {
-                db.close()
-                resolve(getRequest.result)
-              }
-            } catch (error) {
-              reject(error)
-            }
-          }
-        })
-      },
-      getMetadata: async (key: string): Promise<unknown> => {
-        if (!indexedDBSchemaValid) return null
+// IndexedDB operations provider
+const ProviderDB: IndexedDBProvider = {
+  isAvailable: () => schemaValid,
 
-        return new Promise((resolve, reject) => {
-          const request = indexedDB.open("ai-settings-db", 1)
-          request.onerror = () => reject(request.error)
-          request.onsuccess = () => {
-            try {
-              const db = request.result
-              const transaction = db.transaction(["app_metadata"], "readonly")
-              const store = transaction.objectStore("app_metadata")
-              const getRequest = store.get(key)
-              getRequest.onerror = () => reject(getRequest.error)
-              getRequest.onsuccess = () => {
-                const result = getRequest.result
-                db.close()
-                resolve(result ? result.value : null)
-              }
-            } catch (error) {
-              reject(error)
-            }
-          }
-        })
-      },
-      getSchemaVersion: async (): Promise<number> => {
-        if (!indexedDBSchemaValid) return 0
+  getAllProfiles: async (): Promise<ProfileRecord[]> => {
+    if (!schemaValid) return []
 
-        return new Promise((resolve, reject) => {
-          const request = indexedDB.open("ai-settings-db", 1)
-          request.onerror = () => reject(request.error)
-          request.onsuccess = () => {
-            try {
-              const db = request.result
-              const transaction = db.transaction(["app_metadata"], "readonly")
-              const store = transaction.objectStore("app_metadata")
-              const getRequest = store.get("schema_version")
-              getRequest.onerror = () => reject(getRequest.error)
-              getRequest.onsuccess = () => {
-                const result = getRequest.result
-                db.close()
-                resolve(result?.value || 0)
-              }
-            } catch (error) {
-              reject(error)
-            }
-          }
-        })
-      },
-      deleteProviderConfig: async (id: string): Promise<void> => {
-        if (!indexedDBSchemaValid) return
+    const result = await withTransaction<ProfileRecord[]>(["profiles"], "readonly", (store) => store.getAll())
+    return result || []
+  },
 
-        return new Promise((resolve, reject) => {
-          const request = indexedDB.open("ai-settings-db", 1)
-          request.onerror = () => reject(request.error)
-          request.onsuccess = () => {
-            try {
-              const db = request.result
-              const transaction = db.transaction(["provider_configs"], "readwrite")
-              const store = transaction.objectStore("provider_configs")
-              const deleteRequest = store.delete(id)
-              deleteRequest.onerror = () => reject(deleteRequest.error)
-              deleteRequest.onsuccess = () => {
-                transaction.oncomplete = () => {
-                  db.close()
-                  resolve()
-                }
-              }
-            } catch (error) {
-              reject(error)
-            }
-          }
-        })
-      },
-      deleteProfile: async (id: string): Promise<void> => {
-        if (!indexedDBSchemaValid) return
+  getProviderConfigsByProfile: async (profileId: string): Promise<ProviderConfig[]> => {
+    if (!schemaValid) return []
 
-        return new Promise((resolve, reject) => {
-          const request = indexedDB.open("ai-settings-db", 1)
-          request.onerror = () => reject(request.error)
-          request.onsuccess = () => {
-            try {
-              const db = request.result
-              const transaction = db.transaction(["profiles"], "readwrite")
-              const store = transaction.objectStore("profiles")
-              const deleteRequest = store.delete(id)
-              deleteRequest.onerror = () => reject(deleteRequest.error)
-              deleteRequest.onsuccess = () => {
-                transaction.oncomplete = () => {
-                  db.close()
-                  resolve()
-                }
-              }
-            } catch (error) {
-              reject(error)
-            }
-          }
-        })
-      },
-      getProfile: async (id: string): Promise<ProfileRecord | null> => {
-        if (!indexedDBSchemaValid) return null
-
-        return new Promise((resolve, reject) => {
-          const request = indexedDB.open("ai-settings-db", 1)
-          request.onerror = () => reject(request.error)
-          request.onsuccess = () => {
-            try {
-              const db = request.result
-              const transaction = db.transaction(["profiles"], "readonly")
-              const store = transaction.objectStore("profiles")
-              const getRequest = store.get(id)
-              getRequest.onerror = () => reject(getRequest.error)
-              getRequest.onsuccess = () => {
-                db.close()
-                resolve(getRequest.result || null)
-              }
-            } catch (error) {
-              reject(error)
-            }
-          }
-        })
-      },
-      getDefaultProfile: async (): Promise<ProfileRecord> => {
-        if (!indexedDBSchemaValid) {
-          throw new Error("IndexedDB schema is invalid")
+    return new Promise((resolve, reject) => {
+      getDB().then(db => {
+        if (!db) {
+          resolve([])
+          return
         }
 
-        return new Promise((resolve, reject) => {
-          const request = indexedDB.open("ai-settings-db", 1)
+        try {
+          const transaction = db.transaction(["provider_configs"], "readonly")
+          const store = transaction.objectStore("provider_configs")
+          const index = store.index("by-profileId")
+          const request = index.getAll(profileId)
+
+          request.onerror = () => reject(request.error)
+          request.onsuccess = () => resolve(request.result || [])
+        } catch (error) {
+          reject(error)
+        }
+      })
+    })
+  },
+
+  getMetadata: async (key: string): Promise<unknown> => {
+    if (!schemaValid) return null
+
+    const result = await withTransaction<{ value: unknown }>(["app_metadata"], "readonly", (store) => store.get(key))
+    return result?.value ?? null
+  },
+
+  getSchemaVersion: async (): Promise<number> => {
+    if (!schemaValid) return 0
+
+    const result = await withTransaction<{ value: number }>(
+      ["app_metadata"],
+      "readonly",
+      (store) => store.get("schema_version")
+    )
+    return result?.value || 0
+  },
+
+  deleteProviderConfig: async (id: string): Promise<void> => {
+    if (!schemaValid) return
+
+    await withTransaction(["provider_configs"], "readwrite", (store) => store.delete(id))
+  },
+
+  deleteProfile: async (id: string): Promise<void> => {
+    if (!schemaValid) return
+
+    await withTransaction(["profiles"], "readwrite", (store) => store.delete(id))
+  },
+
+  getProfile: async (id: string): Promise<ProfileRecord | null> => {
+    if (!schemaValid) return null
+
+    const result = await withTransaction<ProfileRecord>(["profiles"], "readonly", (store) => store.get(id))
+    return result || null
+  },
+
+  getDefaultProfile: async (): Promise<ProfileRecord> => {
+    if (!schemaValid) {
+      throw new Error("IndexedDB schema is invalid")
+    }
+
+    return new Promise((resolve, reject) => {
+      getDB().then(db => {
+        if (!db) {
+          reject(new Error("IndexedDB not available"))
+          return
+        }
+
+        try {
+          const transaction = db.transaction(["profiles"], "readonly")
+          const store = transaction.objectStore("profiles")
+          const index = store.index("by-isDefault")
+          const request = index.get(IDBKeyRange.only(true))
+
           request.onerror = () => reject(request.error)
           request.onsuccess = () => {
-            try {
-              const db = request.result
-              const transaction = db.transaction(["profiles"], "readonly")
-              const store = transaction.objectStore("profiles")
-              const index = store.index("by-isDefault")
-              const getRequest = index.get(IDBKeyRange.only(true))
-              getRequest.onerror = () => reject(getRequest.error)
-              getRequest.onsuccess = () => {
-                const result = getRequest.result
-                db.close()
-                if (result) {
-                  resolve(result)
-                } else {
-                  reject(new Error("No default profile found"))
-                }
-              }
-            } catch (error) {
-              reject(error)
+            const result = request.result
+            if (result) {
+              resolve(result)
+            } else {
+              reject(new Error("No default profile found"))
             }
           }
-        })
-      }
-    }
+        } catch (error) {
+          reject(error)
+        }
+      })
+    })
   }
-} catch {
-  console.warn("IndexedDB not available for migration")
 }
 
 export class LocalStorageMigration {
@@ -314,12 +264,11 @@ export class LocalStorageMigration {
         return false
       }
 
-      // Wait for schema validation to complete
-      const schemaValid = await hasValidIndexedDBSchema()
-      indexedDBSchemaValid = schemaValid
+      // Validate schema before checking
+      const isSchemaValid = await hasValidIndexedDBSchema()
 
       // Check if IndexedDB is available and has data to migrate
-      if (!ProviderDB || !schemaValid) {
+      if (!isSchemaValid) {
         // No valid IndexedDB to migrate from, mark as migrated
         await this.localStorageProvider.setSchemaVersion(2)
         return false
@@ -358,10 +307,9 @@ export class LocalStorageMigration {
     }
 
     // Verify schema is valid before attempting migration
-    const schemaValid = await hasValidIndexedDBSchema()
-    indexedDBSchemaValid = schemaValid
+    const isSchemaValid = await hasValidIndexedDBSchema()
 
-    if (!ProviderDB || !schemaValid) {
+    if (!isSchemaValid) {
       return {
         success: false,
         message: "IndexedDB is not available or has invalid schema",
@@ -383,29 +331,31 @@ export class LocalStorageMigration {
         migratedItems++
       }
 
-      // Migrate provider configs
-      const allProfiles = await ProviderDB.getAllProfiles()
-      let providerConfigsMigrated = 0
+      // Migrate provider configs - fetch all configs in parallel to avoid N+1
+      const allConfigsPromises = profiles.map(profile =>
+        ProviderDB.getProviderConfigsByProfile(profile.id).then(configs =>
+          configs.map(config => ({ config, profileName: profile.name }))
+        )
+      )
 
-      for (const profile of allProfiles) {
-        const configs = await ProviderDB.getProviderConfigsByProfile(profile.id)
-        console.log(`Migrating ${configs.length} provider configs for profile ${profile.name}`)
+      const allConfigsNested = await Promise.all(allConfigsPromises)
+      const allConfigs = allConfigsNested.flat()
 
-        for (const config of configs) {
-          await this.localStorageProvider.saveProviderConfig({
-            profileId: config.profileId,
-            providerId: config.providerId,
-            providerType: config.providerType as "builtin" | "custom",
-            apiKey: config.apiKey, // API keys are already encrypted
-            model: config.model,
-            baseUrl: config.baseUrl,
-            enabled: config.enabled,
-            customName: config.customName,
-            customModels: config.customModels,
-          })
-          migratedItems++
-          providerConfigsMigrated++
-        }
+      console.log(`Found ${allConfigs.length} total provider configs to migrate`)
+
+      for (const { config, profileName } of allConfigs) {
+        await this.localStorageProvider.saveProviderConfig({
+          profileId: config.profileId,
+          providerId: config.providerId,
+          providerType: config.providerType as "builtin" | "custom",
+          apiKey: config.apiKey, // API keys are already encrypted
+          model: config.model,
+          baseUrl: config.baseUrl,
+          enabled: config.enabled,
+          customName: config.customName,
+          customModels: config.customModels,
+        })
+        migratedItems++
       }
 
       // Migrate metadata
@@ -430,7 +380,7 @@ export class LocalStorageMigration {
 
       return {
         success: true,
-        message: `Successfully migrated ${profiles.length} profiles and ${providerConfigsMigrated} provider configurations`,
+        message: `Successfully migrated ${profiles.length} profiles and ${allConfigs.length} provider configurations`,
         migratedItems,
       }
     } catch (error) {
@@ -448,10 +398,9 @@ export class LocalStorageMigration {
    */
   async clearIndexedDB(): Promise<void> {
     // Verify schema before attempting cleanup
-    const schemaValid = await hasValidIndexedDBSchema()
-    indexedDBSchemaValid = schemaValid
+    const isSchemaValid = await hasValidIndexedDBSchema()
 
-    if (!ProviderDB || !schemaValid) {
+    if (!isSchemaValid) {
       console.warn("IndexedDB not available or has invalid schema, skipping cleanup")
       return
     }
@@ -459,27 +408,30 @@ export class LocalStorageMigration {
     try {
       console.log("Clearing IndexedDB after migration...")
 
-      // Get all profiles to delete
+      // Get all profiles and configs
       const profiles = await ProviderDB.getAllProfiles()
 
-      // Delete all provider configs first
-      for (const profile of profiles) {
-        const configs = await ProviderDB.getProviderConfigsByProfile(profile.id)
-        for (const config of configs) {
-          await ProviderDB.deleteProviderConfig(config.id)
-        }
-      }
+      // Collect all provider configs to delete
+      const configsPromises = profiles.map(profile =>
+        ProviderDB.getProviderConfigsByProfile(profile.id)
+      )
+      const allConfigsNested = await Promise.all(configsPromises)
+      const allConfigIds = allConfigsNested.flat().map(config => config.id)
+
+      // Delete all provider configs in parallel
+      await Promise.all(allConfigIds.map(id => ProviderDB.deleteProviderConfig(id)))
 
       // Delete all profiles (except default if it exists)
-      for (const profile of profiles) {
-        if (!profile.isDefault) {
-          try {
-            await ProviderDB.deleteProfile(profile.id)
-          } catch (error) {
+      await Promise.all(
+        profiles
+          .filter(profile => !profile.isDefault)
+          .map(profile => ProviderDB.deleteProfile(profile.id).catch(error => {
             console.warn(`Could not delete profile ${profile.id}:`, error)
-          }
-        }
-      }
+          }))
+      )
+
+      // Close the database connection after cleanup
+      closeDB()
 
       console.log("IndexedDB cleanup completed")
     } catch (error) {
@@ -524,42 +476,43 @@ export class LocalStorageMigration {
   }> {
     const localStorageAvailable = this.localStorageProvider.isAvailable()
 
-    // Verify schema before checking IndexedDB availability
-    const schemaValid = await hasValidIndexedDBSchema()
-    indexedDBSchemaValid = schemaValid
+    // Validate schema once
+    const isSchemaValid = await hasValidIndexedDBSchema()
 
-    const indexedDBAvailable = ProviderDB && schemaValid ? ProviderDB.isAvailable() : false
+    const indexedDBAvailable = isSchemaValid ? ProviderDB.isAvailable() : false
     const needsMigration = await this.isMigrationNeeded()
 
+    // Count localStorage items
     let localStorageItems = 0
-    let indexedDBItems = 0
-
     if (localStorageAvailable) {
       try {
         const profiles = await this.localStorageProvider.getAllProfiles()
         localStorageItems += profiles.length
 
-        for (const profile of profiles) {
-          const configs = await this.localStorageProvider.getProviderConfigsByProfile(profile.id)
-          localStorageItems += configs.length
-        }
+        const configPromises = profiles.map(profile =>
+          this.localStorageProvider.getProviderConfigsByProfile(profile.id)
+        )
+        const allConfigs = await Promise.all(configPromises)
+        localStorageItems += allConfigs.flat().length
       } catch (error) {
         console.warn("Error counting localStorage items:", error)
       }
     }
 
-    if (indexedDBAvailable && ProviderDB && schemaValid) {
+    // Count IndexedDB items
+    let indexedDBItems = 0
+    if (indexedDBAvailable) {
       try {
         const profiles = await ProviderDB.getAllProfiles()
         indexedDBItems += profiles.length
 
-        for (const profile of profiles) {
-          const configs = await ProviderDB.getProviderConfigsByProfile(profile.id)
-          indexedDBItems += configs.length
-        }
+        const configPromises = profiles.map(profile =>
+          ProviderDB.getProviderConfigsByProfile(profile.id)
+        )
+        const allConfigs = await Promise.all(configPromises)
+        indexedDBItems += allConfigs.flat().length
       } catch (error) {
         console.warn("Error counting IndexedDB items:", error)
-        // If error occurs, assume no items to migrate
         indexedDBItems = 0
       }
     }
@@ -578,23 +531,29 @@ export class LocalStorageMigration {
    */
   async exportIndexedDBData(): Promise<string> {
     // Verify schema before attempting export
-    const schemaValid = await hasValidIndexedDBSchema()
-    indexedDBSchemaValid = schemaValid
+    const isSchemaValid = await hasValidIndexedDBSchema()
 
-    if (!ProviderDB || !schemaValid) {
+    if (!isSchemaValid) {
       throw new Error("IndexedDB is not available or has invalid schema")
     }
 
     try {
       const profiles = await ProviderDB.getAllProfiles()
-      const providerConfigs: Record<string, ProviderConfig> = {}
 
-      for (const profile of profiles) {
-        const configs = await ProviderDB.getProviderConfigsByProfile(profile.id)
-        configs.forEach((config: ProviderConfig) => {
-          const key = `${profile.id}:${config.providerId}`
-          providerConfigs[key] = config
-        })
+      // Fetch all configs in parallel
+      const configsPromises = profiles.map(profile =>
+        ProviderDB.getProviderConfigsByProfile(profile.id).then(configs =>
+          configs.map(config => ({ profileId: profile.id, config }))
+        )
+      )
+
+      const allConfigsNested = await Promise.all(configsPromises)
+      const allConfigs = allConfigsNested.flat()
+
+      const providerConfigs: Record<string, ProviderConfig> = {}
+      for (const { profileId, config } of allConfigs) {
+        const key = `${profileId}:${config.providerId}`
+        providerConfigs[key] = config
       }
 
       const metadata: Record<string, unknown> = {}
