@@ -23,7 +23,7 @@ import {
 import { ApiKeyInput } from "./api-key-input"
 import { useAISettings, type ExtendedProviderId } from "@/contexts/ai-settings-context"
 import { testConnection, type TestResult } from "@/lib/ai/test-connection"
-import { fetchModels, type FetchModelsResult } from "@/lib/ai/fetch-models"
+import { fetchModels, fetchCLIProxyAPIModels, type FetchModelsResult } from "@/lib/ai/fetch-models"
 import { PROVIDERS, type ProviderId } from "@/lib/ai/providers"
 
 interface ProviderCardProps {
@@ -41,7 +41,7 @@ export function ProviderCard({ providerId }: ProviderCardProps) {
   const [fetchModelsResult, setFetchModelsResult] = useState<FetchModelsResult | null>(null)
 
   // Determine if this is a built-in or custom provider
-  const isBuiltIn = Object.values<ProviderId>(["openai", "anthropic", "google", "anthropic-custom", "cerebras"]).includes(providerId as ProviderId)
+  const isBuiltIn = Object.values<ProviderId>(["openai", "anthropic", "google", "anthropic-custom", "cerebras", "cliproxyapi"]).includes(providerId as ProviderId)
   const provider = isBuiltIn ? PROVIDERS[providerId as ProviderId] : null
 
   const isEnabled = config?.enabled || false
@@ -52,11 +52,22 @@ export function ProviderCard({ providerId }: ProviderCardProps) {
 
     // Get decrypted API key
     const decryptedKey = await getDecryptedApiKey(providerId)
+
+    // Validate base URL for providers that require it
+    if (provider?.supportsCustomEndpoint && !config!.baseUrl && !provider?.fixedBaseUrl) {
+      setTestResult({
+        success: false,
+        message: "Base URL is required"
+      })
+      setIsTesting(false)
+      return
+    }
+
     const testConfig = {
       id: providerId as ProviderId,
       apiKey: decryptedKey,
       model: config!.model,
-      baseUrl: config!.baseUrl,
+      baseUrl: config!.baseUrl || provider?.fixedBaseUrl || "",
       enabled: config!.enabled
     }
 
@@ -84,7 +95,20 @@ export function ProviderCard({ providerId }: ProviderCardProps) {
     const decryptedKey = await getDecryptedApiKey(providerId)
     const baseUrl = config!.baseUrl || provider?.fixedBaseUrl
 
-    const result = await fetchModels(baseUrl!, decryptedKey)
+    if (!baseUrl) {
+      setFetchModelsResult({
+        success: false,
+        models: [],
+        message: "Base URL is required to fetch models"
+      })
+      setIsFetchingModels(false)
+      return
+    }
+
+    // Use provider-specific fetch function for CLIProxyAPI
+    const result = providerId === "cliproxyapi"
+      ? await fetchCLIProxyAPIModels(baseUrl, decryptedKey)
+      : await fetchModels(baseUrl, decryptedKey)
     setFetchModelsResult(result)
 
     if (result.success) {

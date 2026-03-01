@@ -37,7 +37,7 @@ import {
 import { ApiKeyInput } from "./api-key-input"
 import { useAISettings, type ExtendedProviderId } from "@/contexts/ai-settings-context"
 import { testConnection, type TestResult } from "@/lib/ai/test-connection"
-import { fetchModels, type FetchModelsResult } from "@/lib/ai/fetch-models"
+import { fetchModels, fetchCLIProxyAPIModels, type FetchModelsResult } from "@/lib/ai/fetch-models"
 import { PROVIDERS, type ProviderId } from "@/lib/ai/providers"
 
 interface ProviderListViewProps {
@@ -71,19 +71,33 @@ export function ProviderListView({ providerIds }: ProviderListViewProps) {
 
     try {
       const decryptedKey = await getDecryptedApiKey(providerId)
+      const isBuiltIn = Object.values<ProviderId>(["openai", "anthropic", "google", "anthropic-custom", "cerebras", "cliproxyapi"]).includes(providerId as ProviderId)
+      const provider = isBuiltIn ? PROVIDERS[providerId as ProviderId] : null
+
+      // Validate base URL for providers that require it
+      if (provider?.supportsCustomEndpoint && !config.baseUrl && !provider?.fixedBaseUrl) {
+        setTestResults(prev => ({
+          ...prev,
+          [providerId]: {
+            success: false,
+            message: "Base URL is required",
+            latencyMs: 0
+          }
+        }))
+        setTestingStates(prev => ({ ...prev, [providerId]: false }))
+        return
+      }
+
       const testConfig = {
         id: providerId as ProviderId,
         apiKey: decryptedKey,
         model: config.model,
-        baseUrl: config.baseUrl,
+        baseUrl: config.baseUrl || provider?.fixedBaseUrl || "",
         enabled: config.enabled
       }
 
       const result = await testConnection(providerId as ProviderId, testConfig)
       setTestResults(prev => ({ ...prev, [providerId]: result }))
-
-      const isBuiltIn = Object.values<ProviderId>(["openai", "anthropic", "google", "anthropic-custom", "cerebras"]).includes(providerId as ProviderId)
-      const provider = isBuiltIn ? PROVIDERS[providerId as ProviderId] : null
 
       if (result.success) {
         toast.success(`${provider?.name || 'Custom Provider'} connected`, {
@@ -118,11 +132,27 @@ export function ProviderListView({ providerIds }: ProviderListViewProps) {
 
     try {
       const decryptedKey = await getDecryptedApiKey(providerId)
-      const isBuiltIn = Object.values<ProviderId>(["openai", "anthropic", "google", "anthropic-custom", "cerebras"]).includes(providerId as ProviderId)
+      const isBuiltIn = Object.values<ProviderId>(["openai", "anthropic", "google", "anthropic-custom", "cerebras", "cliproxyapi"]).includes(providerId as ProviderId)
       const provider = isBuiltIn ? PROVIDERS[providerId as ProviderId] : null
       const baseUrl = config.baseUrl || provider?.fixedBaseUrl
 
-      const result = await fetchModels(baseUrl!, decryptedKey)
+      if (!baseUrl) {
+        setFetchModelsResults(prev => ({
+          ...prev,
+          [providerId]: {
+            success: false,
+            models: [],
+            message: "Base URL is required to fetch models"
+          }
+        }))
+        setFetchingStates(prev => ({ ...prev, [providerId]: false }))
+        return
+      }
+
+      // Use provider-specific fetch function for CLIProxyAPI
+      const result = providerId === "cliproxyapi"
+        ? await fetchCLIProxyAPIModels(baseUrl, decryptedKey)
+        : await fetchModels(baseUrl, decryptedKey)
       setFetchModelsResults(prev => ({ ...prev, [providerId]: result }))
       setFetchedModels(prev => ({ ...prev, [providerId]: result.models }))
 
@@ -165,7 +195,7 @@ export function ProviderListView({ providerIds }: ProviderListViewProps) {
   }
 
   const getProviderInfo = (providerId: ExtendedProviderId) => {
-    const isBuiltIn = Object.values<ProviderId>(["openai", "anthropic", "google", "anthropic-custom", "cerebras"]).includes(providerId as ProviderId)
+    const isBuiltIn = Object.values<ProviderId>(["openai", "anthropic", "google", "anthropic-custom", "cerebras", "cliproxyapi"]).includes(providerId as ProviderId)
     const provider = isBuiltIn ? PROVIDERS[providerId as ProviderId] : null
     const config = settings.providers[providerId]
 

@@ -29,9 +29,18 @@ export async function encrypt(plaintext: string): Promise<EncryptedData> {
     encodedData
   )
 
+  // Convert bytes to base64 using a helper to avoid spread operator issues with large arrays
+  const bytesToBase64 = (bytes: Uint8Array): string => {
+    let binary = ''
+    for (let i = 0; i < bytes.length; i++) {
+      binary += String.fromCharCode(bytes[i])
+    }
+    return btoa(binary)
+  }
+
   return {
-    iv: btoa(String.fromCharCode(...iv)),
-    data: btoa(String.fromCharCode(...new Uint8Array(encryptedBuffer)))
+    iv: bytesToBase64(iv),
+    data: bytesToBase64(new Uint8Array(encryptedBuffer))
   }
 }
 

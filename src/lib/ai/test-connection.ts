@@ -63,6 +63,18 @@ export async function testConnection(
         model = cerebras(config.model)
         break
       }
+      case "cliproxyapi": {
+        if (!config.baseUrl) {
+          return { success: false, message: "Base URL is required for CLIProxyAPI" }
+        }
+        const cliproxy = createOpenAICompatible({
+          name: "cliproxyapi",
+          baseURL: config.baseUrl,
+          apiKey: config.apiKey
+        })
+        model = cliproxy(config.model)
+        break
+      }
       default:
         return { success: false, message: "Unknown provider" }
     }

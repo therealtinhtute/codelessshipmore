@@ -57,6 +57,7 @@ export function ProfileConfiguration({ profileId, onBack }: ProfileConfiguration
   const [customProviderModels, setCustomProviderModels] = useState("")
   const [isAddProviderDialogOpen, setIsAddProviderDialogOpen] = useState(false)
   const [selectedProviderId, setSelectedProviderId] = useState<ProviderId | "">("")
+  const [customDefaultModel, setCustomDefaultModel] = useState("")
 
   // Check if this is the current profile
   const isCurrentProfile = currentProfile?.id === profileId
@@ -86,12 +87,15 @@ export function ProfileConfiguration({ profileId, onBack }: ProfileConfiguration
     }
 
     try {
-      await addProvider(selectedProviderId)
+      // Pass custom default model if provided, otherwise uses provider's default
+      const modelToUse = customDefaultModel.trim() || undefined
+      await addProvider(selectedProviderId, modelToUse)
       toast.success("Provider added", {
         description: `${PROVIDERS[selectedProviderId].name} has been added to this profile`
       })
       setIsAddProviderDialogOpen(false)
       setSelectedProviderId("")
+      setCustomDefaultModel("")
     } catch (error) {
       toast.error("Failed to add provider", {
         description: error instanceof Error ? error.message : "Unknown error"
@@ -320,7 +324,13 @@ export function ProfileConfiguration({ profileId, onBack }: ProfileConfiguration
                 <div className="space-y-4 py-4">
                   <div className="space-y-2">
                     <Label htmlFor="provider-select">Select Provider *</Label>
-                    <Select value={selectedProviderId} onValueChange={(value: ProviderId) => setSelectedProviderId(value)}>
+                    <Select value={selectedProviderId} onValueChange={(value: ProviderId) => {
+                      setSelectedProviderId(value)
+                      // Pre-fill with provider's default model when selection changes
+                      if (value) {
+                        setCustomDefaultModel(PROVIDERS[value].defaultModel)
+                      }
+                    }}>
                       <SelectTrigger id="provider-select">
                         <SelectValue placeholder="Choose a provider to add" />
                       </SelectTrigger>
@@ -333,6 +343,20 @@ export function ProfileConfiguration({ profileId, onBack }: ProfileConfiguration
                       </SelectContent>
                     </Select>
                   </div>
+                  {selectedProviderId && (
+                    <div className="space-y-2">
+                      <Label htmlFor="default-model">Default Model</Label>
+                      <Input
+                        id="default-model"
+                        value={customDefaultModel}
+                        onChange={(e) => setCustomDefaultModel(e.target.value)}
+                        placeholder={PROVIDERS[selectedProviderId as ProviderId].defaultModel}
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Default: {PROVIDERS[selectedProviderId as ProviderId].defaultModel}. You can customize this or leave as is.
+                      </p>
+                    </div>
+                  )}
                 </div>
                 <DialogFooter>
                   <Button variant="outline" onClick={() => setIsAddProviderDialogOpen(false)}>

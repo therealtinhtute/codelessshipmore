@@ -1,4 +1,4 @@
-export type ProviderId = "openai" | "anthropic" | "google" | "anthropic-custom" | "cerebras"
+export type ProviderId = "openai" | "anthropic" | "google" | "anthropic-custom" | "cerebras" | "cliproxyapi"
 
 export interface ProviderDefinition {
   id: ProviderId
@@ -83,6 +83,22 @@ export const PROVIDERS: Record<ProviderId, ProviderDefinition> = {
     fixedBaseUrl: "https://api.cerebras.ai/v1",
     defaultModel: "llama-3.3-70b",
     placeholder: "csk-..."
+  },
+  cliproxyapi: {
+    id: "cliproxyapi",
+    name: "CLIProxyAPI",
+    description: "Multi-provider proxy for Gemini, Claude, Codex, Qwen via CLI tools",
+    models: [
+      "gemini/gemini-2.5-pro",
+      "gemini/gemini-2.5-flash",
+      "openai/gpt-5",
+      "openai/gpt-4o",
+      "anthropic/claude-sonnet-4",
+      "qwen/qwen-3-235b"
+    ],
+    supportsCustomEndpoint: true,
+    defaultModel: "gemini/gemini-2.5-pro",
+    placeholder: "CLIProxyAPI token or leave empty for OAuth"
   }
 }
 
@@ -133,6 +149,13 @@ export const DEFAULT_SETTINGS: AISettings = {
       id: "cerebras",
       apiKey: "",
       model: PROVIDERS.cerebras.defaultModel,
+      enabled: false
+    },
+    cliproxyapi: {
+      id: "cliproxyapi",
+      apiKey: "",
+      baseUrl: "",
+      model: PROVIDERS.cliproxyapi.defaultModel,
       enabled: false
     }
   },

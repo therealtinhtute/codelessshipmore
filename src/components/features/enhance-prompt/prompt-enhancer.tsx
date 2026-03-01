@@ -71,7 +71,8 @@ export default function PromptEnhancer({ className }: PromptEnhancerProps) {
       anthropic: "Anthropic (Claude)",
       google: "Google (Gemini)",
       "anthropic-custom": "Anthropic Custom",
-      cerebras: "Cerebras"
+      cerebras: "Cerebras",
+      cliproxyapi: "CLIProxyAPI"
     }
     return names[id] || id
   }

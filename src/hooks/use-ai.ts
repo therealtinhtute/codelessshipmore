@@ -55,7 +55,7 @@ export function useAI(options: UseAIOptions = {}) {
       }
 
       // Handle custom providers
-      const isBuiltIn = Object.values<ProviderId>(["openai", "anthropic", "google", "anthropic-custom", "cerebras"]).includes(providerId as ProviderId)
+      const isBuiltIn = Object.values<ProviderId>(["openai", "anthropic", "google", "anthropic-custom", "cerebras", "cliproxyapi"]).includes(providerId as ProviderId)
 
       if (!isBuiltIn) {
         // Custom provider - use OpenAI compatible
@@ -105,6 +105,17 @@ export function useAI(options: UseAIOptions = {}) {
             apiKey
           })
           return cerebras(config.model)
+        }
+        case "cliproxyapi": {
+          if (!config.baseUrl) {
+            throw new Error("Base URL required for CLIProxyAPI provider")
+          }
+          const cliproxy = createOpenAICompatible({
+            name: "cliproxyapi",
+            baseURL: config.baseUrl,
+            apiKey
+          })
+          return cliproxy(config.model)
         }
         default:
           throw new Error("Unknown provider")

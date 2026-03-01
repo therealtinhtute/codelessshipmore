@@ -59,7 +59,7 @@ interface AISettingsContextType {
   // Provider management (scoped to current profile)
   settings: ProfileProviderSettings;
   isLoading: boolean;
-  addProvider: (providerId: ProviderId) => Promise<void>;
+  addProvider: (providerId: ProviderId, defaultModel?: string) => Promise<void>;
   updateProvider: (id: ExtendedProviderId, config: Partial<ProviderConfig>) => Promise<void>;
   toggleProvider: (id: ExtendedProviderId) => Promise<void>;
   deleteProvider: (id: ExtendedProviderId) => Promise<void>;
@@ -417,7 +417,7 @@ export function AISettingsProvider({ children }: { children: ReactNode }) {
 
   // Provider management methods
   const addProvider = useCallback(
-    async (providerId: ProviderId) => {
+    async (providerId: ProviderId, defaultModel?: string) => {
       if (!currentProfile) throw new Error("No current profile");
 
       try {
@@ -432,11 +432,11 @@ export function AISettingsProvider({ children }: { children: ReactNode }) {
           throw new Error(`Unknown provider: ${providerId}`);
         }
 
-        // Create provider config
+        // Create provider config with customizable default model
         const providerConfig: ProviderConfig & { providerType: "builtin" | "custom"; customName?: string; customModels?: string[] } = {
           id: providerId,
           apiKey: "",
-          model: providerDef.defaultModel,
+          model: defaultModel || providerDef.defaultModel,
           baseUrl: providerDef.fixedBaseUrl || "",
           enabled: false,
           providerType: "builtin"
