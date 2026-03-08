@@ -13,6 +13,7 @@ import {
   IconSettings,
   IconLogin,
   IconLogout,
+  IconKey,
 } from "@tabler/icons-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import {
@@ -46,6 +47,7 @@ const navigation = [
     icon: IconAdjustments,
   },
   { name: "Record to Protobuf", href: "/record-protobuf", icon: IconFileCode },
+  { name: "TOTP Generator", href: "/totp-generator", icon: IconKey },
 ];
 
 const protectedNavigation = [

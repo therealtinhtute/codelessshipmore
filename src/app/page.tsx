@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { IconBraces, IconDatabase, IconFileCode, IconAdjustments, IconArrowRight } from "@tabler/icons-react"
+import { IconBraces, IconDatabase, IconFileCode, IconAdjustments, IconArrowRight, IconKey } from "@tabler/icons-react"
 
 const features = [
   {
@@ -31,6 +31,13 @@ const features = [
     href: "/record-protobuf",
     icon: IconFileCode,
     color: "text-orange-600"
+  },
+  {
+    title: "TOTP Generator",
+    description: "Generate the current 6-digit 2FA code from a raw Base32 secret",
+    href: "/totp-generator",
+    icon: IconKey,
+    color: "text-amber-600"
   }
 ]
 
@@ -42,7 +49,7 @@ export default function HomePage() {
           CodelessShipMore
         </h1>
         <p className="text-base text-muted-foreground mb-8">
-          A collection of developer utilities for JSON, SQL, Protobuf, and Properties conversion
+          A collection of developer utilities for JSON, SQL, Protobuf, Properties conversion, and TOTP generation
         </p>
         <div className="flex items-center justify-center gap-4">
           <Button asChild>
