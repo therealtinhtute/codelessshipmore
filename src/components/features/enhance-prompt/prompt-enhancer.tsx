@@ -1,96 +1,77 @@
 "use client"
 
-import { useState, useMemo } from "react"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useClipboard } from "@/hooks/use-clipboard"
-import { useAI } from "@/hooks/use-ai"
-import { useAISettings, type ExtendedProviderId } from "@/contexts/ai-settings-context"
+import { useState } from "react"
+import { IconCheck, IconCopy, IconSettings, IconSparkles } from "@tabler/icons-react"
 import { toast } from "sonner"
-import { IconCopy, IconCheck, IconSparkles, IconSettings } from "@tabler/icons-react"
+
+import { useAISettings, type ExtendedProviderId } from "@/contexts/ai-settings-context"
+import { useAI } from "@/hooks/use-ai"
+import { useClipboard } from "@/hooks/use-clipboard"
 import type { ProviderId } from "@/lib/ai/providers"
+import { getPromptOutputFormats, getProviderDisplayName } from "@/lib/tool-ui-config"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
+import { Toggle } from "@/components/ui/toggle"
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 
 interface PromptEnhancerProps {
   className?: string
 }
 
+const targets = [
+  "Creative Writing",
+  "Coding",
+  "Analysis",
+  "Research",
+  "General Tasks",
+  "Business",
+  "Education",
+]
+
+const availablePrinciples = [
+  "Think step-by-step",
+  "Use examples",
+  "Be specific",
+  "Chain of thought",
+  "Role-play expert",
+]
+
+const tones = ["Professional", "Casual", "Technical", "Friendly"]
+
 export default function PromptEnhancer({ className }: PromptEnhancerProps) {
   const [originalPrompt, setOriginalPrompt] = useState("")
   const [target, setTarget] = useState("General Tasks")
   const [providerId, setProviderId] = useState<ProviderId | undefined>(undefined)
-  const [model, setModel] = useState<string>("")
   const [outputFormat, setOutputFormat] = useState("Step-by-step")
   const [principles, setPrinciples] = useState<string[]>([])
   const [tone, setTone] = useState("Professional")
   const [enhancedPrompt, setEnhancedPrompt] = useState("")
   const [showExplanation, setShowExplanation] = useState(false)
   const { copy, isCopying } = useClipboard()
-  const { generate, isLoading, error } = useAI({ providerId })
   const { settings } = useAISettings()
+  const { generate, isLoading, error } = useAI({ providerId })
 
-  const targets = [
-    "Creative Writing",
-    "Coding",
-    "Analysis",
-    "Research",
-    "General Tasks",
-    "Business",
-    "Education"
-  ]
+  const activeProviderId = providerId ?? settings.enabledProviders[0]
+  const activeProviderConfig = activeProviderId ? settings.providers[activeProviderId] : undefined
+  const outputFormats = getPromptOutputFormats(target)
 
-  // Dynamic output formats based on target use case
-  const outputFormatsByTarget: Record<string, string[]> = useMemo(() => ({
-    "Creative Writing": ["Narrative", "Descriptive", "Dialogue-focused", "Scene-by-scene", "Character-driven"],
-    "Coding": ["Step-by-step", "Code-first", "Explained", "With comments", "Documented"],
-    "Analysis": ["Structured", "Comparative", "Critical", "Data-driven", "Executive summary"],
-    "Research": ["Academic", "Annotated", "Systematic review", "Literature review", "Detailed findings"],
-    "General Tasks": ["Step-by-step", "Concise", "Detailed", "Structured", "Conversational"],
-    "Business": ["Executive summary", "Action-oriented", "Strategic", "Presentation-ready", "ROI-focused"],
-    "Education": ["Tutorial-style", "ELI5", "Progressive difficulty", "With exercises", "Interactive"]
-  }), [])
+  const handleTargetChange = (nextTarget: string) => {
+    setTarget(nextTarget)
 
-  const outputFormats = outputFormatsByTarget[target] || outputFormatsByTarget["General Tasks"]
-
-  const availablePrinciples = [
-    "Think step-by-step",
-    "Use examples",
-    "Be specific",
-    "Chain of thought",
-    "Role-play expert"
-  ]
-  const tones = ["Professional", "Casual", "Technical", "Friendly"]
-
-  // Get provider name for display
-  const getProviderName = (id: ProviderId) => {
-    const names: Record<ProviderId, string> = {
-      openai: "OpenAI",
-      anthropic: "Anthropic (Claude)",
-      google: "Google (Gemini)",
-      "anthropic-custom": "Anthropic Custom",
-      cerebras: "Cerebras",
-      cliproxyapi: "CLIProxyAPI"
+    const nextOutputFormats = getPromptOutputFormats(nextTarget)
+    if (!nextOutputFormats.includes(outputFormat)) {
+      setOutputFormat(nextOutputFormats[0])
     }
-    return names[id] || id
-  }
-
-  const handleTargetChange = (newTarget: string) => {
-    setTarget(newTarget)
-    const formats = outputFormatsByTarget[newTarget]
-    if (formats && !formats.includes(outputFormat)) {
-      setOutputFormat(formats[0])
-    }
-  }
-
-  const togglePrinciple = (principle: string) => {
-    setPrinciples(prev =>
-      prev.includes(principle)
-        ? prev.filter(p => p !== principle)
-        : [...prev, principle]
-    )
   }
 
   const enhancePrompt = async () => {
@@ -101,11 +82,14 @@ export default function PromptEnhancer({ className }: PromptEnhancerProps) {
     }
 
     try {
-      // Build the enhancement instruction
+      const providerName = activeProviderId
+        ? getProviderDisplayName(activeProviderId)
+        : "Default AI Model"
+
       const systemPrompt = `You are an expert prompt engineer. Your task is to enhance prompts for AI models to get better results.
 
 Target Use Case: ${target}
-Target AI Model: ${providerId ? getProviderName(providerId) : "Default AI Model"}
+Target AI Model: ${providerName}
 Desired Output Format: ${outputFormat}
 Tone: ${tone}
 ${principles.length > 0 ? `Enhancement Principles: ${principles.join(", ")}` : ""}
@@ -115,292 +99,227 @@ Enhance the user's prompt by:
 2. Incorporating the desired output format (${outputFormat})
 3. Applying the selected tone (${tone})
 4. Including any selected enhancement principles
-5. Optimizing for the ${providerId ? getProviderName(providerId) : "selected AI model"}
+5. Optimizing for the ${providerName}
 6. Making the instructions clear, specific, and actionable
 
 IMPORTANT: Keep the core intent of the original prompt intact. Only enhance and clarify, don't change what the user is asking for.
 
 Return ONLY the enhanced prompt, nothing else.`
 
-      const fullPrompt = `Original prompt to enhance:\n\n${originalPrompt.trim()}`
-
       const enhanced = await generate({
-        prompt: `${systemPrompt}\n\n${fullPrompt}`,
-        temperature: 0.3
+        prompt: `${systemPrompt}\n\nOriginal prompt to enhance:\n\n${originalPrompt.trim()}`,
+        temperature: 0.3,
       })
 
       setEnhancedPrompt(enhanced)
       toast.success("Prompt enhanced successfully!")
-    } catch (err) {
-      console.error("Enhancement error:", err)
+    } catch {
       toast.error(error || "Failed to enhance prompt. Please try again.")
     }
   }
 
-  const handleCopyPrompt = () => {
-    if (enhancedPrompt) {
-      copy(enhancedPrompt, "Enhanced prompt copied to clipboard!")
-    }
-  }
-
   return (
-    <div className={`grid md:grid-cols-2 gap-6 h-full ${className || ""}`}>
-      {/* Input Section */}
-      <Card className="h-full flex flex-col">
+    <div className={cn("grid h-full gap-6 md:grid-cols-2", className)}>
+      <Card className="flex h-full flex-col">
         <CardHeader>
           <CardTitle>Input</CardTitle>
+          <CardDescription>Refine the prompt intent, tone, and output structure before sending it to your selected provider.</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4 flex-1 flex flex-col">
-          <div>
-            <Label htmlFor="original-prompt" className="font-semibold mb-2 block">Your Prompt</Label>
-            <Textarea
-              id="original-prompt"
-              value={originalPrompt}
-              onChange={(e) => setOriginalPrompt(e.target.value)}
-              placeholder="Enter your prompt here..."
-              className="min-h-[160px] resize-none"
-            />
-          </div>
+        <CardContent className="flex flex-1 flex-col gap-4">
+          <FieldGroup className="flex-1 gap-4">
+            <Field>
+              <FieldLabel htmlFor="original-prompt">Your Prompt</FieldLabel>
+              <Textarea
+                id="original-prompt"
+                value={originalPrompt}
+                onChange={(event) => setOriginalPrompt(event.target.value)}
+                placeholder="Enter your prompt here..."
+                className="min-h-[160px] resize-none"
+              />
+            </Field>
 
-          <div>
-            <Label>Target Use Case</Label>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {targets.map(t => (
-                <Badge
-                  key={t}
-                  variant={target === t ? "default" : "outline"}
-                  className={`cursor-pointer transition-all duration-200 ${
-                    target === t
-                      ? "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white border-transparent shadow-lg"
-                      : "bg-gradient-to-r from-blue-50 to-blue-100 border-blue-300 text-blue-800 hover:from-blue-100 hover:to-blue-200"
-                  }`}
-                  onClick={() => handleTargetChange(t)}
-                >
-                  {t}
-                </Badge>
-              ))}
-            </div>
-          </div>
+            <Field>
+              <FieldLabel>Target Use Case</FieldLabel>
+              <ToggleGroup
+                type="single"
+                value={target}
+                onValueChange={(value) => value && handleTargetChange(value)}
+                variant="outline"
+                className="flex-wrap"
+              >
+                {targets.map((option) => (
+                  <ToggleGroupItem key={option} value={option} aria-label={option}>
+                    {option}
+                  </ToggleGroupItem>
+                ))}
+              </ToggleGroup>
+            </Field>
 
-          <div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="ai-provider">AI Provider</Label>
+            <FieldGroup className="grid gap-4 md:grid-cols-2">
+              <Field>
+                <FieldLabel htmlFor="ai-provider">AI Provider</FieldLabel>
                 <Select
-                  value={providerId || settings.enabledProviders[0] || ""}
-                  onValueChange={(value: ExtendedProviderId) => {
-                    setProviderId(value as ProviderId)
-                    // Reset model when provider changes
-                    const config = settings.providers[value]
-                    if (config) {
-                      setModel(config.model)
-                    }
-                  }}
+                  value={activeProviderId || ""}
+                  onValueChange={(value: ExtendedProviderId) => setProviderId(value as ProviderId)}
                 >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select AI provider">
-                      {providerId ? getProviderName(providerId) : settings.enabledProviders[0] ? getProviderName(settings.enabledProviders[0] as ProviderId) : "No provider"}
-                    </SelectValue>
+                  <SelectTrigger id="ai-provider" className="w-full">
+                    <SelectValue placeholder="Select AI provider" />
                   </SelectTrigger>
                   <SelectContent>
-                    {Object.entries(settings.providers)
-                      .filter(([, config]) => config && config.enabled)
-                      .map(([id]) => (
-                        <SelectItem key={id} value={id}>
-                          {getProviderName(id as ProviderId)}
+                    <SelectGroup>
+                      {Object.entries(settings.providers)
+                        .filter(([, config]) => config?.enabled)
+                        .map(([id]) => (
+                          <SelectItem key={id} value={id}>
+                            {getProviderDisplayName(id)}
+                          </SelectItem>
+                        ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                {settings.enabledProviders.length === 0 && (
+                  <FieldDescription>
+                    <IconSettings data-icon="inline-start" />
+                    Configure AI providers in <a href="/settings" className="underline underline-offset-4">Settings</a>.
+                  </FieldDescription>
+                )}
+              </Field>
+
+              <Field>
+                <FieldLabel htmlFor="ai-model">Model</FieldLabel>
+                <Select value={activeProviderConfig?.model || ""} disabled>
+                  <SelectTrigger id="ai-model" className="w-full">
+                    <SelectValue placeholder="Select provider first" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {activeProviderConfig?.model && (
+                        <SelectItem value={activeProviderConfig.model}>
+                          {activeProviderConfig.model}
                         </SelectItem>
-                      ))}
+                      )}
+                    </SelectGroup>
                   </SelectContent>
                 </Select>
-              </div>
-              <div>
-                <Label htmlFor="ai-model">Model</Label>
-                <Select
-                  value={model || (providerId || settings.enabledProviders[0]) ? settings.providers[providerId || settings.enabledProviders[0]]?.model || "" : ""}
-                  onValueChange={setModel}
-                  disabled={!providerId && settings.enabledProviders.length === 0}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select model">
-                      {(providerId || settings.enabledProviders[0])
-                        ? settings.providers[providerId || settings.enabledProviders[0]]?.model || "No model"
-                        : "Select provider first"
-                      }
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {(providerId || settings.enabledProviders[0]) && (
-                      <SelectItem value={settings.providers[providerId || settings.enabledProviders[0]]?.model || ""}>
-                        {settings.providers[providerId || settings.enabledProviders[0]]?.model || "No model"}
-                      </SelectItem>
-                    )}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            {settings.enabledProviders.length === 0 && (
-              <p className="text-sm text-muted-foreground mt-2">
-                <IconSettings className="inline h-3 w-3 mr-1" />
-                Configure AI providers in{" "}
-                <a href="/settings" className="underline">
-                  Settings
-                </a>
-              </p>
-            )}
-          </div>
+              </Field>
+            </FieldGroup>
 
-          <div>
-            <Label>Output Format</Label>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {outputFormats.map(f => (
-                <Badge
-                  key={f}
-                  variant={outputFormat === f ? "default" : "outline"}
-                  className={`cursor-pointer transition-all duration-200 ${
-                    outputFormat === f
-                      ? "bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white border-transparent shadow-lg"
-                      : "bg-gradient-to-r from-emerald-50 to-green-100 border-emerald-300 text-emerald-800 hover:from-emerald-100 hover:to-green-200"
-                  }`}
-                  onClick={() => setOutputFormat(f)}
-                >
-                  {f}
-                </Badge>
-              ))}
-            </div>
-          </div>
+            <Field>
+              <FieldLabel>Output Format</FieldLabel>
+              <ToggleGroup
+                type="single"
+                value={outputFormat}
+                onValueChange={(value) => value && setOutputFormat(value)}
+                variant="outline"
+                className="flex-wrap"
+              >
+                {outputFormats.map((option) => (
+                  <ToggleGroupItem key={option} value={option} aria-label={option}>
+                    {option}
+                  </ToggleGroupItem>
+                ))}
+              </ToggleGroup>
+            </Field>
 
-          <div>
-            <Label>Enhancement Principles</Label>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {availablePrinciples.map(p => (
-                <Badge
-                  key={p}
-                  variant={principles.includes(p) ? "default" : "outline"}
-                  className={`cursor-pointer transition-all duration-200 ${
-                    principles.includes(p)
-                      ? "bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-transparent shadow-lg"
-                      : "bg-gradient-to-r from-amber-50 to-orange-100 border-amber-300 text-amber-800 hover:from-amber-100 hover:to-orange-200"
-                  }`}
-                  onClick={() => togglePrinciple(p)}
-                >
-                  {p}
-                </Badge>
-              ))}
-            </div>
-          </div>
+            <Field>
+              <FieldLabel>Enhancement Principles</FieldLabel>
+              <ToggleGroup
+                type="multiple"
+                value={principles}
+                onValueChange={setPrinciples}
+                variant="outline"
+                className="flex-wrap"
+              >
+                {availablePrinciples.map((option) => (
+                  <ToggleGroupItem key={option} value={option} aria-label={option}>
+                    {option}
+                  </ToggleGroupItem>
+                ))}
+              </ToggleGroup>
+            </Field>
 
-          <div>
-            <Label>Tone</Label>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {tones.map(t => (
-                <Badge
-                  key={t}
-                  variant={tone === t ? "default" : "outline"}
-                  className={`cursor-pointer transition-all duration-200 ${
-                    tone === t
-                      ? "bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white border-transparent shadow-lg"
-                      : "bg-gradient-to-r from-violet-50 to-purple-100 border-violet-300 text-violet-800 hover:from-violet-100 hover:to-purple-200"
-                  }`}
-                  onClick={() => setTone(t)}
-                >
-                  {t}
-                </Badge>
-              ))}
-            </div>
-          </div>
+            <Field>
+              <FieldLabel>Tone</FieldLabel>
+              <ToggleGroup
+                type="single"
+                value={tone}
+                onValueChange={(value) => value && setTone(value)}
+                variant="outline"
+                className="flex-wrap"
+              >
+                {tones.map((option) => (
+                  <ToggleGroupItem key={option} value={option} aria-label={option}>
+                    {option}
+                  </ToggleGroupItem>
+                ))}
+              </ToggleGroup>
+            </Field>
+          </FieldGroup>
 
           <Button
             onClick={enhancePrompt}
             disabled={isLoading || !originalPrompt.trim() || settings.enabledProviders.length === 0}
             className="w-full"
           >
-            {isLoading ? (
-              <>
-                <IconSparkles className="mr-2 h-4 w-4 animate-spin" />
-                Enhancing...
-              </>
-            ) : (
-              <>
-                <IconSparkles className="mr-2 h-4 w-4" />
-                Enhance Prompt
-              </>
-            )}
+            <IconSparkles data-icon="inline-start" className={cn(isLoading && "animate-spin")} />
+            {isLoading ? "Enhancing..." : "Enhance Prompt"}
           </Button>
 
-          {error && (
-            <p className="text-sm text-destructive">{error}</p>
-          )}
+          {error && <p className="text-sm text-destructive">{error}</p>}
         </CardContent>
       </Card>
 
-      {/* Output Section */}
-      <Card className="h-full flex flex-col">
-        <CardHeader>
-          <div className="flex items-center justify-between">
+      <Card className="flex h-full flex-col">
+        <CardHeader className="gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div className="flex flex-col gap-1">
             <CardTitle>Enhanced Prompt</CardTitle>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleCopyPrompt}
-              disabled={!enhancedPrompt || isCopying}
-            >
-              {isCopying ? (
-                <>
-                  <IconCheck className="mr-2 h-4 w-4" />
-                  Copied!
-                </>
-              ) : (
-                <>
-                  <IconCopy className="mr-2 h-4 w-4" />
-                  Copy
-                </>
-              )}
-            </Button>
+            <CardDescription>Copy the refined prompt directly or review a short explanation of what changed.</CardDescription>
           </div>
+          <Button variant="outline" size="sm" onClick={() => enhancedPrompt && copy(enhancedPrompt, "Enhanced prompt copied to clipboard!")} disabled={!enhancedPrompt || isCopying}>
+            {isCopying ? <IconCheck data-icon="inline-start" /> : <IconCopy data-icon="inline-start" />}
+            {isCopying ? "Copied!" : "Copy"}
+          </Button>
         </CardHeader>
-        <CardContent className="flex-1 flex flex-col">
-          <div className="flex-1 min-h-[400px] max-h-[600px] overflow-y-auto">
+        <CardContent className="flex flex-1 flex-col gap-4">
+          <div className="min-h-[400px] flex-1 overflow-y-auto rounded-lg border bg-muted/30 p-4">
             {enhancedPrompt ? (
-              <pre className="whitespace-pre-wrap text-sm font-mono">
-                {enhancedPrompt}
-              </pre>
+              <pre className="whitespace-pre-wrap font-mono text-sm">{enhancedPrompt}</pre>
             ) : (
-              <p className="text-muted-foreground text-center mt-20">
-                Your enhanced prompt will appear here...
-              </p>
+              <div className="flex h-full min-h-[360px] items-center justify-center text-center text-muted-foreground">
+                <p>Your enhanced prompt will appear here.</p>
+              </div>
             )}
           </div>
 
           {enhancedPrompt && (
-            <div className="mt-4 space-y-2">
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id="show-explanation"
-                  checked={showExplanation}
-                  onChange={(e) => setShowExplanation(e.target.checked)}
-                  className="rounded"
-                />
-                <Label htmlFor="show-explanation" className="text-sm">
-                  Show explanation of changes
-                </Label>
-              </div>
+            <FieldGroup className="gap-3">
+              <Field orientation="horizontal" className="items-center justify-between rounded-lg border bg-muted/30 p-3">
+                <Label htmlFor="show-explanation-toggle">Show explanation of changes</Label>
+                <Toggle
+                  id="show-explanation-toggle"
+                  aria-label="Show explanation of changes"
+                  aria-pressed={showExplanation}
+                  variant="outline"
+                  pressed={showExplanation}
+                  onPressedChange={setShowExplanation}
+                >
+                  {showExplanation ? "On" : "Off"}
+                </Toggle>
+              </Field>
 
               {showExplanation && (
-                <div className="rounded-lg bg-muted p-4">
-                  <h3 className="font-semibold text-sm mb-2">What was enhanced:</h3>
-                  <ul className="text-sm space-y-1 list-disc list-inside">
-                    <li>Added role-based context for <strong>{target}</strong></li>
-                    <li>Optimized for <strong>{providerId ? getProviderName(providerId) : "selected AI model"}</strong></li>
-                    <li>Applied <strong>{outputFormat}</strong> formatting</li>
-                    <li>Set tone to <strong>{tone}</strong></li>
-                    {principles.length > 0 && (
-                      <li>Included principles: {principles.join(", ")}</li>
-                    )}
+                <div className="rounded-lg border bg-muted/30 p-4 text-sm">
+                  <h3 className="font-semibold">What was enhanced</h3>
+                  <ul className="mt-2 ml-4 flex list-disc flex-col gap-1 text-muted-foreground">
+                    <li>Added role-based context for <strong className="text-foreground">{target}</strong></li>
+                    <li>Optimized for <strong className="text-foreground">{activeProviderId ? getProviderDisplayName(activeProviderId) : "selected AI model"}</strong></li>
+                    <li>Applied <strong className="text-foreground">{outputFormat}</strong> formatting</li>
+                    <li>Set tone to <strong className="text-foreground">{tone}</strong></li>
+                    {principles.length > 0 && <li>Included principles: {principles.join(", ")}</li>}
                   </ul>
                 </div>
               )}
-            </div>
+            </FieldGroup>
           )}
         </CardContent>
       </Card>

@@ -1,56 +1,31 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
+import { IconCloud, IconCopy, IconDownload, IconFileText, IconTrash } from "@tabler/icons-react"
+import { toast } from "sonner"
+
 import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Badge } from "@/components/ui/badge"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Textarea } from "@/components/ui/textarea"
 import { useAsyncOperation } from "@/hooks/use-async-operation"
 import { useClipboard } from "@/hooks/use-clipboard"
+import { convertProperties, type ConversionMode } from "@/lib/properties-utils"
 import {
-  convertProperties,
-  type ConversionMode
-} from "@/lib/properties-utils"
-import { toast } from "sonner"
-import { IconCopy, IconDownload, IconCloud } from "@tabler/icons-react"
+  canConvertToK8s,
+  getConversionOutputFilename,
+  getK8sConversionMode,
+  getPropertiesExample,
+} from "@/lib/tool-ui-config"
+
 import { EnvOutputList } from "./env-output-list"
 
-const EXAMPLES = {
-  yaml: `app:
-  redis:
-    host: localhost
-    port: 6379
-  database:
-    connection-url: jdbc:mysql://localhost:3306/db
-    username: admin
-server:
-  port: 8080`,
-  spring: `@Value("\${app.redis.host}")
-private String redisHost;
-
-@Value("\${app.redis.port:6379}")
-private int redisPort;
-
-@Value("\${database.connection-url}")
-private String dbUrl;`,
-  properties: `abc.efg.gh-oo.makeNow
-app.redis.hostName=localhost
-server.connection-timeout=5000
-database.pool.maxSize=10`
-}
-
-function ExampleButton({ content, label }: { content: string; label: string }) {
+function ExampleButton({ content, label, onLoad }: { content: string; label: string; onLoad: (content: string) => void }) {
   return (
-    <Button
-      variant="outline"
-      size="sm"
-      onClick={() => {
-        const event = new CustomEvent("loadExample", { detail: content })
-        window.dispatchEvent(event)
-      }}
-    >
+    <Button variant="outline" size="sm" onClick={() => onLoad(content)}>
+      <IconFileText data-icon="inline-start" />
       Load {label}
     </Button>
   )
@@ -66,23 +41,14 @@ export function PropertiesConverter() {
 
   const asyncOperation = useAsyncOperation({
     successMessage: "Conversion successful!",
-    errorMessage: "Conversion failed"
+    errorMessage: "Conversion failed",
   })
   const { copy } = useClipboard()
 
-  // Listen for example load events
-  useEffect(() => {
-    const handleLoadExample = (e: CustomEvent) => {
-      setInput(e.detail)
-      toast.success("Example loaded!")
-    }
-
-    window.addEventListener("loadExample", handleLoadExample as EventListener)
-
-    return () => {
-      window.removeEventListener("loadExample", handleLoadExample as EventListener)
-    }
-  }, [])
+  const handleLoadExample = (content: string) => {
+    setInput(content)
+    toast.success("Example loaded!")
+  }
 
   const handleConvert = () => {
     if (!input.trim()) {
@@ -105,17 +71,12 @@ export function PropertiesConverter() {
     setShowK8sModal(true)
 
     try {
-      const result = convertProperties(input, "yaml-to-k8s-env")
+      const result = convertProperties(input, getK8sConversionMode())
       setK8sOutput(result)
       toast.success("K8s conversion successful!")
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "K8s conversion failed"
-      setK8sError(errorMessage)
+      setK8sError(error instanceof Error ? error.message : "K8s conversion failed")
     }
-  }
-
-  const handleCopy = async (text: string) => {
-    await copy(text)
   }
 
   const handleDownload = (content: string, filename: string) => {
@@ -131,10 +92,12 @@ export function PropertiesConverter() {
     toast.success(`${filename} downloaded!`)
   }
 
-  const showK8sButton = (mode === "yaml-to-env" || mode === "spring-to-env") && input.trim()
+  const selectedExample = getPropertiesExample(mode)
+  const showK8sButton = canConvertToK8s(mode, input)
+  const outputFilename = getConversionOutputFilename(mode)
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       <Tabs value={mode} onValueChange={(value) => setMode(value as ConversionMode)}>
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="yaml-to-env">YAML to ENV</TabsTrigger>
@@ -145,45 +108,51 @@ export function PropertiesConverter() {
 
         <TabsContent value={mode} className="mt-4">
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-            {/* Input Panel */}
             <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  Input
-                  <div className="flex gap-2">
-                    {mode === "yaml-to-env" && (
-                      <ExampleButton content={EXAMPLES.yaml} label="YAML Example" />
-                    )}
-                    {mode === "spring-to-env" && (
-                      <ExampleButton content={EXAMPLES.spring} label="Spring Example" />
-                    )}
-                    {mode === "yaml-to-properties" && (
-                      <ExampleButton content={EXAMPLES.yaml} label="YAML Example" />
-                    )}
-                    {mode === "properties-to-yaml" && (
-                      <ExampleButton content={EXAMPLES.properties} label="Properties Example" />
-                    )}
+              <CardHeader className="gap-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex flex-col gap-1">
+                    <CardTitle>Input</CardTitle>
+                    <CardDescription>Paste YAML, Spring annotations, or Java properties and convert them with one click.</CardDescription>
                   </div>
-                </CardTitle>
+                  {selectedExample && (
+                    <ExampleButton
+                      content={selectedExample.content}
+                      label={selectedExample.label}
+                      onLoad={handleLoadExample}
+                    />
+                  )}
+                </div>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <Textarea
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  placeholder={
-                    mode === "spring-to-env"
-                      ? "Enter Spring @Value annotations or property keys..."
-                      : mode === "properties-to-yaml"
-                        ? "Enter Java properties..."
-                        : "Enter YAML or properties..."
-                  }
-                  className="min-h-[400px] font-mono text-sm"
-                />
-                <div className="flex gap-2">
-                  <Button
-                    onClick={handleConvert}
-                    disabled={!input.trim() || asyncOperation.isLoading}
-                  >
+              <CardContent className="flex flex-col gap-4">
+                <FieldGroup>
+                  <Field>
+                    <FieldLabel htmlFor="properties-input">Source content</FieldLabel>
+                    <FieldDescription>
+                      {mode === "spring-to-env"
+                        ? "Enter Spring @Value annotations or property keys."
+                        : mode === "properties-to-yaml"
+                          ? "Enter Java properties."
+                          : "Enter YAML or Java properties."}
+                    </FieldDescription>
+                    <Textarea
+                      id="properties-input"
+                      value={input}
+                      onChange={(event) => setInput(event.target.value)}
+                      placeholder={
+                        mode === "spring-to-env"
+                          ? "Enter Spring @Value annotations or property keys..."
+                          : mode === "properties-to-yaml"
+                            ? "Enter Java properties..."
+                            : "Enter YAML or properties..."
+                      }
+                      className="min-h-[400px] font-mono text-sm"
+                    />
+                  </Field>
+                </FieldGroup>
+
+                <div className="flex flex-wrap gap-2">
+                  <Button onClick={handleConvert} disabled={!input.trim() || asyncOperation.isLoading}>
                     {asyncOperation.isLoading ? "Converting..." : "Convert"}
                   </Button>
                   <Button
@@ -193,69 +162,57 @@ export function PropertiesConverter() {
                       setOutput("")
                     }}
                   >
+                    <IconTrash data-icon="inline-start" />
                     Clear
                   </Button>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Output Panel */}
             <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  <span>Output</span>
-                  {output && !asyncOperation.error && (
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleCopy(output)}
-                      >
-                        <IconCopy className="h-4 w-4 mr-2" />
-                        Copy All
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          const filename = mode.includes("yaml") ? "output.yaml" : "output.properties"
-                          handleDownload(output, filename)
-                        }}
-                      >
-                        <IconDownload className="h-4 w-4 mr-2" />
-                        Download
-                      </Button>
-                    </div>
-                  )}
-                </CardTitle>
+              <CardHeader className="gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div className="flex flex-col gap-1">
+                  <CardTitle>Output</CardTitle>
+                  <CardDescription>Copy the converted result or download it as a file when ready.</CardDescription>
+                </div>
+                {output && !asyncOperation.error && (
+                  <div className="flex flex-wrap gap-2">
+                    <Button variant="outline" size="sm" onClick={() => copy(output)}>
+                      <IconCopy data-icon="inline-start" />
+                      Copy All
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={() => handleDownload(output, outputFilename)}>
+                      <IconDownload data-icon="inline-start" />
+                      Download
+                    </Button>
+                  </div>
+                )}
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="flex flex-col gap-4">
                 {!output && !asyncOperation.error && (
-                  <div className="flex flex-col items-center justify-center h-96 text-muted-foreground">
-                    <div className="text-4xl mb-2">🔄</div>
-                    <p>No output yet</p>
-                    <p className="text-sm">Convert properties to see results</p>
+                  <div className="flex min-h-[400px] flex-col items-center justify-center rounded-lg border border-dashed text-center text-muted-foreground">
+                    <IconFileText className="size-8" />
+                    <p className="mt-3 font-medium text-foreground">No output yet</p>
+                    <p className="text-sm">Convert properties to see results.</p>
                   </div>
                 )}
 
                 {asyncOperation.error && (
-                  <div className="p-4 border border-destructive/20 bg-destructive/5 rounded-lg">
-                    <p className="text-sm text-destructive">{asyncOperation.error.message}</p>
+                  <div className="rounded-lg border border-destructive/20 bg-destructive/5 p-4 text-sm text-destructive">
+                    {asyncOperation.error.message}
                   </div>
                 )}
 
                 {output && !asyncOperation.error && (
-                  <>
-                    {(mode === "yaml-to-env" || mode === "spring-to-env") ? (
-                      <EnvOutputList output={output} />
-                    ) : (
-                      <Textarea
-                        value={output}
-                        readOnly
-                        className="min-h-[400px] font-mono text-sm"
-                      />
-                    )}
-                  </>
+                  mode === "yaml-to-env" || mode === "spring-to-env" ? (
+                    <EnvOutputList output={output} />
+                  ) : (
+                    <Textarea
+                      value={output}
+                      readOnly
+                      className="min-h-[400px] font-mono text-sm"
+                    />
+                  )
                 )}
               </CardContent>
             </Card>
@@ -263,36 +220,33 @@ export function PropertiesConverter() {
         </TabsContent>
       </Tabs>
 
-      {/* Kubernetes Conversion Button */}
       {showK8sButton && (
         <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="font-medium">Kubernetes Format</h3>
-                <p className="text-sm text-muted-foreground">
-                  Convert to Kubernetes environment variables format
-                </p>
-              </div>
-              <Button onClick={handleK8sConversion}>
-                <IconCloud className="h-4 w-4 mr-2" />
-                Convert to K8s
-              </Button>
+          <CardContent className="flex items-center justify-between gap-4 pt-6">
+            <div className="flex flex-col gap-1">
+              <h3 className="font-medium">Kubernetes Format</h3>
+              <p className="text-sm text-muted-foreground">
+                Convert the current YAML input into Kubernetes environment variable entries.
+              </p>
             </div>
+            <Button onClick={handleK8sConversion}>
+              <IconCloud data-icon="inline-start" />
+              Convert to K8s
+            </Button>
           </CardContent>
         </Card>
       )}
 
-      {/* Kubernetes Modal */}
       <Dialog open={showK8sModal} onOpenChange={setShowK8sModal}>
-        <DialogContent className="max-w-3xl max-h-[80vh] overflow-auto">
+        <DialogContent className="max-h-[80vh] max-w-3xl overflow-auto">
           <DialogHeader>
             <DialogTitle>Kubernetes Environment Variables</DialogTitle>
+            <DialogDescription>Review the generated entries before copying or downloading the YAML file.</DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="flex flex-col gap-4">
             {k8sError ? (
-              <div className="p-4 border border-destructive/20 bg-destructive/5 rounded-lg">
-                <p className="text-sm text-destructive">{k8sError}</p>
+              <div className="rounded-lg border border-destructive/20 bg-destructive/5 p-4 text-sm text-destructive">
+                {k8sError}
               </div>
             ) : (
               <>
@@ -301,19 +255,13 @@ export function PropertiesConverter() {
                   readOnly
                   className="min-h-[300px] font-mono text-sm"
                 />
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    onClick={() => handleCopy(k8sOutput)}
-                  >
-                    <IconCopy className="h-4 w-4 mr-2" />
+                <div className="flex flex-wrap gap-2">
+                  <Button variant="outline" onClick={() => copy(k8sOutput)}>
+                    <IconCopy data-icon="inline-start" />
                     Copy
                   </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => handleDownload(k8sOutput, "k8s-env.yaml")}
-                  >
-                    <IconDownload className="h-4 w-4 mr-2" />
+                  <Button variant="outline" onClick={() => handleDownload(k8sOutput, getConversionOutputFilename(getK8sConversionMode()))}>
+                    <IconDownload data-icon="inline-start" />
                     Download YAML
                   </Button>
                 </div>

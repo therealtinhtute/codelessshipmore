@@ -1,35 +1,38 @@
 "use client"
 
-import { EnvLineItem } from "./env-line-item"
+import { IconFileText } from "@tabler/icons-react"
+
 import { parseEnvOutput } from "@/lib/env-parser"
 
+import { EnvLineItem } from "./env-line-item"
+
 interface EnvOutputListProps {
-    output: string
+  output: string
 }
 
 export function EnvOutputList({ output }: EnvOutputListProps) {
-    const lines = parseEnvOutput(output)
+  const lines = parseEnvOutput(output)
 
-    if (lines.length === 0) {
-        return (
-            <div className="flex flex-col items-center justify-center h-96 text-muted-foreground">
-                <div className="text-4xl mb-2">🔄</div>
-                <p>No output yet</p>
-                <p className="text-sm">Convert properties to see results</p>
-            </div>
-        )
-    }
-
+  if (lines.length === 0) {
     return (
-        <div className="border rounded-lg max-h-[500px] overflow-y-auto">
-            {lines.map((line, index) => (
-                <EnvLineItem
-                    key={`${line.key}-${index}`}
-                    envKey={line.key}
-                    value={line.value}
-                    fullLine={line.fullLine}
-                />
-            ))}
-        </div>
+      <div className="flex h-96 flex-col items-center justify-center rounded-lg border border-dashed text-center text-muted-foreground">
+        <IconFileText className="size-8" />
+        <p className="mt-3 font-medium text-foreground">No output yet</p>
+        <p className="text-sm">Convert properties to see results.</p>
+      </div>
     )
+  }
+
+  return (
+    <div className="max-h-[500px] overflow-y-auto rounded-lg border">
+      {lines.map((line, index) => (
+        <EnvLineItem
+          key={`${line.key}-${index}`}
+          envKey={line.key}
+          value={line.value}
+          fullLine={line.fullLine}
+        />
+      ))}
+    </div>
+  )
 }

@@ -1,26 +1,34 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, IBM_Plex_Mono } from "next/font/google";
+import {
+  Bricolage_Grotesque,
+  IBM_Plex_Mono,
+  Public_Sans,
+} from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/contexts/auth-context";
 import { AISettingsProvider } from "@/contexts/ai-settings-context";
 import { AppSidebar } from "@/components/layout/sidebar";
 import { Toaster } from "@/components/ui/toaster";
+import { cn } from "@/lib/utils";
+
+const publicSans = Public_Sans({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: "CodelessShipMore - Developer Tools",
-  description: "A collection of developer utilities for JSON, SQL, Protobuf, and Properties conversion",
+  description:
+    "A collection of developer utilities for JSON, SQL, Protobuf, and Properties conversion",
 };
 
 const bricolageGrotesque = Bricolage_Grotesque({
   subsets: ["latin"],
-  variable: "--font-bricolage-grotesque"
+  variable: "--font-bricolage-grotesque",
 });
 
 const ibmPlexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   variable: "--font-ibm-plex-mono",
-  weight: ["400", "500", "600", "700"]
+  weight: ["400", "500", "600", "700"],
 });
 
 export default function RootLayout({
@@ -29,7 +37,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${bricolageGrotesque.variable} ${ibmPlexMono.variable}`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={cn(
+        bricolageGrotesque.variable,
+        ibmPlexMono.variable,
+        "font-sans",
+        publicSans.variable,
+      )}
+      suppressHydrationWarning
+    >
       <body className="antialiased" suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
@@ -39,9 +56,7 @@ export default function RootLayout({
         >
           <AuthProvider>
             <AISettingsProvider>
-              <AppSidebar>
-                {children}
-              </AppSidebar>
+              <AppSidebar>{children}</AppSidebar>
             </AISettingsProvider>
           </AuthProvider>
           <Toaster />
