@@ -1,0 +1,46 @@
+{
+  "name": "codelessshipmore",
+  "id": "codelessshipmore",
+  "createdAt": "2026-03-31T15:43:20.092861Z",
+  "settings": {
+    "defaultPriority": "medium",
+    "gitTrackingMode": "git-tracked",
+    "statuses": [
+      "todo",
+      "in-progress",
+      "in-review",
+      "done",
+      "blocked",
+      "on-hold",
+      "urgent"
+    ],
+    "statusColors": {
+      "blocked": "red",
+      "done": "green",
+      "in-progress": "blue",
+      "in-review": "purple",
+      "on-hold": "yellow",
+      "todo": "gray",
+      "urgent": "orange"
+    },
+    "visibleColumns": [
+      "todo",
+      "in-progress",
+      "blocked",
+      "done",
+      "in-review"
+    ],
+    "semanticSearch": {
+      "enabled": true,
+      "model": "gte-small",
+      "huggingFaceId": "Xenova/gte-small",
+      "dimensions": 384,
+      "maxTokens": 512
+    },
+    "platforms": [
+      "claude-code",
+      "agents"
+    ],
+    "enableChatUI": false
+  }
+}

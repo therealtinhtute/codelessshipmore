@@ -1,9 +1,5 @@
 import type { Metadata } from "next";
-import {
-  Bricolage_Grotesque,
-  IBM_Plex_Mono,
-  Public_Sans,
-} from "next/font/google";
+import { IBM_Plex_Mono, Public_Sans, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/contexts/auth-context";
@@ -14,16 +10,16 @@ import { cn } from "@/lib/utils";
 
 const publicSans = Public_Sans({ subsets: ["latin"], variable: "--font-sans" });
 
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-space-grotesk",
+});
+
 export const metadata: Metadata = {
   title: "CodelessShipMore - Developer Tools",
   description:
     "A collection of developer utilities for JSON, SQL, Protobuf, and Properties conversion",
 };
-
-const bricolageGrotesque = Bricolage_Grotesque({
-  subsets: ["latin"],
-  variable: "--font-bricolage-grotesque",
-});
 
 const ibmPlexMono = IBM_Plex_Mono({
   subsets: ["latin"],
@@ -40,7 +36,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={cn(
-        bricolageGrotesque.variable,
+        spaceGrotesk.variable,
         ibmPlexMono.variable,
         "font-sans",
         publicSans.variable,
