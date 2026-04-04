@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import {
   IconBraces,
   IconDatabase,
@@ -22,6 +23,8 @@ import {
 } from "@/components/layout/page-header-context";
 import { useAuth } from "@/contexts/auth-context";
 import { LoginDialog } from "@/components/auth/login-dialog";
+import { NotificationsPopover } from "@/components/layout/notifications-popover";
+import { cn } from "@/lib/utils";
 import {
   Sidebar,
   SidebarContent,
@@ -36,6 +39,7 @@ import {
   SidebarMenuItem,
   SidebarProvider,
   SidebarTrigger,
+  useSidebar,
 } from "@/components/ui/sidebar";
 
 const navigation = [
@@ -63,42 +67,125 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
   return (
     <PageHeaderProvider>
       <SidebarProvider>
-        <Sidebar collapsible="icon">
-          <SidebarHeader>
-            <Link
-              href="/"
-              className="flex flex-col items-start gap-2 py-2 group-data-[collapsible=icon]:items-center"
-            >
-              <Image
-                src="/pepe.svg"
-                alt="Pepe"
-                width={48}
-                height={48}
-                className="size-10 md:size-12 group-data-[collapsible=icon]:size-8 transition-all"
-              />
-              <div className="text-start group-data-[collapsible=icon]:opacity-0 group-data-[collapsible=icon]:hidden transition-opacity">
-                <div className="font-semibold text-base">CodelessShipMore</div>
-                <div className="text-xs text-muted-foreground">Dev Tools</div>
-              </div>
-            </Link>
-          </SidebarHeader>
-          <SidebarContent>
+        <SidebarContentInner
+          pathname={pathname}
+          isAuthenticated={isAuthenticated}
+          isLoading={isLoading}
+          logout={logout}
+          setLoginOpen={setLoginOpen}
+        >
+          {children}
+        </SidebarContentInner>
+        <LoginDialog open={loginOpen} onOpenChange={setLoginOpen} />
+      </SidebarProvider>
+    </PageHeaderProvider>
+  );
+}
+
+function SidebarContentInner({
+  pathname,
+  isAuthenticated,
+  isLoading,
+  logout,
+  setLoginOpen,
+  children,
+}: {
+  pathname: string;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  logout: () => void;
+  setLoginOpen: (open: boolean) => void;
+  children: React.ReactNode;
+}) {
+  const { state } = useSidebar();
+  const isCollapsed = state === "collapsed";
+
+  return (
+    <>
+      <Sidebar variant="inset" collapsible="icon">
+        <SidebarHeader
+          className={cn(
+            "flex md:pt-3.5",
+            isCollapsed
+              ? "flex-row items-center justify-between gap-y-4 md:flex-col md:items-start md:justify-start"
+              : "flex-row items-center justify-between"
+          )}
+        >
+          <Link
+            href="/"
+            className="flex items-center gap-2"
+          >
+            <Image
+              src="/pepe.svg"
+              alt="Pepe"
+              width={32}
+              height={32}
+              className="size-8"
+            />
+            {!isCollapsed && (
+              <span className="font-semibold text-black dark:text-white">
+                CodelessShipMore
+              </span>
+            )}
+          </Link>
+
+          <motion.div
+            key={isCollapsed ? "header-collapsed" : "header-expanded"}
+            className={cn(
+              "flex items-center gap-2",
+              isCollapsed ? "flex-row md:flex-col-reverse" : "flex-row"
+            )}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.2 }}
+          >
+            <NotificationsPopover />
+            <SidebarTrigger />
+          </motion.div>
+        </SidebarHeader>
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupLabel className="text-[0.688rem] font-medium">
+              Developer Tools
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {navigation.map((item) => (
+                  <SidebarMenuItem key={item.name}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={pathname === item.href}
+                      className="data-active:bg-primary/10 data-active:text-primary data-active:font-semibold hover:bg-accent font-normal"
+                    >
+                      <Link href={item.href}>
+                        <item.icon className="h-4 w-4" />
+                        <span className="text-xs">{item.name}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+          {!isLoading && isAuthenticated && (
             <SidebarGroup>
               <SidebarGroupLabel className="text-[0.688rem] font-medium">
-                Developer Tools
+                Pro Features
               </SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {navigation.map((item) => (
+                  {protectedNavigation.map((item) => (
                     <SidebarMenuItem key={item.name}>
                       <SidebarMenuButton
                         asChild
                         isActive={pathname === item.href}
-                        className="data-active:bg-primary/10 data-active:text-primary data-active:font-semibold hover:bg-accent font-normal"
+                        className="data-active:bg-primary/10 data-active:text-primary data-active:font-bold hover:bg-accent"
                       >
                         <Link href={item.href}>
                           <item.icon className="h-4 w-4" />
-                          <span className="text-xs">{item.name}</span>
+                          <span className="text-xs">
+                            {item.name}
+                          </span>
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -106,66 +193,38 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
-            {!isLoading && isAuthenticated && (
-              <SidebarGroup>
-                <SidebarGroupLabel className="text-[0.688rem] font-medium">
-                  Pro Features
-                </SidebarGroupLabel>
-                <SidebarGroupContent>
-                  <SidebarMenu>
-                    {protectedNavigation.map((item) => (
-                      <SidebarMenuItem key={item.name}>
-                        <SidebarMenuButton
-                          asChild
-                          isActive={pathname === item.href}
-                          className="data-active:bg-primary/10 data-active:text-primary data-active:font-bold hover:bg-accent"
-                        >
-                          <Link href={item.href}>
-                            <item.icon className="h-4 w-4" />
-                            <span className="text-xs">
-                              {item.name}
-                            </span>
-                          </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    ))}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              </SidebarGroup>
-            )}
-          </SidebarContent>
-          <SidebarFooter>
-            <div className="flex items-center justify-between">
-              {!isLoading &&
-                (isAuthenticated ? (
-                  <button
-                    onClick={logout}
-                    className="flex items-center gap-2 text-sm cursor-pointer hover:text-primary hover:font-bold transition-all"
-                  >
-                    <IconLogout className="h-4 w-4" />
-                    <span className="group-data-[collapsible=icon]:hidden">
-                      Logout
-                    </span>
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => setLoginOpen(true)}
-                    className="flex items-center gap-2 text-sm cursor-pointer hover:text-primary hover:font-bold transition-all"
-                  >
-                    <IconLogin className="h-4 w-4" />
-                    <span className="group-data-[collapsible=icon]:hidden">
-                      Login
-                    </span>
-                  </button>
-                ))}
-              <ThemeToggle />
-            </div>
-          </SidebarFooter>
-        </Sidebar>
-        <SidebarInsetContent>{children}</SidebarInsetContent>
-        <LoginDialog open={loginOpen} onOpenChange={setLoginOpen} />
-      </SidebarProvider>
-    </PageHeaderProvider>
+          )}
+        </SidebarContent>
+        <SidebarFooter>
+          <div className="flex items-center justify-between">
+            {!isLoading &&
+              (isAuthenticated ? (
+                <button
+                  onClick={logout}
+                  className="flex items-center gap-2 text-sm cursor-pointer hover:text-primary hover:font-bold transition-all"
+                >
+                  <IconLogout className="h-4 w-4" />
+                  <span className="group-data-[collapsible=icon]:hidden">
+                    Logout
+                  </span>
+                </button>
+              ) : (
+                <button
+                  onClick={() => setLoginOpen(true)}
+                  className="flex items-center gap-2 text-sm cursor-pointer hover:text-primary hover:font-bold transition-all"
+                >
+                  <IconLogin className="h-4 w-4" />
+                  <span className="group-data-[collapsible=icon]:hidden">
+                    Login
+                  </span>
+                </button>
+              ))}
+            <ThemeToggle />
+          </div>
+        </SidebarFooter>
+      </Sidebar>
+      <SidebarInsetContent>{children}</SidebarInsetContent>
+    </>
   );
 }
 
