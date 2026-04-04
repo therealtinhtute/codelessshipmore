@@ -1,0 +1,89 @@
+{
+  "taskId": "xzi2xb",
+  "currentVersion": 4,
+  "versions": [
+    {
+      "id": "v1",
+      "taskId": "xzi2xb",
+      "version": 1,
+      "timestamp": "2026-04-04T15:21:41.481553Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": null,
+          "newValue": "todo"
+        },
+        {
+          "field": "priority",
+          "oldValue": null,
+          "newValue": "high"
+        }
+      ],
+      "snapshot": {
+        "description": "Add framer-motion as a project dependency for sidebar header animations. This is a prerequisite for the animated header elements in the sidebar-02 pattern.",
+        "priority": "high",
+        "status": "todo",
+        "title": "Add framer-motion dependency"
+      }
+    },
+    {
+      "id": "v2",
+      "taskId": "xzi2xb",
+      "version": 2,
+      "timestamp": "2026-04-04T15:22:08.6393Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "todo",
+          "newValue": "in-progress"
+        }
+      ],
+      "snapshot": {
+        "description": "Add framer-motion as a project dependency for sidebar header animations. This is a prerequisite for the animated header elements in the sidebar-02 pattern.",
+        "priority": "high",
+        "status": "in-progress",
+        "title": "Add framer-motion dependency"
+      }
+    },
+    {
+      "id": "v3",
+      "taskId": "xzi2xb",
+      "version": 3,
+      "timestamp": "2026-04-04T15:22:39.877855Z",
+      "changes": [
+        {
+          "field": "implementationNotes",
+          "oldValue": null,
+          "newValue": "Installed framer-motion@12.38.0 via bun add"
+        }
+      ],
+      "snapshot": {
+        "description": "Add framer-motion as a project dependency for sidebar header animations. This is a prerequisite for the animated header elements in the sidebar-02 pattern.",
+        "implementationNotes": "Installed framer-motion@12.38.0 via bun add",
+        "priority": "high",
+        "status": "in-progress",
+        "title": "Add framer-motion dependency"
+      }
+    },
+    {
+      "id": "v4",
+      "taskId": "xzi2xb",
+      "version": 4,
+      "timestamp": "2026-04-04T15:22:39.973375Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "in-progress",
+          "newValue": "done"
+        }
+      ],
+      "snapshot": {
+        "description": "Add framer-motion as a project dependency for sidebar header animations. This is a prerequisite for the animated header elements in the sidebar-02 pattern.",
+        "implementationNotes": "Installed framer-motion@12.38.0 via bun add",
+        "priority": "high",
+        "status": "done",
+        "title": "Add framer-motion dependency"
+      }
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "taskId": "q8oorr",
+  "currentVersion": 4,
+  "versions": [
+    {
+      "id": "v1",
+      "taskId": "q8oorr",
+      "version": 1,
+      "timestamp": "2026-04-04T15:21:41.600433Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": null,
+          "newValue": "todo"
+        },
+        {
+          "field": "priority",
+          "oldValue": null,
+          "newValue": "high"
+        }
+      ],
+      "snapshot": {
+        "description": "Create a new notifications-popover.tsx component in src/components/layout/ with placeholder UI for notifications. Should include a bell icon button that opens a dropdown with sample notifications.",
+        "priority": "high",
+        "status": "todo",
+        "title": "Create notifications-popover component"
+      }
+    },
+    {
+      "id": "v2",
+      "taskId": "q8oorr",
+      "version": 2,
+      "timestamp": "2026-04-04T15:22:56.715553Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "todo",
+          "newValue": "in-progress"
+        }
+      ],
+      "snapshot": {
+        "description": "Create a new notifications-popover.tsx component in src/components/layout/ with placeholder UI for notifications. Should include a bell icon button that opens a dropdown with sample notifications.",
+        "priority": "high",
+        "status": "in-progress",
+        "title": "Create notifications-popover component"
+      }
+    },
+    {
+      "id": "v3",
+      "taskId": "q8oorr",
+      "version": 3,
+      "timestamp": "2026-04-04T15:23:40.964958Z",
+      "changes": [
+        {
+          "field": "implementationNotes",
+          "oldValue": null,
+          "newValue": "Created notifications-popover.tsx with Bell icon, dropdown, and 3 sample notifications"
+        }
+      ],
+      "snapshot": {
+        "description": "Create a new notifications-popover.tsx component in src/components/layout/ with placeholder UI for notifications. Should include a bell icon button that opens a dropdown with sample notifications.",
+        "implementationNotes": "Created notifications-popover.tsx with Bell icon, dropdown, and 3 sample notifications",
+        "priority": "high",
+        "status": "in-progress",
+        "title": "Create notifications-popover component"
+      }
+    },
+    {
+      "id": "v4",
+      "taskId": "q8oorr",
+      "version": 4,
+      "timestamp": "2026-04-04T15:23:41.065776Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "in-progress",
+          "newValue": "done"
+        }
+      ],
+      "snapshot": {
+        "description": "Create a new notifications-popover.tsx component in src/components/layout/ with placeholder UI for notifications. Should include a bell icon button that opens a dropdown with sample notifications.",
+        "implementationNotes": "Created notifications-popover.tsx with Bell icon, dropdown, and 3 sample notifications",
+        "priority": "high",
+        "status": "done",
+        "title": "Create notifications-popover component"
+      }
+    }
+  ]
+}

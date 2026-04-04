@@ -1,0 +1,89 @@
+{
+  "taskId": "6qrldh",
+  "currentVersion": 4,
+  "versions": [
+    {
+      "id": "v1",
+      "taskId": "6qrldh",
+      "version": 1,
+      "timestamp": "2026-04-04T15:21:41.677137Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": null,
+          "newValue": "todo"
+        },
+        {
+          "field": "priority",
+          "oldValue": null,
+          "newValue": "high"
+        }
+      ],
+      "snapshot": {
+        "description": "Update src/components/layout/sidebar.tsx to use variant=\"inset\" on the Sidebar component, add framer-motion animations to the header, integrate the notifications-popover, and restructure the header layout.",
+        "priority": "high",
+        "status": "todo",
+        "title": "Migrate sidebar to inset variant"
+      }
+    },
+    {
+      "id": "v2",
+      "taskId": "6qrldh",
+      "version": 2,
+      "timestamp": "2026-04-04T15:23:55.777334Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "todo",
+          "newValue": "in-progress"
+        }
+      ],
+      "snapshot": {
+        "description": "Update src/components/layout/sidebar.tsx to use variant=\"inset\" on the Sidebar component, add framer-motion animations to the header, integrate the notifications-popover, and restructure the header layout.",
+        "priority": "high",
+        "status": "in-progress",
+        "title": "Migrate sidebar to inset variant"
+      }
+    },
+    {
+      "id": "v3",
+      "taskId": "6qrldh",
+      "version": 3,
+      "timestamp": "2026-04-04T15:28:12.793415Z",
+      "changes": [
+        {
+          "field": "implementationNotes",
+          "oldValue": null,
+          "newValue": "Migrated sidebar to variant='inset', added framer-motion animations, integrated NotificationsPopover, kept navigation and auth footer"
+        }
+      ],
+      "snapshot": {
+        "description": "Update src/components/layout/sidebar.tsx to use variant=\"inset\" on the Sidebar component, add framer-motion animations to the header, integrate the notifications-popover, and restructure the header layout.",
+        "implementationNotes": "Migrated sidebar to variant='inset', added framer-motion animations, integrated NotificationsPopover, kept navigation and auth footer",
+        "priority": "high",
+        "status": "in-progress",
+        "title": "Migrate sidebar to inset variant"
+      }
+    },
+    {
+      "id": "v4",
+      "taskId": "6qrldh",
+      "version": 4,
+      "timestamp": "2026-04-04T15:28:12.91023Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "in-progress",
+          "newValue": "done"
+        }
+      ],
+      "snapshot": {
+        "description": "Update src/components/layout/sidebar.tsx to use variant=\"inset\" on the Sidebar component, add framer-motion animations to the header, integrate the notifications-popover, and restructure the header layout.",
+        "implementationNotes": "Migrated sidebar to variant='inset', added framer-motion animations, integrated NotificationsPopover, kept navigation and auth footer",
+        "priority": "high",
+        "status": "done",
+        "title": "Migrate sidebar to inset variant"
+      }
+    }
+  ]
+}
