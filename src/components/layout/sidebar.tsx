@@ -123,7 +123,7 @@ function SidebarContentInner({
               className="size-8"
             />
             {!isCollapsed && (
-              <span className="font-semibold text-black dark:text-white">
+              <span className="font-semibold text-claude-near-black dark:text-claude-ivory">
                 CodelessShipMore
               </span>
             )}
