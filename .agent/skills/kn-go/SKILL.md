@@ -96,8 +96,13 @@ mcp__knowns__update_task({
 mcp__knowns__start_time({ "taskId": "<id>" })
 ```
 
-- Research context: follow refs, search related docs, check templates
+- Research context: follow refs, search related docs/memories, check templates
+- Use `search` for discovery first. If a task/spec needs assembled execution context, use `mcp__knowns__retrieve({ "query": "<keywords>" })` before drafting or executing the plan. Fall back to CLI `knowns retrieve "<keywords>" --json` if MCP is unavailable.
 - Draft and save plan directly (no approval gate)
+
+```json
+mcp__knowns__search({ "query": "<task keywords>", "type": "memory" })
+```
 
 ```json
 mcp__knowns__update_task({

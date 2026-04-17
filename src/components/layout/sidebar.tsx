@@ -155,7 +155,7 @@ function SidebarContentInner({
                     <SidebarMenuButton
                       asChild
                       isActive={pathname === item.href}
-                      className="data-active:bg-primary/10 data-active:text-primary data-active:font-semibold hover:bg-accent font-normal"
+                      className="data-active:bg-claude-terracotta/10 data-active:text-claude-terracotta data-active:font-semibold hover:bg-accent font-normal"
                     >
                       <Link href={item.href}>
                         <item.icon className="h-4 w-4" />
@@ -179,7 +179,7 @@ function SidebarContentInner({
                       <SidebarMenuButton
                         asChild
                         isActive={pathname === item.href}
-                        className="data-active:bg-primary/10 data-active:text-primary data-active:font-bold hover:bg-accent"
+                        className="data-active:bg-claude-terracotta/10 data-active:text-claude-terracotta data-active:font-bold hover:bg-accent"
                       >
                         <Link href={item.href}>
                           <item.icon className="h-4 w-4" />
@@ -201,7 +201,7 @@ function SidebarContentInner({
               (isAuthenticated ? (
                 <button
                   onClick={logout}
-                  className="flex items-center gap-2 text-sm cursor-pointer hover:text-primary hover:font-bold transition-all"
+                  className="flex items-center gap-2 text-sm cursor-pointer hover:text-claude-terracotta hover:font-bold transition-all"
                 >
                   <IconLogout className="h-4 w-4" />
                   <span className="group-data-[collapsible=icon]:hidden">
@@ -211,7 +211,7 @@ function SidebarContentInner({
               ) : (
                 <button
                   onClick={() => setLoginOpen(true)}
-                  className="flex items-center gap-2 text-sm cursor-pointer hover:text-primary hover:font-bold transition-all"
+                  className="flex items-center gap-2 text-sm cursor-pointer hover:text-claude-terracotta hover:font-bold transition-all"
                 >
                   <IconLogin className="h-4 w-4" />
                   <span className="group-data-[collapsible=icon]:hidden">
@@ -237,7 +237,7 @@ function SidebarInsetContent({ children }: { children: React.ReactNode }) {
         <SidebarTrigger className="-ml-1" />
         {title && (
           <div className="flex-1">
-            <h1 className="text-base font-semibold">{title}</h1>
+            <h1 className="text-lg font-serif font-medium">{title}</h1>
             {description && (
               <p className="text-xs text-muted-foreground">{description}</p>
             )}

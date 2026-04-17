@@ -1,0 +1,17 @@
+{
+  "jobs": [],
+  "recent": [
+    {
+      "jobId": "1776439640781875000-2953",
+      "key": "reindex-search::",
+      "kind": "reindex-search",
+      "success": false,
+      "error": "load vector store: sqlite vecstore: load: SQL logic error: no such column: memory_layer (1)",
+      "completedAt": "2026-04-17T15:27:20.920536Z",
+      "requestedAt": "2026-04-17T15:27:20.781875Z",
+      "startedAt": "2026-04-17T15:27:20.791729Z",
+      "attemptCount": 1
+    }
+  ],
+  "updatedAt": "2026-04-17T15:27:20.920537Z"
+}

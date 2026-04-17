@@ -1,33 +1,41 @@
-# Repository Guidelines
+# AGENTS
 
-## Project Structure & Module Organization
-- `src/app`: Next.js App Router pages, layouts, and route handlers.
-- `src/components`: UI components (kebab-case filenames; feature and layout subfolders).
-- `src/contexts`, `src/hooks`, `src/lib`: React contexts, hooks, and shared utilities.
-- `public`: Static assets served at the site root.
-- `docs`, `plans`: Supplemental documentation and planning artifacts.
+Compatibility entrypoint for runtimes that auto-detect `AGENTS.md`.
 
-## Build, Test, and Development Commands
-- `npm run dev` or `bun run dev`: Start the local dev server.
-- `npm run build`: Create a production build.
-- `npm run start`: Run the production server from the build output.
-- `npm run lint`: Run ESLint checks.
+<!-- KNOWNS GUIDELINES START -->
 
-## Coding Style & Naming Conventions
-- TypeScript + React with Tailwind CSS; follow existing patterns in nearby files.
-- Indentation follows the project’s current formatting; keep diffs minimal and consistent.
-- Filenames are kebab-case (e.g., `theme-toggle.tsx`); React components use PascalCase exports.
-- Hooks are named `useSomething` and live under `src/hooks` when shared.
+**CRITICAL: You MUST read and follow `KNOWNS.md` in the repository root before doing any work. It is the canonical source of truth for all agent behavior in this project.**
 
-## Testing Guidelines
-- No automated test runner is configured yet; linting is the current quality gate.
-- If you add tests, document the command in `package.json` and prefer `*.test.ts(x)` filenames.
+## Canonical Guidance
 
-## Commit & Pull Request Guidelines
-- Commit messages follow Conventional Commit style (e.g., `feat: ...`, `fix: ...`, `chore: ...`).
-- Use optional scopes when helpful (e.g., `feat(ai): ...`).
-- PRs should include a clear summary, testing notes, and UI screenshots for visual changes.
+- Knowns is the repository memory layer for humans and the AI-friendly working layer for agents.
+- The source of truth for repo-level agent guidance is `KNOWNS.md`.
+- Read `KNOWNS.md` first whenever the runtime supports reading repository files.
+- Load behavior, memory policy, and workflow rules from `KNOWNS.md`; treat this file only as a compatibility entrypoint.
+- If this file and `KNOWNS.md` differ, follow `KNOWNS.md`.
 
-## Security & Configuration Tips
-- API keys are stored client-side (localStorage) and encrypted; avoid logging secrets.
-- Do not commit `.env` files or credentials; use local config when needed.
+## Minimum Rules
+
+- Use Knowns as the canonical system for tasks, docs, templates, and workflow state.
+- Never manually edit Knowns-managed task or doc markdown.
+- Search first, then read only relevant docs and code.
+- Use `search` for discovery; use MCP `retrieve` tool when a workflow needs structured context with citations. Fall back to CLI `knowns retrieve` if MCP is unavailable.
+- For code context retrieval, prefer MCP tools over CLI: use `code_search` first, then `code_symbols`, then `code_deps`. Treat CLI `knowns code ...` as fallback for manual inspection or debugging.
+- Plan before implementation unless the user explicitly overrides that workflow.
+- Validate before considering work complete.
+- Use memory tools: `list_memories` at session start, `add_memory` after tasks for reusable knowledge, `add_working_memory` for session cache.
+- Proactively capture durable memory based on `KNOWNS.md` memory rules; do not wait for an explicit user instruction to save memory when scope and durability are clear.
+
+## Quick Reference
+
+```bash
+knowns doc list --plain               # List docs
+knowns task list --plain              # List tasks
+knowns task <id> --plain              # View task
+knowns doc "<path>" --plain --smart  # View doc
+knowns search "query" --plain        # Search docs/tasks
+knowns retrieve "query" --json      # Retrieve structured context pack (CLI fallback)
+knowns guidelines --plain             # Full workflow reference
+```
+
+<!-- KNOWNS GUIDELINES END -->

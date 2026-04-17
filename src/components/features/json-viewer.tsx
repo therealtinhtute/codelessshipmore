@@ -174,11 +174,11 @@ export function JsonViewer() {
   return (
     <div className="flex flex-col gap-4">
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <Card>
+        <Card variant="claude">
           <CardHeader className="gap-3">
             <div className="flex items-start justify-between gap-3">
               <div className="flex flex-col gap-1">
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle variant="serif" className="flex items-center gap-2">
                   <IconBraces />
                   JSON Input
                 </CardTitle>
@@ -221,11 +221,11 @@ export function JsonViewer() {
             <p className="text-xs text-muted-foreground">Tip: Press {formatShortcut} + F to format.</p>
 
             <div className="flex flex-wrap gap-2">
-              <Button onClick={processJson} disabled={!input.trim() || isProcessing}>
+              <Button variant="claude-primary" onClick={processJson} disabled={!input.trim() || isProcessing}>
                 <IconSparkles data-icon="inline-start" className={isProcessing ? "animate-spin" : undefined} />
                 {isProcessing ? "Processing..." : "Process JSON"}
               </Button>
-              <Button variant="outline" onClick={handleClear}>
+              <Button variant="claude" onClick={handleClear}>
                 <IconTrash data-icon="inline-start" />
                 Clear
               </Button>
@@ -233,7 +233,7 @@ export function JsonViewer() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card variant="claude">
           <CardHeader>
             <Tabs value={mode} onValueChange={(value) => setMode(value as typeof mode)}>
               <TabsList className="grid w-full grid-cols-2">

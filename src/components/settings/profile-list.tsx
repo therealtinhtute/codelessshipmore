@@ -275,7 +275,7 @@ export function ProfileList({ onConfigureProfile }: ProfileListProps = {}) {
                 <div className="flex items-start justify-between">
                   <div className="flex-1 min-w-0">
                     <CardTitle className="text-base truncate flex items-center gap-2">
-                      <IconUser className="h-4 w-4 text-primary shrink-0" />
+                      <IconUser className="h-4 w-4 text-claude-terracotta shrink-0" />
                       {profileWithProviders.profile.name}
                       {profileWithProviders.profile.isDefault && (
                         <Badge variant="secondary" className="text-xs">

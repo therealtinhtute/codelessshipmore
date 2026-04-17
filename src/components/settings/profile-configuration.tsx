@@ -233,7 +233,7 @@ export function ProfileConfiguration({ profileId, onBack }: ProfileConfiguration
             <h2 className="text-lg font-semibold flex items-center gap-2">
               Configure: {currentProfile?.name}
               {currentProfile?.isDefault && (
-                <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
+                <span className="text-xs bg-claude-warm-sand text-claude-charcoal-warm px-2 py-1 rounded">
                   Default
                 </span>
               )}

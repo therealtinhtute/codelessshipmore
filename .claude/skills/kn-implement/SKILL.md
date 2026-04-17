@@ -70,6 +70,8 @@ Working rules:
 - Append compact progress notes at meaningful checkpoints, not after every tiny edit
 - If a step reveals missing context, pause implementation and gather it before continuing
 - If the task needs docs or template changes, do them as part of completion, not as an afterthought
+- Use `search` to discover relevant sources; use `retrieve` when implementation needs assembled context with citations for docs, tasks, and memories.
+- Prefer MCP `mcp__knowns__retrieve({ "query": "<keywords>" })` for retrieval; fall back to CLI `knowns retrieve "<keywords>" --json` if MCP is unavailable.
 
 ## Step 4: Handle Scope Changes
 
@@ -161,6 +163,17 @@ ACs: Y/Z verified
 ## Step 6: Extract Knowledge (optional)
 
 If patterns discovered: `/kn-extract`
+
+If a quick insight is worth remembering but doesn't warrant a full doc:
+```json
+mcp__knowns__add_memory({
+  "title": "<insight>",
+  "content": "<2-3 sentence summary>",
+  "layer": "project",
+  "category": "<pattern|decision|convention>",
+  "tags": ["<domain>"]
+})
+```
 
 ## Final Response Contract
 

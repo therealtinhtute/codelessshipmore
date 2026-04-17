@@ -234,7 +234,7 @@ export function ProviderListView({ providerIds }: ProviderListViewProps) {
         const isExpanded = expandedProviders.has(providerId)
 
         return (
-          <Card key={providerId} className={`${isEnabled ? 'border-primary/50 bg-primary/5' : ''}`}>
+          <Card key={providerId} className={`${isEnabled ? 'border-claude-terracotta/50 bg-claude-terracotta/5' : ''}`}>
             <div className="p-4">
               {/* Header Row */}
               <div className="flex items-center justify-between">

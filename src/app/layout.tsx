@@ -15,6 +15,11 @@ const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
 });
 
+const georgiaSerif = {
+  variable: "--font-serif",
+  style: { fontFamily: "Georgia, serif" },
+};
+
 export const metadata: Metadata = {
   title: "CodelessShipMore - Developer Tools",
   description:
@@ -38,6 +43,7 @@ export default function RootLayout({
       className={cn(
         spaceGrotesk.variable,
         ibmPlexMono.variable,
+        georgiaSerif.variable,
         "font-sans",
         publicSans.variable,
       )}

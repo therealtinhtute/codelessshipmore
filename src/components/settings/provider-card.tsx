@@ -138,14 +138,14 @@ export function ProviderCard({ providerId }: ProviderCardProps) {
   const availableModels = fetchedModels.length > 0 ? fetchedModels : (provider?.models || [])
 
   return (
-    <Card className={`relative ${isEnabled ? 'border-primary' : ''}`}>
+    <Card variant="claude" className={`relative ${isEnabled ? 'border-primary' : ''}`}>
       <div className="p-6">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h3 className="text-lg font-semibold flex items-center gap-2">
+            <h3 className="text-lg font-serif font-medium flex items-center gap-2">
               {provider?.name || config.customName || providerId}
               {!isBuiltIn && (
-                <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                <span className="text-xs bg-claude-warm-sand text-claude-charcoal-warm px-2 py-1 rounded">
                   Custom
                 </span>
               )}
@@ -162,7 +162,7 @@ export function ProviderCard({ providerId }: ProviderCardProps) {
               </div>
             )}
             <Button
-              variant="outline"
+              variant="claude"
               size="sm"
               onClick={handleToggleEnabled}
               className={isEnabled ? 'text-green-600' : ''}
@@ -222,7 +222,7 @@ export function ProviderCard({ providerId }: ProviderCardProps) {
               </Select>
               {provider && (
                 <Button
-                  variant="outline"
+                  variant="claude"
                   size="sm"
                   onClick={handleFetchModels}
                   disabled={isFetchingModels || !config.apiKey}
@@ -244,7 +244,7 @@ export function ProviderCard({ providerId }: ProviderCardProps) {
             <Button
               onClick={handleTestConnection}
               disabled={isTesting || !config.apiKey}
-              variant="outline"
+              variant="claude"
               size="sm"
             >
               {isTesting ? (

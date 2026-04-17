@@ -132,12 +132,12 @@ export function ProfileSelector() {
             Current Profile
           </Label>
           <div className="flex items-center gap-2 mt-1">
-            <IconUser className="h-4 w-4 text-primary" />
+            <IconUser className="h-4 w-4 text-claude-terracotta" />
             <span className="font-semibold">
               {currentProfile?.name || "No profile"}
             </span>
             {currentProfile?.isDefault && (
-              <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
+              <span className="text-xs bg-claude-warm-sand text-claude-charcoal-warm px-2 py-1 rounded">
                 Default
               </span>
             )}
@@ -181,13 +181,13 @@ export function ProfileSelector() {
                     <span className="font-medium">
                       {profile.name}
                       {profile.isDefault && (
-                        <span className="text-xs bg-primary/10 text-primary px-1.5 py-0.5 rounded ml-2">
+                        <span className="text-xs bg-claude-warm-sand text-claude-charcoal-warm px-1.5 py-0.5 rounded ml-2">
                           Default
                         </span>
                       )}
                     </span>
                     {profile.id === currentProfile?.id && (
-                      <span className="text-xs text-primary">Active</span>
+                      <span className="text-xs text-claude-terracotta">Active</span>
                     )}
                   </div>
                   {profile.description && (
@@ -236,7 +236,7 @@ export function ProfileSelector() {
             {/* Create New Profile */}
             <DropdownMenuItem
               onClick={() => setIsCreateDialogOpen(true)}
-              className="text-primary"
+              className="text-claude-terracotta"
             >
               <IconPlus className="h-4 w-4 mr-2" />
               Create New Profile

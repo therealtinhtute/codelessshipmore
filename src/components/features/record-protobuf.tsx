@@ -75,27 +75,27 @@ export function RecordProtobuf() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-2">
-        <Button onClick={() => handleConvert("clean")}>
+        <Button variant="claude-primary" onClick={() => handleConvert("clean")}>
           Clean
         </Button>
-        <Button variant="outline" onClick={() => handleConvert("record")}>
+        <Button variant="claude" onClick={() => handleConvert("record")}>
           Convert Record
         </Button>
-        <Button variant="outline" onClick={() => handleConvert("interface")}>
+        <Button variant="claude" onClick={() => handleConvert("interface")}>
           Convert Interface
         </Button>
-        <Button variant="outline" onClick={() => handleConvert("standardize")}>
+        <Button variant="claude" onClick={() => handleConvert("standardize")}>
           Standardize
         </Button>
-        <Button variant="outline" onClick={() => handleConvert("sort")}>
+        <Button variant="claude" onClick={() => handleConvert("sort")}>
           Sort
         </Button>
       </div>
 
       <div className="grid min-h-[600px] grid-cols-1 lg:grid-cols-2 gap-4">
-        <Card>
+        <Card variant="claude">
           <CardHeader>
-            <CardTitle>Java Record Input</CardTitle>
+            <CardTitle variant="serif">Java Record Input</CardTitle>
           </CardHeader>
           <CardContent>
             <Textarea
@@ -109,9 +109,9 @@ export function RecordProtobuf() {
 
         <div className="space-y-4">
           {cleanedJava && (
-            <Card>
+            <Card variant="claude">
               <CardHeader>
-                <CardTitle>Cleaned Java</CardTitle>
+                <CardTitle variant="serif">Cleaned Java</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <Textarea
@@ -119,7 +119,7 @@ export function RecordProtobuf() {
                   value={cleanedJava}
                   readOnly
                 />
-                <Button onClick={() => handleConvert("record")}>
+                <Button variant="claude-primary" onClick={() => handleConvert("record")}>
                   Convert to Proto
                 </Button>
               </CardContent>
@@ -127,9 +127,9 @@ export function RecordProtobuf() {
           )}
 
           {protoCode && (
-            <Card>
+            <Card variant="claude">
               <CardHeader>
-                <CardTitle>Protocol Buffer Definition</CardTitle>
+                <CardTitle variant="serif">Protocol Buffer Definition</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <Textarea
@@ -137,7 +137,7 @@ export function RecordProtobuf() {
                   value={protoCode}
                   readOnly
                 />
-                <Button onClick={handleDownload}>
+                <Button variant="claude-primary" onClick={handleDownload}>
                   Download .proto
                 </Button>
               </CardContent>

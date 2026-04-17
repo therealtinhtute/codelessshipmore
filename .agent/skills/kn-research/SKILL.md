@@ -16,17 +16,26 @@ description: Use when you need to understand existing code, find patterns, or ex
 
 ## Search Order
 
-1. Project docs
+1. Project docs and memories (unified search)
 2. Completed or related tasks
 3. Existing code paths and implementations
 4. Adjacent tests, templates, and validation logic
 
-## Step 1: Search Documentation
+## Step 1: Search Documentation and Memory
 
 ```json
 mcp__knowns__search({ "query": "<topic>", "type": "doc" })
+mcp__knowns__search({ "query": "<topic>", "type": "memory" })
 mcp__knowns__get_doc({ "path": "<path>", "smart": true })
 ```
+
+Unified search returns docs and memory entries. If relevant memories appear, include them in findings and note whether they're still current.
+
+Use `search` for discovery-first research. Only use `retrieve` when the next consumer needs assembled context with citations rather than raw hits:
+```json
+mcp__knowns__retrieve({ "query": "<topic>" })
+```
+If MCP is unavailable, fall back to CLI: `knowns retrieve "<topic>" --json`
 
 ## Step 2: Search Completed Tasks
 

@@ -9,6 +9,7 @@
     --color-foreground: var(--foreground);
     --font-sans: var(--font-space-grotesk);
     --font-mono: var(--font-ibm-plex-mono);
+    --font-serif: Georgia, serif;
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -67,6 +68,28 @@
     --color-ds-amber-800: var(--ds-amber-800);
     --color-ds-green-800: var(--ds-green-800);
     --color-ds-teal-800: var(--ds-teal-800);
+
+    /* Claude Design System Colors */
+    --color-claude-parchment: var(--claude-parchment);
+    --color-claude-ivory: var(--claude-ivory);
+    --color-claude-warm-sand: var(--claude-warm-sand);
+    --color-claude-terracotta: var(--claude-terracotta);
+    --color-claude-coral: var(--claude-coral);
+    --color-claude-near-black: var(--claude-near-black);
+    --color-claude-charcoal-warm: var(--claude-charcoal-warm);
+    --color-claude-olive-gray: var(--claude-olive-gray);
+    --color-claude-stone-gray: var(--claude-stone-gray);
+    --color-claude-dark-warm: var(--claude-dark-warm);
+    --color-claude-warm-silver: var(--claude-warm-silver);
+    --color-claude-dark-surface: var(--claude-dark-surface);
+    --color-claude-border-cream: var(--claude-border-cream);
+    --color-claude-border-warm: var(--claude-border-warm);
+    --color-claude-border-dark: var(--claude-border-dark);
+    --color-claude-ring-warm: var(--claude-ring-warm);
+    --color-claude-ring-deep: var(--claude-ring-deep);
+    --color-claude-error: var(--claude-error);
+    --color-claude-focus: var(--claude-focus);
+    --font-serif: var(--font-serif);
 }
 
 :root {
@@ -101,6 +124,27 @@
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.708 0 0);
 
+    /* Claude Design System - Light Mode */
+    --claude-parchment: #f5f4ed;
+    --claude-ivory: #faf9f5;
+    --claude-warm-sand: #e8e6dc;
+    --claude-terracotta: #c96442;
+    --claude-coral: #d97757;
+    --claude-near-black: #141413;
+    --claude-charcoal-warm: #4d4c48;
+    --claude-olive-gray: #5e5d59;
+    --claude-stone-gray: #87867f;
+    --claude-dark-warm: #3d3d3a;
+    --claude-warm-silver: #b0aea5;
+    --claude-dark-surface: #30302e;
+    --claude-border-cream: #f0eee6;
+    --claude-border-warm: #e8e6dc;
+    --claude-border-dark: #30302e;
+    --claude-ring-warm: #d1cfc5;
+    --claude-ring-deep: #c2c0b6;
+    --claude-error: #b53333;
+    --claude-focus: #3898ec;
+
     /* Geist Color System - Light Mode */
     --ds-gray-100: oklch(0.98 0 0);
     --ds-gray-400: oklch(0.85 0.005 286);
@@ -123,7 +167,7 @@
 
     --ds-teal-800: oklch(0.55 0.12 180);
 
-    --background: oklch(1 0 0);
+    --background: var(--claude-parchment);
 
     --foreground: oklch(0.145 0 0);
 }
@@ -250,6 +294,94 @@
     }
     .text-copy-12 {
         @apply text-xs font-normal leading-relaxed;
+    }
+
+    /* Claude Typography Scale */
+    .text-claude-display {
+        font-family: var(--font-serif);
+        font-size: 4rem;
+        font-weight: 500;
+        line-height: 1.10;
+        letter-spacing: normal;
+    }
+    .text-claude-heading {
+        font-family: var(--font-serif);
+        font-size: 3.25rem;
+        font-weight: 500;
+        line-height: 1.20;
+        letter-spacing: normal;
+    }
+    .text-claude-subheading {
+        font-family: var(--font-serif);
+        font-size: 2rem;
+        font-weight: 500;
+        line-height: 1.10;
+        letter-spacing: normal;
+    }
+    .text-claude-subheading-sm {
+        font-family: var(--font-serif);
+        font-size: 1.6rem;
+        font-weight: 500;
+        line-height: 1.20;
+        letter-spacing: normal;
+    }
+    .text-claude-feature-title {
+        font-family: var(--font-serif);
+        font-size: 1.3rem;
+        font-weight: 500;
+        line-height: 1.20;
+        letter-spacing: normal;
+    }
+    .text-claude-body-serif {
+        font-family: var(--font-serif);
+        font-size: 1.06rem;
+        font-weight: 400;
+        line-height: 1.60;
+        letter-spacing: normal;
+    }
+    .text-claude-body-lg {
+        font-size: 1.25rem;
+        font-weight: 400;
+        line-height: 1.60;
+        letter-spacing: normal;
+    }
+    .text-claude-body {
+        font-size: 1.06rem;
+        font-weight: 400;
+        line-height: 1.60;
+        letter-spacing: normal;
+    }
+
+    /* Claude Color Utilities */
+    .bg-claude-parchment {
+        background-color: var(--claude-parchment);
+    }
+    .bg-claude-ivory {
+        background-color: var(--claude-ivory);
+    }
+    .bg-claude-warm-sand {
+        background-color: var(--claude-warm-sand);
+    }
+    .bg-claude-terracotta {
+        background-color: var(--claude-terracotta);
+    }
+    .text-claude-near-black {
+        color: var(--claude-near-black);
+    }
+    .text-claude-olive-gray {
+        color: var(--claude-olive-gray);
+    }
+    .text-claude-stone-gray {
+        color: var(--claude-stone-gray);
+    }
+    .text-claude-terracotta {
+        color: var(--claude-terracotta);
+    }
+    .border-claude-border-cream {
+        border-color: var(--claude-border-cream);
+    }
+    .border-claude-border-warm {
+        border-color: var(--claude-border-warm);
     }
 
     /* Geist Color Utilities */

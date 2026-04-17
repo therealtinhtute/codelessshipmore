@@ -1,17 +1,36 @@
 import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
+
+const cardVariants = cva(
+  "gap-4 overflow-hidden text-sm has-[>img:first-child]:pt-0 *:[img:first-child]:rounded-t-lg *:[img:last-child]:rounded-b-lg group/card flex flex-col",
+  {
+    variants: {
+      variant: {
+        default: "ring-foreground/10 bg-card text-card-foreground rounded-lg py-4 ring-1 data-[size=sm]:gap-3 data-[size=sm]:py-3",
+        claude: "bg-claude-ivory text-claude-near-black rounded-xl py-6 border border-claude-border-cream shadow-[rgba(0,0,0,0.05)_0px_4px_24px] data-[size=sm]:gap-3 data-[size=sm]:py-4",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+)
 
 function Card({
   className,
   size = "default",
+  variant = "default",
   ...props
-}: React.ComponentProps<"div"> & { size?: "default" | "sm" }) {
+}: React.ComponentProps<"div"> &
+  { size?: "default" | "sm" } &
+  VariantProps<typeof cardVariants>) {
   return (
     <div
       data-slot="card"
       data-size={size}
-      className={cn("ring-foreground/10 bg-card text-card-foreground gap-4 overflow-hidden rounded-lg py-4 text-sm ring-1 has-[>img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 *:[img:first-child]:rounded-t-lg *:[img:last-child]:rounded-b-lg group/card flex flex-col", className)}
+      className={cn(cardVariants({ variant }), className)}
       {...props}
     />
   )
@@ -30,11 +49,15 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
+function CardTitle({ className, variant, ...props }: React.ComponentProps<"div"> & { variant?: "default" | "serif" }) {
   return (
     <div
       data-slot="card-title"
-      className={cn("text-base font-semibold", className)}
+      className={cn(
+        "text-base font-semibold",
+        variant === "serif" && "font-serif text-lg font-medium",
+        className
+      )}
       {...props}
     />
   )

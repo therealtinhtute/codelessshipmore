@@ -65,10 +65,10 @@ export function SqlPlaceholder() {
     <div className="flex flex-col h-full max-h-screen gap-4">
       {/* Action Buttons */}
       <div className="flex flex-wrap gap-2">
-        <Button onClick={handlePasteFromClipboard}>
+        <Button variant="claude-primary" onClick={handlePasteFromClipboard}>
           Paste then fill SQL
         </Button>
-        <Button variant="outline" onClick={fillQuery}>
+        <Button variant="claude" onClick={fillQuery}>
           Fill SQL Query
         </Button>
       </div>
@@ -78,9 +78,9 @@ export function SqlPlaceholder() {
         {/* Left Column - Input SQL (2/3) + Params SQL (1/3) */}
         <div className="flex flex-col gap-4 min-h-0">
           {/* Input SQL - 2/3 height */}
-          <Card className="flex-[2] flex flex-col overflow-hidden">
+          <Card variant="claude" className="flex-[2] flex flex-col overflow-hidden">
             <CardHeader>
-              <CardTitle className="text-base">Input SQL</CardTitle>
+              <CardTitle variant="serif" className="text-base">Input SQL</CardTitle>
             </CardHeader>
             <CardContent className="flex-1 min-h-0">
               <TextareaWithActions
@@ -93,9 +93,9 @@ export function SqlPlaceholder() {
           </Card>
 
           {/* Params SQL - 1/3 height */}
-          <Card className="flex-1 flex flex-col overflow-hidden">
+          <Card variant="claude" className="flex-1 flex flex-col overflow-hidden">
             <CardHeader>
-              <CardTitle className="text-base">Params SQL</CardTitle>
+              <CardTitle variant="serif" className="text-base">Params SQL</CardTitle>
             </CardHeader>
             <CardContent className="flex-1 min-h-0">
               <TextareaWithActions
@@ -109,9 +109,9 @@ export function SqlPlaceholder() {
         </div>
 
         {/* Right Column - Result (100% height) */}
-        <Card className="flex flex-col overflow-hidden">
+        <Card variant="claude" className="flex flex-col overflow-hidden">
           <CardHeader>
-            <CardTitle className="text-base">Result</CardTitle>
+            <CardTitle variant="serif" className="text-base">Result</CardTitle>
           </CardHeader>
           <CardContent className="flex-1 min-h-0">
             <TextareaWithActions

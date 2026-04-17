@@ -184,9 +184,9 @@ export function TotpGenerator() {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <Card>
+        <Card variant="claude">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle variant="serif" className="flex items-center gap-2">
               <IconKey className="h-5 w-5" />
               Secret Input
             </CardTitle>
@@ -212,18 +212,18 @@ export function TotpGenerator() {
             <div className="rounded-md border border-dashed px-3 py-2 text-xs text-muted-foreground">
               Saved secrets are stored only in browser localStorage on this device. They are not encrypted or synced to a server.
             </div>
-            <Button onClick={handleSave} className="w-full sm:w-auto">
+            <Button variant="claude" onClick={handleSave} className="w-full sm:w-auto">
               <IconDeviceMobileCode className="h-4 w-4" />
               Save account locally
             </Button>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card variant="claude">
           <CardHeader>
             <div className="flex items-start justify-between gap-3">
               <div>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle variant="serif" className="flex items-center gap-2">
                   <IconRefresh className="h-5 w-5" />
                   Current Code
                 </CardTitle>
@@ -231,7 +231,7 @@ export function TotpGenerator() {
                   Standard 6-digit TOTP with a shared 30-second refresh window.
                 </CardDescription>
               </div>
-              <Button variant="outline" onClick={handleCopyCurrent} disabled={!currentCode || isCopying}>
+              <Button variant="claude" onClick={handleCopyCurrent} disabled={!currentCode || isCopying}>
                 <IconCopy className="h-4 w-4" />
                 Copy
               </Button>
@@ -260,9 +260,9 @@ export function TotpGenerator() {
         </Card>
       </div>
 
-      <Card>
+      <Card variant="claude">
         <CardHeader>
-          <CardTitle>Saved Accounts</CardTitle>
+          <CardTitle variant="serif">Saved Accounts</CardTitle>
           <CardDescription>
             Copy current 6-digit codes without re-entering each secret. Deleting an item removes it from localStorage immediately.
           </CardDescription>
@@ -292,7 +292,7 @@ export function TotpGenerator() {
                         <div className="text-xs text-muted-foreground">Refreshes in {secondsRemaining}s</div>
                       </div>
                       <div className="flex items-center gap-2 self-start sm:self-center">
-                        <Button variant="outline" onClick={() => void handleCopySaved(entry.id)} disabled={!savedState?.code || !!savedState.error || isCopying}>
+                        <Button variant="claude" onClick={() => void handleCopySaved(entry.id)} disabled={!savedState?.code || !!savedState.error || isCopying}>
                           <IconCopy className="h-4 w-4" />
                           Copy
                         </Button>

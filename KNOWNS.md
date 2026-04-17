@@ -9,6 +9,7 @@ Canonical repository guidance for agents working in this project.
 - [Repo Mental Model](#repo-mental-model)
 - [How Agents Should Read This File](#how-agents-should-read-this-file)
 - [Tool Selection](#tool-selection)
+- [Memory Usage](#memory-usage)
 - [Critical Rules](#critical-rules)
 - [Git Safety](#git-safety)
 - [Context Retrieval Strategy](#context-retrieval-strategy)
@@ -65,6 +66,11 @@ Canonical repository guidance for agents working in this project.
 - Use file reading and search tools for local code and text inspection.
 - Use shell commands for git, tests, builds, generators, and other terminal operations.
 - Prefer targeted retrieval over loading large files in full.
+- Use `knowns search` for discovery and quick relevance checks.
+- Use MCP `retrieve` tool when a workflow needs structured context with citations and context-pack assembly. Fall back to CLI `knowns retrieve` if MCP is unavailable.
+- Prefer `--json` for structured CLI reads consumed by agents, scripts, or workflows, including `get`, `list`, `search`, and `retrieve` commands.
+- Prefer `--plain` for human-facing inspection, quick content reads, and logs when JSON is unnecessary.
+- Do not rely on styled default CLI output for automation or parsing.
 
 ### Preferred Tool Matrix
 
@@ -76,6 +82,23 @@ Canonical repository guidance for agents working in this project.
 - `apply_patch`: make small, explicit file edits.
 - `task`: delegate large research or multi-step exploration when useful.
 
+## Memory Usage
+
+- Session start: `list_memories(layer="project")` to load accumulated project knowledge.
+- During work: `add_working_memory()` for ephemeral session-scoped cache (gone when session ends).
+- After task: `add_memory()` for reusable patterns, decisions, and conventions (alongside docs).
+- Cross-project: `promote_memory()` to move project knowledge to global (`project→global`).
+- Memory complements docs: memory is for fast agent recall, docs are for structured human-readable reference.
+- Never duplicate the full doc content into memory — store a summary and reference the doc with `@doc/<path>`.
+- During any skill: if you discover a reusable pattern, decision, convention, or failure, save it with `add_memory(layer="project")`. Capture knowledge as it emerges, don't wait for extraction.
+- Proactively save durable memory without waiting for the user to say "save this" when confidence is high.
+- Use `working` for session-only context, active investigations, temporary blockers, and other short-lived facts.
+- Use `project` for repo-specific rules, architecture decisions, conventions, recurring failure patterns, and implementation constraints.
+- Use `global` for stable user preferences or workflow rules that should carry across repositories and future sessions.
+- Ask the user only when the information appears durable but the correct scope (`working`, `project`, or `global`) is genuinely ambiguous.
+- After any meaningful user instruction, correction, or newly discovered pattern, quickly evaluate whether it should be stored as memory and save it when appropriate.
+- If the user states a stable collaboration preference, default to saving it as `global` memory unless they clearly scoped it to this repository only.
+
 ## Critical Rules
 
 - Never manually edit Knowns-managed task or doc markdown.
@@ -84,6 +107,7 @@ Canonical repository guidance for agents working in this project.
 - Use `appendNotes` for progress updates; `notes` replaces existing notes and should only be used intentionally.
 - Validate before marking work complete.
 - Use skills for detailed workflow execution instead of duplicating step-by-step process here.
+- Compatibility shim files must stay lightweight and must direct agents back to `KNOWNS.md` for behavioral rules instead of restating divergent guidance.
 
 ## Git Safety
 
@@ -129,11 +153,14 @@ Canonical repository guidance for agents working in this project.
 - In `doc edit`, `-a` means `--append`.
 - Use raw task IDs where a command expects an ID value rather than a mention.
 - Use `--plain` for read, list, and search commands, not for create or edit commands.
+- Use `--json` for structured reads like `get`, `list`, `search`, and `retrieve` when the output will be parsed or fed into an agent workflow.
+- Use `--plain` when inspecting manually or when only clean text output is needed.
 - Use `--smart` when reading docs through the CLI.
 
 ### Retrieval Pitfalls
 
 - Do not read every doc hoping to find the answer; search first.
+- Do not replace discovery-oriented `search` with `retrieve` by default; use `retrieve` only when you need assembled context, citations, or expansion metadata.
 - Do not repeatedly list the same tasks or docs if the needed context is already loaded.
 - Do not quote large file contents when a concise summary is enough.
 
