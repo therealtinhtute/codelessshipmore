@@ -17,7 +17,7 @@ export function PageContainer({ title, description, children }: PageContainerPro
   }, [title, description, setPageHeader])
 
   return (
-    <div className="flex flex-1 flex-col gap-4">
+    <div className="flex flex-1 flex-col gap-6">
       {children}
     </div>
   )

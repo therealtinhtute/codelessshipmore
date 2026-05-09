@@ -1,7 +1,26 @@
 import Link from "next/link"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  IconAdjustments,
+  IconArrowRight,
+  IconBraces,
+  IconClipboard,
+  IconDatabase,
+  IconDeviceFloppy,
+  IconFileCode,
+  IconKey,
+  IconSparkles,
+  IconTerminal2,
+} from "@tabler/icons-react"
+
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { IconBraces, IconDatabase, IconFileCode, IconAdjustments, IconArrowRight, IconKey } from "@tabler/icons-react"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 
 const features = [
   {
@@ -9,67 +28,125 @@ const features = [
     description: "Format and explore JSON data with interactive viewing capabilities including pretty print and tree view modes",
     href: "/json-viewer",
     icon: IconBraces,
-    color: "text-green-600"
+    color: "text-claude-teal"
   },
   {
     title: "SQL Placeholder",
     description: "Fill SQL query placeholders with parameter values from logs, converting JDBC-style ? placeholders to actual values",
     href: "/sql-placeholder",
     icon: IconDatabase,
-    color: "text-blue-600"
+    color: "text-claude-primary"
   },
   {
     title: "Properties Converter",
     description: "Convert between YAML, Properties, Spring @Value annotations, and Environment variables formats",
     href: "/properties-converter",
     icon: IconAdjustments,
-    color: "text-purple-600"
+    color: "text-claude-amber"
   },
   {
     title: "Record to Protobuf",
     description: "Convert Java record classes to Protocol Buffer definitions with multiple conversion options",
     href: "/record-protobuf",
     icon: IconFileCode,
-    color: "text-orange-600"
+    color: "text-claude-primary"
   },
   {
     title: "TOTP Generator",
     description: "Generate the current 6-digit 2FA code from a raw Base32 secret",
     href: "/totp-generator",
     icon: IconKey,
-    color: "text-amber-600"
+    color: "text-claude-teal"
   }
+]
+
+const platformHighlights = [
+  {
+    title: "Focused tool surfaces",
+    description: "Each utility opens straight into the working interface, with dense controls and calm spacing.",
+    icon: IconTerminal2,
+  },
+  {
+    title: "Clipboard-first flow",
+    description: "Paste, transform, copy, and keep moving without routing data through a backend.",
+    icon: IconClipboard,
+  },
+  {
+    title: "Local output handling",
+    description: "Generated JSON, ENV, SQL, TOTP, and Protobuf results stay in your browser session.",
+    icon: IconDeviceFloppy,
+  },
+  {
+    title: "AI assistance where useful",
+    description: "Prompt enhancement and provider settings sit beside the deterministic developer tools.",
+    icon: IconSparkles,
+  },
 ]
 
 export default function HomePage() {
   return (
-    <div className="container mx-auto p-6 max-w-6xl">
-      <div className="text-center mb-12">
-        <h1 className="text-3xl font-bold tracking-tight mb-4">
-          CodelessShipMore
-        </h1>
-        <p className="text-base text-muted-foreground mb-8">
-          A collection of developer utilities for JSON, SQL, Protobuf, Properties conversion, and TOTP generation
-        </p>
-        <div className="flex items-center justify-center gap-4">
-          <Button asChild>
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-20 px-4 py-12 sm:px-6 lg:px-8">
+      <section className="grid items-center gap-10 lg:grid-cols-[1fr_0.9fr]">
+        <div>
+          <Badge variant="secondary" className="mb-6">
+            Developer utilities
+          </Badge>
+          <h1 className="max-w-3xl text-5xl font-normal leading-[1.05] tracking-[-0.023em] sm:text-6xl">
+            CodelessShipMore
+          </h1>
+          <p className="mt-6 max-w-2xl text-lg leading-8 text-muted-foreground">
+            A warm, focused workspace for JSON inspection, SQL parameter filling,
+            properties conversion, Protobuf generation, TOTP codes, and prompt work.
+          </p>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <Button variant="claude-primary" asChild>
             <Link href="/json-viewer">
               Get Started <IconArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
-          <Button variant="outline" asChild>
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer">
-              View on GitHub
-            </a>
+            <Button variant="outline" asChild>
+              <Link href="/settings">Configure AI</Link>
           </Button>
+          </div>
         </div>
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+        <div className="rounded-xl bg-claude-dark p-6 text-claude-canvas">
+          <div className="mb-5 flex items-center gap-2 border-b border-white/10 pb-4">
+            <span className="size-3 rounded-full bg-claude-primary" />
+            <span className="size-3 rounded-full bg-claude-amber" />
+            <span className="size-3 rounded-full bg-claude-teal" />
+            <span className="ml-auto font-mono text-xs text-claude-muted-soft">
+              transform.ts
+            </span>
+          </div>
+          <pre className="overflow-hidden rounded-lg bg-claude-dark-soft p-5 text-sm text-claude-canvas">
+            <code>{`const tools = [
+  "json-viewer",
+  "sql-placeholder",
+  "properties-converter",
+  "record-protobuf",
+  "totp-generator",
+]
+
+shipMore(tools, { storage: "local" })`}</code>
+          </pre>
+          <div className="mt-5 rounded-lg bg-claude-dark-elevated p-4">
+            <div className="font-mono text-xs text-claude-muted-soft">
+              output
+            </div>
+            <p className="mt-2 text-sm leading-6 text-claude-canvas">
+              deterministic utilities, AI profile management, and browser-local
+              workflows in one place.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
         {features.map((feature) => (
-          <Card key={feature.title} className="hover:shadow-lg transition-shadow">
+          <Card key={feature.title} variant="claude">
             <CardHeader>
-              <CardTitle className="flex items-center gap-3">
+              <CardTitle variant="serif" className="flex items-center gap-3">
                 <feature.icon className={`h-6 w-6 ${feature.color}`} />
                 {feature.title}
               </CardTitle>
@@ -78,37 +155,42 @@ export default function HomePage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button asChild className="w-full">
+              <Button variant="outline" asChild className="w-full justify-between">
                 <Link href={feature.href}>
-                  Try Now <IconArrowRight className="ml-2 h-4 w-4" />
+                  Open tool <IconArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             </CardContent>
           </Card>
         ))}
-      </div>
+      </section>
 
-      <div className="text-center">
-        <h2 className="text-xl font-semibold mb-4">Features</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-left">
-          <div className="p-4 border rounded-lg">
-            <h3 className="font-semibold mb-2">🎨 Modern UI</h3>
-            <p className="text-sm text-muted-foreground">Clean, responsive interface with dark mode support</p>
+      <section className="rounded-lg bg-claude-primary p-10 text-white md:p-12">
+        <div className="grid gap-8 lg:grid-cols-[0.8fr_1fr] lg:items-end">
+          <div>
+            <h2 className="text-4xl font-normal leading-tight tracking-[-0.011em] text-white">
+              Built for repeated technical chores.
+            </h2>
+            <p className="mt-4 max-w-xl text-sm leading-6 text-white/85">
+              The interface keeps the controls visible, the output inspectable,
+              and the visual noise low.
+            </p>
           </div>
-          <div className="p-4 border rounded-lg">
-            <h3 className="font-semibold mb-2">⚡ Fast & Efficient</h3>
-            <p className="text-sm text-muted-foreground">Built with Next.js 16 and optimized for performance</p>
-          </div>
-          <div className="p-4 border rounded-lg">
-            <h3 className="font-semibold mb-2">📋 Clipboard Support</h3>
-            <p className="text-sm text-muted-foreground">Seamless copy/paste functionality across all tools</p>
-          </div>
-          <div className="p-4 border rounded-lg">
-            <h3 className="font-semibold mb-2">💾 Export Options</h3>
-            <p className="text-sm text-muted-foreground">Download results in various formats for later use</p>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {platformHighlights.map((highlight) => (
+              <div key={highlight.title} className="rounded-lg bg-white/12 p-5">
+                <highlight.icon className="mb-4 h-5 w-5" />
+                <h3 className="font-sans text-base font-medium leading-snug text-white">
+                  {highlight.title}
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-white/80">
+                  {highlight.description}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
-      </div>
+      </section>
     </div>
   )
 }

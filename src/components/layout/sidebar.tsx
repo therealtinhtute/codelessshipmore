@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import {
@@ -115,15 +114,11 @@ function SidebarContentInner({
             href="/"
             className="flex items-center gap-2"
           >
-            <Image
-              src="/pepe.svg"
-              alt="Pepe"
-              width={32}
-              height={32}
-              className="size-8"
-            />
+            <span className="flex size-8 items-center justify-center rounded-full bg-claude-ink text-lg leading-none text-claude-canvas">
+              *
+            </span>
             {!isCollapsed && (
-              <span className="font-semibold text-claude-near-black dark:text-claude-ivory">
+              <span className="font-serif text-xl font-normal tracking-[-0.011em] text-claude-near-black dark:text-claude-ivory">
                 CodelessShipMore
               </span>
             )}
@@ -155,11 +150,11 @@ function SidebarContentInner({
                     <SidebarMenuButton
                       asChild
                       isActive={pathname === item.href}
-                      className="data-active:bg-claude-terracotta/10 data-active:text-claude-terracotta data-active:font-semibold hover:bg-accent font-normal"
+                      className="data-active:bg-claude-surface-card data-active:text-claude-ink data-active:font-medium hover:bg-accent font-normal"
                     >
                       <Link href={item.href}>
                         <item.icon className="h-4 w-4" />
-                        <span className="text-xs">{item.name}</span>
+                        <span>{item.name}</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -179,11 +174,11 @@ function SidebarContentInner({
                       <SidebarMenuButton
                         asChild
                         isActive={pathname === item.href}
-                        className="data-active:bg-claude-terracotta/10 data-active:text-claude-terracotta data-active:font-bold hover:bg-accent"
+                        className="data-active:bg-claude-surface-card data-active:text-claude-ink data-active:font-medium hover:bg-accent"
                       >
                         <Link href={item.href}>
                           <item.icon className="h-4 w-4" />
-                          <span className="text-xs">
+                          <span>
                             {item.name}
                           </span>
                         </Link>
@@ -201,7 +196,7 @@ function SidebarContentInner({
               (isAuthenticated ? (
                 <button
                   onClick={logout}
-                  className="flex items-center gap-2 text-sm cursor-pointer hover:text-claude-terracotta hover:font-bold transition-all"
+                  className="flex items-center gap-2 text-sm cursor-pointer hover:text-claude-terracotta transition-colors"
                 >
                   <IconLogout className="h-4 w-4" />
                   <span className="group-data-[collapsible=icon]:hidden">
@@ -211,7 +206,7 @@ function SidebarContentInner({
               ) : (
                 <button
                   onClick={() => setLoginOpen(true)}
-                  className="flex items-center gap-2 text-sm cursor-pointer hover:text-claude-terracotta hover:font-bold transition-all"
+                  className="flex items-center gap-2 text-sm cursor-pointer hover:text-claude-terracotta transition-colors"
                 >
                   <IconLogin className="h-4 w-4" />
                   <span className="group-data-[collapsible=icon]:hidden">
@@ -233,18 +228,18 @@ function SidebarInsetContent({ children }: { children: React.ReactNode }) {
 
   return (
     <SidebarInset>
-      <header className="flex h-16 shrink-0 items-center gap-4 border-b px-4">
+      <header className="flex min-h-20 shrink-0 items-center gap-4 border-b px-6">
         <SidebarTrigger className="-ml-1" />
         {title && (
           <div className="flex-1">
-            <h1 className="text-lg font-serif font-medium">{title}</h1>
+            <h1 className="font-serif text-3xl font-normal leading-tight tracking-[-0.014em]">{title}</h1>
             {description && (
-              <p className="text-xs text-muted-foreground">{description}</p>
+              <p className="mt-1 text-sm text-muted-foreground">{description}</p>
             )}
           </div>
         )}
       </header>
-      <div className="flex flex-1 flex-col p-4">{children}</div>
+      <div className="flex flex-1 flex-col p-6">{children}</div>
     </SidebarInset>
   );
 }

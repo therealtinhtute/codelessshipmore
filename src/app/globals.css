@@ -7,9 +7,9 @@
 @theme inline {
     --color-background: var(--background);
     --color-foreground: var(--foreground);
-    --font-sans: var(--font-space-grotesk);
-    --font-mono: var(--font-ibm-plex-mono);
-    --font-serif: Georgia, serif;
+    --font-sans: var(--font-inter);
+    --font-mono: var(--font-code);
+    --font-serif: var(--font-display);
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -70,80 +70,118 @@
     --color-ds-teal-800: var(--ds-teal-800);
 
     /* Claude Design System Colors */
-    --color-claude-parchment: var(--claude-parchment);
-    --color-claude-ivory: var(--claude-ivory);
-    --color-claude-warm-sand: var(--claude-warm-sand);
-    --color-claude-terracotta: var(--claude-terracotta);
-    --color-claude-coral: var(--claude-coral);
-    --color-claude-near-black: var(--claude-near-black);
-    --color-claude-charcoal-warm: var(--claude-charcoal-warm);
-    --color-claude-olive-gray: var(--claude-olive-gray);
-    --color-claude-stone-gray: var(--claude-stone-gray);
-    --color-claude-dark-warm: var(--claude-dark-warm);
-    --color-claude-warm-silver: var(--claude-warm-silver);
-    --color-claude-dark-surface: var(--claude-dark-surface);
-    --color-claude-border-cream: var(--claude-border-cream);
-    --color-claude-border-warm: var(--claude-border-warm);
-    --color-claude-border-dark: var(--claude-border-dark);
-    --color-claude-ring-warm: var(--claude-ring-warm);
-    --color-claude-ring-deep: var(--claude-ring-deep);
+    --color-claude-canvas: var(--claude-canvas);
+    --color-claude-surface-soft: var(--claude-surface-soft);
+    --color-claude-surface-card: var(--claude-surface-card);
+    --color-claude-surface-cream-strong: var(--claude-surface-cream-strong);
+    --color-claude-primary: var(--claude-primary);
+    --color-claude-primary-active: var(--claude-primary-active);
+    --color-claude-dark: var(--claude-dark);
+    --color-claude-dark-elevated: var(--claude-dark-elevated);
+    --color-claude-dark-soft: var(--claude-dark-soft);
+    --color-claude-ink: var(--claude-ink);
+    --color-claude-body: var(--claude-body);
+    --color-claude-body-strong: var(--claude-body-strong);
+    --color-claude-muted: var(--claude-muted);
+    --color-claude-muted-soft: var(--claude-muted-soft);
+    --color-claude-hairline: var(--claude-hairline);
+    --color-claude-hairline-soft: var(--claude-hairline-soft);
+    --color-claude-teal: var(--claude-teal);
+    --color-claude-amber: var(--claude-amber);
     --color-claude-error: var(--claude-error);
-    --color-claude-focus: var(--claude-focus);
-    --font-serif: var(--font-serif);
+    --color-claude-success: var(--claude-success);
+    --color-claude-parchment: var(--claude-canvas);
+    --color-claude-ivory: var(--claude-canvas);
+    --color-claude-warm-sand: var(--claude-surface-card);
+    --color-claude-terracotta: var(--claude-primary);
+    --color-claude-coral: var(--claude-primary-active);
+    --color-claude-near-black: var(--claude-ink);
+    --color-claude-charcoal-warm: var(--claude-body);
+    --color-claude-olive-gray: var(--claude-muted);
+    --color-claude-stone-gray: var(--claude-muted-soft);
+    --color-claude-dark-surface: var(--claude-dark);
+    --color-claude-border-cream: var(--claude-hairline-soft);
+    --color-claude-border-warm: var(--claude-hairline);
+    --color-claude-ring-warm: var(--claude-hairline);
+    --color-claude-ring-deep: var(--claude-primary);
 }
 
 :root {
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: #c96442;
-    --primary-foreground: #faf9f5;
-    --secondary: oklch(0.967 0.001 286.375);
-    --secondary-foreground: oklch(0.21 0.006 285.885);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: #f0eee6;
-    --accent-foreground: #141413;
-    --destructive: oklch(0.58 0.22 27);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
-    --chart-1: oklch(0.865 0.127 207.078);
-    --chart-2: oklch(0.715 0.143 215.221);
-    --chart-3: oklch(0.609 0.126 221.723);
-    --chart-4: oklch(0.52 0.105 223.128);
-    --chart-5: oklch(0.45 0.085 224.283);
-    --radius: 0;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: #c96442;
-    --sidebar-primary-foreground: #faf9f5;
-    --sidebar-accent: #f0eee6;
-    --sidebar-accent-foreground: #141413;
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
+    --claude-canvas: #faf9f5;
+    --claude-surface-soft: #f5f0e8;
+    --claude-surface-card: #efe9de;
+    --claude-surface-cream-strong: #e8e0d2;
+    --claude-primary: #cc785c;
+    --claude-primary-active: #a9583e;
+    --claude-primary-disabled: #e6dfd8;
+    --claude-dark: #181715;
+    --claude-dark-elevated: #252320;
+    --claude-dark-soft: #1f1e1b;
+    --claude-ink: #141413;
+    --claude-body-strong: #252523;
+    --claude-body: #3d3d3a;
+    --claude-muted: #6c6a64;
+    --claude-muted-soft: #8e8b82;
+    --claude-hairline: #e6dfd8;
+    --claude-hairline-soft: #ebe6df;
+    --claude-teal: #5db8a6;
+    --claude-amber: #e8a55a;
+    --claude-success: #5db872;
+    --claude-warning: #d4a017;
+    --claude-error: #c64545;
+
+    --background: var(--claude-canvas);
+    --foreground: var(--claude-ink);
+    --card: var(--claude-surface-card);
+    --card-foreground: var(--claude-ink);
+    --popover: var(--claude-canvas);
+    --popover-foreground: var(--claude-ink);
+    --primary: var(--claude-primary);
+    --primary-foreground: #ffffff;
+    --secondary: var(--claude-surface-card);
+    --secondary-foreground: var(--claude-ink);
+    --muted: var(--claude-surface-soft);
+    --muted-foreground: var(--claude-muted);
+    --accent: var(--claude-surface-card);
+    --accent-foreground: var(--claude-ink);
+    --destructive: var(--claude-error);
+    --border: var(--claude-hairline);
+    --input: var(--claude-canvas);
+    --ring: var(--claude-primary);
+    --chart-1: var(--claude-primary);
+    --chart-2: var(--claude-teal);
+    --chart-3: var(--claude-amber);
+    --chart-4: var(--claude-success);
+    --chart-5: var(--claude-muted);
+    --radius: 0.75rem;
+    --sidebar: var(--claude-canvas);
+    --sidebar-foreground: var(--claude-body);
+    --sidebar-primary: var(--claude-primary);
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: var(--claude-surface-card);
+    --sidebar-accent-foreground: var(--claude-ink);
+    --sidebar-border: var(--claude-hairline);
+    --sidebar-ring: var(--claude-primary);
 
     /* Claude Design System - Light Mode */
-    --claude-parchment: #f5f4ed;
-    --claude-ivory: #faf9f5;
-    --claude-warm-sand: #e8e6dc;
-    --claude-terracotta: #c96442;
-    --claude-coral: #d97757;
-    --claude-near-black: #141413;
-    --claude-charcoal-warm: #4d4c48;
-    --claude-olive-gray: #5e5d59;
-    --claude-stone-gray: #87867f;
-    --claude-dark-warm: #3d3d3a;
-    --claude-warm-silver: #b0aea5;
-    --claude-dark-surface: #30302e;
-    --claude-border-cream: #f0eee6;
-    --claude-border-warm: #e8e6dc;
-    --claude-border-dark: #30302e;
-    --claude-ring-warm: #d1cfc5;
-    --claude-ring-deep: #c2c0b6;
-    --claude-error: #b53333;
-    --claude-focus: #3898ec;
+    --claude-parchment: var(--claude-canvas);
+    --claude-ivory: var(--claude-canvas);
+    --claude-warm-sand: var(--claude-surface-card);
+    --claude-terracotta: var(--claude-primary);
+    --claude-coral: var(--claude-primary-active);
+    --claude-near-black: var(--claude-ink);
+    --claude-charcoal-warm: var(--claude-body);
+    --claude-olive-gray: var(--claude-muted);
+    --claude-stone-gray: var(--claude-muted-soft);
+    --claude-dark-warm: var(--claude-body);
+    --claude-warm-silver: var(--claude-muted-soft);
+    --claude-dark-surface: var(--claude-dark);
+    --claude-border-cream: var(--claude-hairline-soft);
+    --claude-border-warm: var(--claude-hairline);
+    --claude-border-dark: var(--claude-dark-elevated);
+    --claude-ring-warm: var(--claude-hairline);
+    --claude-ring-deep: var(--claude-primary);
+    --claude-focus: var(--claude-primary);
 
     /* Geist Color System - Light Mode */
     --ds-gray-100: oklch(0.98 0 0);
@@ -167,43 +205,43 @@
 
     --ds-teal-800: oklch(0.55 0.12 180);
 
-    --background: var(--claude-parchment);
+    --background: var(--claude-canvas);
 
-    --foreground: oklch(0.145 0 0);
+    --foreground: var(--claude-ink);
 }
 
 .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: #c96442;
-    --primary-foreground: #faf9f5;
-    --secondary: oklch(0.274 0.006 286.033);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: #30302e;
-    --accent-foreground: #faf9f5;
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
+    --background: var(--claude-dark);
+    --foreground: var(--claude-canvas);
+    --card: var(--claude-dark-elevated);
+    --card-foreground: var(--claude-canvas);
+    --popover: var(--claude-dark-elevated);
+    --popover-foreground: var(--claude-canvas);
+    --primary: var(--claude-primary);
+    --primary-foreground: #ffffff;
+    --secondary: var(--claude-dark-elevated);
+    --secondary-foreground: var(--claude-canvas);
+    --muted: var(--claude-dark-soft);
+    --muted-foreground: #a09d96;
+    --accent: var(--claude-dark-elevated);
+    --accent-foreground: var(--claude-canvas);
+    --destructive: var(--claude-error);
+    --border: rgba(250, 249, 245, 0.12);
+    --input: var(--claude-dark-soft);
+    --ring: var(--claude-primary);
     --chart-1: oklch(0.865 0.127 207.078);
     --chart-2: oklch(0.715 0.143 215.221);
     --chart-3: oklch(0.609 0.126 221.723);
     --chart-4: oklch(0.52 0.105 223.128);
     --chart-5: oklch(0.45 0.085 224.283);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: #c96442;
-    --sidebar-primary-foreground: #faf9f5;
-    --sidebar-accent: #3d3d3a;
-    --sidebar-accent-foreground: #faf9f5;
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
+    --sidebar: var(--claude-dark);
+    --sidebar-foreground: var(--claude-canvas);
+    --sidebar-primary: var(--claude-primary);
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: var(--claude-dark-elevated);
+    --sidebar-accent-foreground: var(--claude-canvas);
+    --sidebar-border: rgba(250, 249, 245, 0.12);
+    --sidebar-ring: var(--claude-primary);
 
     /* Geist Color System - Dark Mode */
     --ds-gray-100: oklch(0.14 0.005 286);
@@ -239,33 +277,57 @@
         @apply font-sans;
     }
     body {
-        @apply text-sm font-normal leading-relaxed bg-background text-foreground;
-        font-family: var(--font-space-grotesk), sans-serif;
+        @apply bg-background text-foreground;
+        color: var(--claude-body);
+        font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 1.55;
     }
     h1 {
-        @apply text-2xl font-bold leading-tight;
+        color: var(--claude-ink);
+        font-family: var(--font-serif), Garamond, "Times New Roman", serif;
+        font-size: 4rem;
+        font-weight: 400;
+        letter-spacing: -0.023em;
+        line-height: 1.05;
     }
     h2 {
-        @apply text-xl font-semibold leading-tight;
+        color: var(--claude-ink);
+        font-family: var(--font-serif), Garamond, "Times New Roman", serif;
+        font-size: 3rem;
+        font-weight: 400;
+        letter-spacing: -0.021em;
+        line-height: 1.1;
     }
     h3 {
-        @apply text-lg font-semibold leading-snug;
+        color: var(--claude-ink);
+        font-family: var(--font-serif), Garamond, "Times New Roman", serif;
+        font-size: 2.25rem;
+        font-weight: 400;
+        letter-spacing: -0.014em;
+        line-height: 1.15;
     }
     h4,
     h5,
     h6 {
-        @apply text-base font-semibold leading-snug;
+        color: var(--claude-ink);
+        font-weight: 500;
+        line-height: 1.3;
     }
-    p,
-    span,
-    div {
-        @apply text-sm font-normal;
+    p {
+        color: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+        line-height: inherit;
     }
     code,
     pre,
     .font-mono {
-        @apply text-xs font-normal leading-relaxed;
-        font-family: var(--font-ibm-plex-mono), monospace;
+        @apply font-normal;
+        font-family: var(--font-mono), "JetBrains Mono", monospace;
+        font-size: 0.875rem;
+        line-height: 1.6;
     }
     small {
         @apply text-xs font-normal;
@@ -300,23 +362,23 @@
     .text-claude-display {
         font-family: var(--font-serif);
         font-size: 4rem;
-        font-weight: 500;
-        line-height: 1.10;
-        letter-spacing: normal;
+        font-weight: 400;
+        line-height: 1.05;
+        letter-spacing: -0.023em;
     }
     .text-claude-heading {
         font-family: var(--font-serif);
-        font-size: 3.25rem;
-        font-weight: 500;
-        line-height: 1.20;
-        letter-spacing: normal;
+        font-size: 3rem;
+        font-weight: 400;
+        line-height: 1.1;
+        letter-spacing: -0.021em;
     }
     .text-claude-subheading {
         font-family: var(--font-serif);
-        font-size: 2rem;
-        font-weight: 500;
-        line-height: 1.10;
-        letter-spacing: normal;
+        font-size: 2.25rem;
+        font-weight: 400;
+        line-height: 1.15;
+        letter-spacing: -0.014em;
     }
     .text-claude-subheading-sm {
         font-family: var(--font-serif);
@@ -327,10 +389,10 @@
     }
     .text-claude-feature-title {
         font-family: var(--font-serif);
-        font-size: 1.3rem;
-        font-weight: 500;
+        font-size: 1.75rem;
+        font-weight: 400;
         line-height: 1.20;
-        letter-spacing: normal;
+        letter-spacing: -0.011em;
     }
     .text-claude-body-serif {
         font-family: var(--font-serif);
@@ -354,34 +416,34 @@
 
     /* Claude Color Utilities */
     .bg-claude-parchment {
-        background-color: var(--claude-parchment);
+        background-color: var(--claude-canvas);
     }
     .bg-claude-ivory {
-        background-color: var(--claude-ivory);
+        background-color: var(--claude-canvas);
     }
     .bg-claude-warm-sand {
-        background-color: var(--claude-warm-sand);
+        background-color: var(--claude-surface-card);
     }
     .bg-claude-terracotta {
-        background-color: var(--claude-terracotta);
+        background-color: var(--claude-primary);
     }
     .text-claude-near-black {
-        color: var(--claude-near-black);
+        color: var(--claude-ink);
     }
     .text-claude-olive-gray {
-        color: var(--claude-olive-gray);
+        color: var(--claude-muted);
     }
     .text-claude-stone-gray {
-        color: var(--claude-stone-gray);
+        color: var(--claude-muted-soft);
     }
     .text-claude-terracotta {
-        color: var(--claude-terracotta);
+        color: var(--claude-primary);
     }
     .border-claude-border-cream {
-        border-color: var(--claude-border-cream);
+        border-color: var(--claude-hairline-soft);
     }
     .border-claude-border-warm {
-        border-color: var(--claude-border-warm);
+        border-color: var(--claude-hairline);
     }
 
     /* Geist Color Utilities */

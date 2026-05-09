@@ -8,8 +8,9 @@ const cardVariants = cva(
   {
     variants: {
       variant: {
-        default: "ring-foreground/10 bg-card text-card-foreground rounded-lg py-4 ring-1 data-[size=sm]:gap-3 data-[size=sm]:py-3",
-        claude: "bg-claude-ivory text-claude-near-black rounded-xl py-6 border border-claude-border-cream shadow-[rgba(0,0,0,0.05)_0px_4px_24px] data-[size=sm]:gap-3 data-[size=sm]:py-4",
+        default: "border border-border bg-card text-card-foreground rounded-lg py-6 data-[size=sm]:gap-3 data-[size=sm]:py-4",
+        claude: "border border-transparent bg-claude-surface-card text-claude-ink rounded-lg py-8 data-[size=sm]:gap-3 data-[size=sm]:py-5",
+        dark: "border border-transparent bg-claude-dark text-claude-canvas rounded-lg py-8 data-[size=sm]:gap-3 data-[size=sm]:py-5",
       },
     },
     defaultVariants: {
@@ -41,7 +42,7 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card-header"
       className={cn(
-        "gap-1 rounded-t-lg px-4 group-data-[size=sm]/card:px-3 [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-3 group/card-header @container/card-header grid auto-rows-min items-start has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto]",
+        "gap-1 rounded-t-lg px-6 group-data-[size=sm]/card:px-4 [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-3 group/card-header @container/card-header grid auto-rows-min items-start has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto]",
         className
       )}
       {...props}
@@ -54,8 +55,8 @@ function CardTitle({ className, variant, ...props }: React.ComponentProps<"div">
     <div
       data-slot="card-title"
       className={cn(
-        "text-base font-semibold",
-        variant === "serif" && "font-serif text-lg font-medium",
+        "text-lg font-medium text-foreground",
+        variant === "serif" && "font-serif text-2xl font-normal leading-tight tracking-[-0.011em]",
         className
       )}
       {...props}
@@ -67,7 +68,7 @@ function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card-description"
-      className={cn("text-muted-foreground text-xs/relaxed", className)}
+      className={cn("text-muted-foreground text-sm leading-relaxed", className)}
       {...props}
     />
   )
@@ -90,7 +91,7 @@ function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card-content"
-      className={cn("px-4 group-data-[size=sm]/card:px-3", className)}
+      className={cn("px-6 group-data-[size=sm]/card:px-4", className)}
       {...props}
     />
   )
@@ -100,7 +101,7 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card-footer"
-      className={cn("rounded-b-lg px-4 group-data-[size=sm]/card:px-3 [.border-t]:pt-4 group-data-[size=sm]/card:[.border-t]:pt-3 flex items-center", className)}
+      className={cn("rounded-b-lg px-6 group-data-[size=sm]/card:px-4 [.border-t]:pt-4 group-data-[size=sm]/card:[.border-t]:pt-3 flex items-center", className)}
       {...props}
     />
   )
