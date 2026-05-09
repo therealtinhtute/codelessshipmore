@@ -51,7 +51,7 @@ export function TextareaWithActions({
                 onChange={(e) => onChange?.(e.target.value)}
                 readOnly={readOnly}
                 placeholder={placeholder}
-                className={`h-full resize-none font-mono text-sm pr-28 overflow-y-auto ${className}`}
+                className={`${readOnly ? "code-pane" : "code-pane-editable"} h-full resize-none pr-28 overflow-y-auto ${className}`}
             />
             <div className="absolute top-2 right-2 flex gap-2 z-10">
                 {showPaste && !readOnly && (

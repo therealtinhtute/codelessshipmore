@@ -204,7 +204,7 @@ export function TotpGenerator() {
               value={secret}
               onChange={(event) => setSecret(event.target.value)}
               placeholder="243XN6ZWVEJG4MQS27XU5275TR7QRJ6K"
-              className="min-h-32 font-mono text-sm"
+              className="code-pane-editable min-h-32"
               spellCheck={false}
               autoCapitalize="off"
               autoCorrect="off"
@@ -243,8 +243,8 @@ export function TotpGenerator() {
                 {currentError}
               </div>
             ) : (
-              <div className="rounded-lg border bg-muted/20 p-6 text-center">
-                <div className="font-mono text-4xl font-semibold tracking-[0.3em] sm:text-5xl">
+              <div className="code-pane p-6 text-center">
+                <div className="font-mono text-4xl font-semibold tracking-[0.3em] text-ink sm:text-5xl">
                   {currentCode || "------"}
                 </div>
                 <div className="mt-3 text-sm text-muted-foreground">

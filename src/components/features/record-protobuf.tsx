@@ -75,7 +75,7 @@ export function RecordProtobuf() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-2">
-        <Button variant="claude-primary" onClick={() => handleConvert("clean")}>
+        <Button variant="default" onClick={() => handleConvert("clean")}>
           Clean
         </Button>
         <Button variant="claude" onClick={() => handleConvert("record")}>
@@ -101,7 +101,7 @@ export function RecordProtobuf() {
             <Textarea
               placeholder="Enter Java 17 record class..."
               value={javaCode}
-              className="min-h-[500px] font-mono text-sm"
+              className="code-pane-editable min-h-[500px]"
               onChange={(e) => setJavaCode(e.target.value)}
             />
           </CardContent>
@@ -115,11 +115,11 @@ export function RecordProtobuf() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <Textarea
-                  className="min-h-[200px] font-mono text-sm"
+                  className="code-pane min-h-[200px]"
                   value={cleanedJava}
                   readOnly
                 />
-                <Button variant="claude-primary" onClick={() => handleConvert("record")}>
+                <Button variant="default" onClick={() => handleConvert("record")}>
                   Convert to Proto
                 </Button>
               </CardContent>
@@ -133,11 +133,11 @@ export function RecordProtobuf() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <Textarea
-                  className="min-h-[200px] font-mono text-sm"
+                  className="code-pane min-h-[200px]"
                   value={protoCode}
                   readOnly
                 />
-                <Button variant="claude-primary" onClick={handleDownload}>
+                <Button variant="default" onClick={handleDownload}>
                   Download .proto
                 </Button>
               </CardContent>

@@ -65,7 +65,7 @@ export function SqlPlaceholder() {
     <div className="flex flex-col h-full max-h-screen gap-4">
       {/* Action Buttons */}
       <div className="flex flex-wrap gap-2">
-        <Button variant="claude-primary" onClick={handlePasteFromClipboard}>
+        <Button variant="default" onClick={handlePasteFromClipboard}>
           Paste then fill SQL
         </Button>
         <Button variant="claude" onClick={fillQuery}>

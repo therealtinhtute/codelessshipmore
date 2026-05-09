@@ -215,13 +215,13 @@ export function JsonViewer() {
               onChange={(event) => setInput(event.target.value)}
               onKeyDown={handleKeyPress}
               placeholder="Paste or type JSON here..."
-              className="min-h-[400px] font-mono text-sm"
+              className="code-pane-editable min-h-[400px]"
             />
 
             <p className="text-xs text-muted-foreground">Tip: Press {formatShortcut} + F to format.</p>
 
             <div className="flex flex-wrap gap-2">
-              <Button variant="claude-primary" onClick={processJson} disabled={!input.trim() || isProcessing}>
+              <Button variant="default" onClick={processJson} disabled={!input.trim() || isProcessing}>
                 <IconSparkles data-icon="inline-start" className={isProcessing ? "animate-spin" : undefined} />
                 {isProcessing ? "Processing..." : "Process JSON"}
               </Button>
@@ -270,7 +270,7 @@ export function JsonViewer() {
                     <Textarea
                       value={output === "Tree view generated successfully" ? "" : output}
                       readOnly
-                      className="min-h-[400px] font-mono text-sm"
+                      className="code-pane min-h-[400px]"
                     />
                     {output !== "Tree view generated successfully" && (
                       <Button size="sm" variant="outline" className="absolute top-2 right-2" onClick={() => copy(output)}>
@@ -283,7 +283,7 @@ export function JsonViewer() {
 
                 <TabsContent value="tree-view" className="mt-0">
                   {treeData ? (
-                    <div className="max-h-[400px] min-h-[400px] overflow-auto rounded-lg border p-4">
+                    <div className="code-pane max-h-[400px] min-h-[400px] overflow-auto">
                       {treeData.map((node, index) => (
                         <TreeNode key={`root-${index}`} node={node} onToggle={handleToggleNode} />
                       ))}

@@ -142,10 +142,10 @@ export function ProviderCard({ providerId }: ProviderCardProps) {
       <div className="p-6">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h3 className="text-lg font-serif font-medium flex items-center gap-2">
+            <h3 className="text-lg font-semibold flex items-center gap-2">
               {provider?.name || config.customName || providerId}
               {!isBuiltIn && (
-                <span className="text-xs bg-claude-warm-sand text-claude-charcoal-warm px-2 py-1 rounded">
+                <span className="text-xs bg-surface-strong text-body px-2 py-1 rounded">
                   Custom
                 </span>
               )}

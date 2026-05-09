@@ -4,266 +4,180 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ============================================================================
+ * Cursor Design System
+ * Source: DESIGN.md (this repo)
+ * Notes: CursorGothic is licensed; Inter is the substitute. JetBrains Mono is
+ * mandatory on every code surface. Display weight stays at 400 with negative
+ * letter-spacing — magazine voice, never bold.
+ * ========================================================================== */
+
 @theme inline {
+    /* shadcn semantic surface */
     --color-background: var(--background);
     --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+
+    /* Fonts */
     --font-sans: var(--font-inter);
     --font-mono: var(--font-code);
-    --font-serif: var(--font-display);
-    --color-sidebar-ring: var(--sidebar-ring);
-    --color-sidebar-border: var(--sidebar-border);
-    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-    --color-sidebar-accent: var(--sidebar-accent);
-    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-    --color-sidebar-primary: var(--sidebar-primary);
-    --color-sidebar-foreground: var(--sidebar-foreground);
-    --color-sidebar: var(--sidebar);
-    --color-chart-5: var(--chart-5);
-    --color-chart-4: var(--chart-4);
-    --color-chart-3: var(--chart-3);
-    --color-chart-2: var(--chart-2);
-    --color-chart-1: var(--chart-1);
-    --color-ring: var(--ring);
-    --color-input: var(--input);
-    --color-border: var(--border);
-    --color-destructive: var(--destructive);
-    --color-accent-foreground: var(--accent-foreground);
-    --color-accent: var(--accent);
-    --color-muted-foreground: var(--muted-foreground);
-    --color-muted: var(--muted);
-    --color-secondary-foreground: var(--secondary-foreground);
-    --color-secondary: var(--secondary);
-    --color-primary-foreground: var(--primary-foreground);
-    --color-primary: var(--primary);
-    --color-popover-foreground: var(--popover-foreground);
-    --color-popover: var(--popover);
-    --color-card-foreground: var(--card-foreground);
-    --color-card: var(--card);
-    --radius-sm: calc(var(--radius) - 4px);
-    --radius-md: calc(var(--radius) - 2px);
-    --radius-lg: var(--radius);
-    --radius-xl: calc(var(--radius) + 4px);
-    --radius-2xl: calc(var(--radius) + 8px);
-    --radius-3xl: calc(var(--radius) + 12px);
-    --radius-4xl: calc(var(--radius) + 16px);
 
-    /* Geist Grid System */
-    --grid-columns: 12;
-    --grid-rows: auto;
-    --grid-gap: 1rem;
-    --max-width: 1200px;
-    --min-width: 320px;
+    /* Cursor primitives — colors */
+    --color-canvas: var(--canvas);
+    --color-canvas-soft: var(--canvas-soft);
+    --color-surface-card: var(--surface-card);
+    --color-surface-strong: var(--surface-strong);
+    --color-ink: var(--ink);
+    --color-body: var(--body);
+    --color-muted-fg: var(--muted-fg);
+    --color-muted-soft: var(--muted-soft);
+    --color-on-primary: var(--on-primary);
+    --color-primary-active: var(--primary-active);
+    --color-hairline: var(--hairline);
+    --color-hairline-soft: var(--hairline-soft);
+    --color-hairline-strong: var(--hairline-strong);
+    --color-timeline-thinking: var(--timeline-thinking);
+    --color-timeline-grep: var(--timeline-grep);
+    --color-timeline-read: var(--timeline-read);
+    --color-timeline-edit: var(--timeline-edit);
+    --color-timeline-done: var(--timeline-done);
+    --color-semantic-success: var(--semantic-success);
+    --color-semantic-error: var(--semantic-error);
 
-    /* Geist Color Families */
-    --color-ds-gray-100: var(--ds-gray-100);
-    --color-ds-gray-400: var(--ds-gray-400);
-    --color-ds-gray-700: var(--ds-gray-700);
-    --color-ds-gray-800: var(--ds-gray-800);
-    --color-ds-gray-1000: var(--ds-gray-1000);
-    --color-ds-blue-700: var(--ds-blue-700);
-    --color-ds-blue-800: var(--ds-blue-800);
-    --color-ds-purple-700: var(--ds-purple-700);
-    --color-ds-pink-800: var(--ds-pink-800);
-    --color-ds-red-800: var(--ds-red-800);
-    --color-ds-amber-800: var(--ds-amber-800);
-    --color-ds-green-800: var(--ds-green-800);
-    --color-ds-teal-800: var(--ds-teal-800);
-
-    /* Claude Design System Colors */
-    --color-claude-canvas: var(--claude-canvas);
-    --color-claude-surface-soft: var(--claude-surface-soft);
-    --color-claude-surface-card: var(--claude-surface-card);
-    --color-claude-surface-cream-strong: var(--claude-surface-cream-strong);
-    --color-claude-primary: var(--claude-primary);
-    --color-claude-primary-active: var(--claude-primary-active);
-    --color-claude-dark: var(--claude-dark);
-    --color-claude-dark-elevated: var(--claude-dark-elevated);
-    --color-claude-dark-soft: var(--claude-dark-soft);
-    --color-claude-ink: var(--claude-ink);
-    --color-claude-body: var(--claude-body);
-    --color-claude-body-strong: var(--claude-body-strong);
-    --color-claude-muted: var(--claude-muted);
-    --color-claude-muted-soft: var(--claude-muted-soft);
-    --color-claude-hairline: var(--claude-hairline);
-    --color-claude-hairline-soft: var(--claude-hairline-soft);
-    --color-claude-teal: var(--claude-teal);
-    --color-claude-amber: var(--claude-amber);
-    --color-claude-error: var(--claude-error);
-    --color-claude-success: var(--claude-success);
-    --color-claude-parchment: var(--claude-canvas);
-    --color-claude-ivory: var(--claude-canvas);
-    --color-claude-warm-sand: var(--claude-surface-card);
-    --color-claude-terracotta: var(--claude-primary);
-    --color-claude-coral: var(--claude-primary-active);
-    --color-claude-near-black: var(--claude-ink);
-    --color-claude-charcoal-warm: var(--claude-body);
-    --color-claude-olive-gray: var(--claude-muted);
-    --color-claude-stone-gray: var(--claude-muted-soft);
-    --color-claude-dark-surface: var(--claude-dark);
-    --color-claude-border-cream: var(--claude-hairline-soft);
-    --color-claude-border-warm: var(--claude-hairline);
-    --color-claude-ring-warm: var(--claude-hairline);
-    --color-claude-ring-deep: var(--claude-primary);
+    /* Cursor radii (concrete, no calc chain) */
+    --radius-xs: 4px;
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-pill: 9999px;
 }
 
 :root {
-    --claude-canvas: #faf9f5;
-    --claude-surface-soft: #f5f0e8;
-    --claude-surface-card: #efe9de;
-    --claude-surface-cream-strong: #e8e0d2;
-    --claude-primary: #cc785c;
-    --claude-primary-active: #a9583e;
-    --claude-primary-disabled: #e6dfd8;
-    --claude-dark: #181715;
-    --claude-dark-elevated: #252320;
-    --claude-dark-soft: #1f1e1b;
-    --claude-ink: #141413;
-    --claude-body-strong: #252523;
-    --claude-body: #3d3d3a;
-    --claude-muted: #6c6a64;
-    --claude-muted-soft: #8e8b82;
-    --claude-hairline: #e6dfd8;
-    --claude-hairline-soft: #ebe6df;
-    --claude-teal: #5db8a6;
-    --claude-amber: #e8a55a;
-    --claude-success: #5db872;
-    --claude-warning: #d4a017;
-    --claude-error: #c64545;
+    /* Cursor primitives — light */
+    --canvas: #f7f7f4;
+    --canvas-soft: #fafaf7;
+    --surface-card: #ffffff;
+    --surface-strong: #e6e5e0;
+    --ink: #26251e;
+    --body: #5a5852;
+    --muted-fg: #807d72;
+    --muted-soft: #a09c92;
+    --on-primary: #ffffff;
+    --primary: #f54e00;
+    --primary-active: #d04200;
+    --hairline: #e6e5e0;
+    --hairline-soft: #efeee8;
+    --hairline-strong: #cfcdc4;
+    --timeline-thinking: #dfa88f;
+    --timeline-grep: #9fc9a2;
+    --timeline-read: #9fbbe0;
+    --timeline-edit: #c0a8dd;
+    --timeline-done: #c08532;
+    --semantic-success: #1f8a65;
+    --semantic-error: #cf2d56;
 
-    --background: var(--claude-canvas);
-    --foreground: var(--claude-ink);
-    --card: var(--claude-surface-card);
-    --card-foreground: var(--claude-ink);
-    --popover: var(--claude-canvas);
-    --popover-foreground: var(--claude-ink);
-    --primary: var(--claude-primary);
-    --primary-foreground: #ffffff;
-    --secondary: var(--claude-surface-card);
-    --secondary-foreground: var(--claude-ink);
-    --muted: var(--claude-surface-soft);
-    --muted-foreground: var(--claude-muted);
-    --accent: var(--claude-surface-card);
-    --accent-foreground: var(--claude-ink);
-    --destructive: var(--claude-error);
-    --border: var(--claude-hairline);
-    --input: var(--claude-canvas);
-    --ring: var(--claude-primary);
-    --chart-1: var(--claude-primary);
-    --chart-2: var(--claude-teal);
-    --chart-3: var(--claude-amber);
-    --chart-4: var(--claude-success);
-    --chart-5: var(--claude-muted);
-    --radius: 0.75rem;
-    --sidebar: var(--claude-canvas);
-    --sidebar-foreground: var(--claude-body);
-    --sidebar-primary: var(--claude-primary);
-    --sidebar-primary-foreground: #ffffff;
-    --sidebar-accent: var(--claude-surface-card);
-    --sidebar-accent-foreground: var(--claude-ink);
-    --sidebar-border: var(--claude-hairline);
-    --sidebar-ring: var(--claude-primary);
+    /* Dark-surface helpers (used by legacy ink-on-canvas inversions in marketing-style cards) */
+    --ink-elevated: #2f2e26;
+    --ink-soft: #1f1e18;
 
-    /* Claude Design System - Light Mode */
-    --claude-parchment: var(--claude-canvas);
-    --claude-ivory: var(--claude-canvas);
-    --claude-warm-sand: var(--claude-surface-card);
-    --claude-terracotta: var(--claude-primary);
-    --claude-coral: var(--claude-primary-active);
-    --claude-near-black: var(--claude-ink);
-    --claude-charcoal-warm: var(--claude-body);
-    --claude-olive-gray: var(--claude-muted);
-    --claude-stone-gray: var(--claude-muted-soft);
-    --claude-dark-warm: var(--claude-body);
-    --claude-warm-silver: var(--claude-muted-soft);
-    --claude-dark-surface: var(--claude-dark);
-    --claude-border-cream: var(--claude-hairline-soft);
-    --claude-border-warm: var(--claude-hairline);
-    --claude-border-dark: var(--claude-dark-elevated);
-    --claude-ring-warm: var(--claude-hairline);
-    --claude-ring-deep: var(--claude-primary);
-    --claude-focus: var(--claude-primary);
-
-    /* Geist Color System - Light Mode */
-    --ds-gray-100: oklch(0.98 0 0);
-    --ds-gray-400: oklch(0.85 0.005 286);
-    --ds-gray-700: oklch(0.55 0.015 286);
-    --ds-gray-800: oklch(0.4 0.01 286);
-    --ds-gray-1000: oklch(0.14 0.005 286);
-
-    --ds-blue-700: oklch(0.5 0.15 260);
-    --ds-blue-800: oklch(0.4 0.18 260);
-
-    --ds-purple-700: oklch(0.55 0.2 300);
-
-    --ds-pink-800: oklch(0.5 0.22 340);
-
-    --ds-red-800: oklch(0.55 0.22 25);
-
-    --ds-amber-800: oklch(0.65 0.15 70);
-
-    --ds-green-800: oklch(0.55 0.15 145);
-
-    --ds-teal-800: oklch(0.55 0.12 180);
-
-    --background: var(--claude-canvas);
-
-    --foreground: var(--claude-ink);
+    /* shadcn semantic — light */
+    --background: var(--canvas);
+    --foreground: var(--ink);
+    --card: var(--surface-card);
+    --card-foreground: var(--ink);
+    --popover: var(--surface-card);
+    --popover-foreground: var(--ink);
+    --primary-foreground: var(--on-primary);
+    --secondary: var(--surface-card);
+    --secondary-foreground: var(--ink);
+    --muted: var(--surface-strong);
+    --muted-foreground: var(--muted-fg);
+    --accent: var(--surface-strong);
+    --accent-foreground: var(--ink);
+    --destructive: var(--semantic-error);
+    --border: var(--hairline);
+    --input: var(--surface-card);
+    --ring: var(--primary);
+    --chart-1: var(--primary);
+    --chart-2: var(--timeline-grep);
+    --chart-3: var(--timeline-thinking);
+    --chart-4: var(--timeline-read);
+    --chart-5: var(--muted-fg);
+    --sidebar: var(--canvas);
+    --sidebar-foreground: var(--body);
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: var(--on-primary);
+    --sidebar-accent: var(--surface-strong);
+    --sidebar-accent-foreground: var(--ink);
+    --sidebar-border: var(--hairline);
+    --sidebar-ring: var(--primary);
 }
 
+/* Dark mode is derived — Cursor brand has no published dark spec.
+ * Strategy: invert canvas + ink, keep Cursor Orange and timeline pastels identical. */
 .dark {
-    --background: var(--claude-dark);
-    --foreground: var(--claude-canvas);
-    --card: var(--claude-dark-elevated);
-    --card-foreground: var(--claude-canvas);
-    --popover: var(--claude-dark-elevated);
-    --popover-foreground: var(--claude-canvas);
-    --primary: var(--claude-primary);
-    --primary-foreground: #ffffff;
-    --secondary: var(--claude-dark-elevated);
-    --secondary-foreground: var(--claude-canvas);
-    --muted: var(--claude-dark-soft);
-    --muted-foreground: #a09d96;
-    --accent: var(--claude-dark-elevated);
-    --accent-foreground: var(--claude-canvas);
-    --destructive: var(--claude-error);
-    --border: rgba(250, 249, 245, 0.12);
-    --input: var(--claude-dark-soft);
-    --ring: var(--claude-primary);
-    --chart-1: oklch(0.865 0.127 207.078);
-    --chart-2: oklch(0.715 0.143 215.221);
-    --chart-3: oklch(0.609 0.126 221.723);
-    --chart-4: oklch(0.52 0.105 223.128);
-    --chart-5: oklch(0.45 0.085 224.283);
-    --sidebar: var(--claude-dark);
-    --sidebar-foreground: var(--claude-canvas);
-    --sidebar-primary: var(--claude-primary);
-    --sidebar-primary-foreground: #ffffff;
-    --sidebar-accent: var(--claude-dark-elevated);
-    --sidebar-accent-foreground: var(--claude-canvas);
-    --sidebar-border: rgba(250, 249, 245, 0.12);
-    --sidebar-ring: var(--claude-primary);
+    --canvas: #1a1916;
+    --canvas-soft: #211f1b;
+    --surface-card: #25241e;
+    --surface-strong: #2f2e26;
+    --ink: #f7f7f4;
+    --body: #d8d6cf;
+    --muted-fg: #a8a59c;
+    --muted-soft: #807d72;
+    --hairline: rgba(247, 247, 244, 0.10);
+    --hairline-soft: rgba(247, 247, 244, 0.06);
+    --hairline-strong: rgba(247, 247, 244, 0.18);
+    --ink-elevated: #2f2e26;
+    --ink-soft: #211f1b;
 
-    /* Geist Color System - Dark Mode */
-    --ds-gray-100: oklch(0.14 0.005 286);
-    --ds-gray-400: oklch(0.3 0.008 286);
-    --ds-gray-700: oklch(0.7 0.012 286);
-    --ds-gray-800: oklch(0.85 0.005 286);
-    --ds-gray-1000: oklch(0.98 0 0);
-
-    --ds-blue-700: oklch(0.6 0.18 260);
-    --ds-blue-800: oklch(0.5 0.2 260);
-
-    --ds-purple-700: oklch(0.65 0.22 300);
-
-    --ds-pink-800: oklch(0.6 0.24 340);
-
-    --ds-red-800: oklch(0.65 0.24 25);
-
-    --ds-amber-800: oklch(0.75 0.18 70);
-
-    --ds-green-800: oklch(0.65 0.18 145);
-
-    --ds-teal-800: oklch(0.65 0.14 180);
+    --background: var(--canvas);
+    --foreground: var(--ink);
+    --card: var(--surface-card);
+    --card-foreground: var(--ink);
+    --popover: var(--surface-card);
+    --popover-foreground: var(--ink);
+    --secondary: var(--surface-card);
+    --secondary-foreground: var(--ink);
+    --muted: var(--surface-strong);
+    --muted-foreground: var(--muted-fg);
+    --accent: var(--surface-strong);
+    --accent-foreground: var(--ink);
+    --border: var(--hairline);
+    --input: var(--surface-card);
+    --sidebar: var(--canvas);
+    --sidebar-foreground: var(--body);
+    --sidebar-accent: var(--surface-strong);
+    --sidebar-accent-foreground: var(--ink);
+    --sidebar-border: var(--hairline);
 }
 
 @layer base {
@@ -278,42 +192,42 @@
     }
     body {
         @apply bg-background text-foreground;
-        color: var(--claude-body);
+        color: var(--body);
         font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         font-size: 16px;
         font-weight: 400;
-        line-height: 1.55;
+        line-height: 1.5;
     }
     h1 {
-        color: var(--claude-ink);
-        font-family: var(--font-serif), Garamond, "Times New Roman", serif;
-        font-size: 4rem;
+        color: var(--ink);
+        font-family: var(--font-sans);
+        font-size: 4.5rem;
         font-weight: 400;
-        letter-spacing: -0.023em;
-        line-height: 1.05;
-    }
-    h2 {
-        color: var(--claude-ink);
-        font-family: var(--font-serif), Garamond, "Times New Roman", serif;
-        font-size: 3rem;
-        font-weight: 400;
-        letter-spacing: -0.021em;
+        letter-spacing: -0.03em;
         line-height: 1.1;
     }
-    h3 {
-        color: var(--claude-ink);
-        font-family: var(--font-serif), Garamond, "Times New Roman", serif;
+    h2 {
+        color: var(--ink);
+        font-family: var(--font-sans);
         font-size: 2.25rem;
         font-weight: 400;
-        letter-spacing: -0.014em;
-        line-height: 1.15;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+    }
+    h3 {
+        color: var(--ink);
+        font-family: var(--font-sans);
+        font-size: 1.625rem;
+        font-weight: 400;
+        letter-spacing: -0.0125em;
+        line-height: 1.25;
     }
     h4,
     h5,
     h6 {
-        color: var(--claude-ink);
-        font-weight: 500;
-        line-height: 1.3;
+        color: var(--ink);
+        font-weight: 600;
+        line-height: 1.4;
     }
     p {
         color: inherit;
@@ -326,250 +240,192 @@
     .font-mono {
         @apply font-normal;
         font-family: var(--font-mono), "JetBrains Mono", monospace;
-        font-size: 0.875rem;
-        line-height: 1.6;
+        font-size: 0.8125rem;
+        line-height: 1.5;
     }
     small {
         @apply text-xs font-normal;
     }
+
+    /* Prism syntax highlighting — bounded use of timeline pastels for code tokens.
+     * (See .planning/phases/code-surfaces/code-surfaces-CONTEXT.md.) */
+    .token.comment,
+    .token.prolog,
+    .token.doctype,
+    .token.cdata {
+        color: var(--muted-soft);
+    }
+    .token.keyword,
+    .token.atrule,
+    .token.attr-name,
+    .token.tag,
+    .token.builtin {
+        color: var(--primary);
+    }
+    .token.string,
+    .token.attr-value,
+    .token.char,
+    .token.regex {
+        color: var(--timeline-thinking);
+    }
+    .token.number,
+    .token.boolean,
+    .token.constant,
+    .token.symbol {
+        color: var(--timeline-grep);
+    }
+    .token.function,
+    .token.property,
+    .token.class-name {
+        color: var(--ink);
+    }
+    .token.punctuation,
+    .token.operator {
+        color: var(--body);
+    }
 }
 
 @layer utilities {
-    /* Geist Semantic Typography Classes */
-    .text-heading-40 {
-        @apply text-4xl font-semibold leading-tight tracking-tight;
-    }
-    .text-heading-24 {
-        @apply text-2xl font-semibold leading-tight;
-    }
-    .text-heading-16 {
-        @apply text-base font-semibold leading-snug;
-    }
-    .text-copy-20 {
-        @apply text-xl font-normal leading-relaxed;
-    }
-    .text-copy-16 {
-        @apply text-base font-normal leading-relaxed;
-    }
-    .text-copy-14 {
-        @apply text-sm font-normal leading-relaxed;
-    }
-    .text-copy-12 {
-        @apply text-xs font-normal leading-relaxed;
-    }
-
-    /* Claude Typography Scale */
-    .text-claude-display {
-        font-family: var(--font-serif);
-        font-size: 4rem;
-        font-weight: 400;
-        line-height: 1.05;
-        letter-spacing: -0.023em;
-    }
-    .text-claude-heading {
-        font-family: var(--font-serif);
-        font-size: 3rem;
+    /* Cursor typography utilities (DESIGN.md §Typography) */
+    .text-display-mega {
+        font-family: var(--font-sans);
+        font-size: 4.5rem;
         font-weight: 400;
         line-height: 1.1;
-        letter-spacing: -0.021em;
+        letter-spacing: -0.03em;
     }
-    .text-claude-subheading {
-        font-family: var(--font-serif);
+    .text-display-lg {
+        font-family: var(--font-sans);
         font-size: 2.25rem;
         font-weight: 400;
-        line-height: 1.15;
-        letter-spacing: -0.014em;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
     }
-    .text-claude-subheading-sm {
-        font-family: var(--font-serif);
-        font-size: 1.6rem;
+    .text-display-md {
+        font-family: var(--font-sans);
+        font-size: 1.625rem;
+        font-weight: 400;
+        line-height: 1.25;
+        letter-spacing: -0.0125em;
+    }
+    .text-display-sm {
+        font-family: var(--font-sans);
+        font-size: 1.375rem;
+        font-weight: 400;
+        line-height: 1.3;
+        letter-spacing: -0.005em;
+    }
+    .text-title-md {
+        font-size: 1.125rem;
+        font-weight: 600;
+        line-height: 1.4;
+    }
+    .text-title-sm {
+        font-size: 1rem;
+        font-weight: 600;
+        line-height: 1.4;
+    }
+    .text-body-md {
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+    }
+    .text-body-tracked {
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        letter-spacing: 0.005em;
+    }
+    .text-body-sm {
+        font-size: 0.875rem;
+        font-weight: 400;
+        line-height: 1.5;
+    }
+    .text-caption {
+        font-size: 0.8125rem;
+        font-weight: 400;
+        line-height: 1.4;
+    }
+    .text-caption-uppercase {
+        font-size: 0.6875rem;
+        font-weight: 600;
+        line-height: 1.4;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    .text-code {
+        font-family: var(--font-mono), "JetBrains Mono", monospace;
+        font-size: 0.8125rem;
+        font-weight: 400;
+        line-height: 1.5;
+    }
+    .text-button {
+        font-size: 0.875rem;
         font-weight: 500;
-        line-height: 1.20;
-        letter-spacing: normal;
+        line-height: 1;
     }
-    .text-claude-feature-title {
-        font-family: var(--font-serif);
-        font-size: 1.75rem;
-        font-weight: 400;
-        line-height: 1.20;
-        letter-spacing: -0.011em;
-    }
-    .text-claude-body-serif {
-        font-family: var(--font-serif);
-        font-size: 1.06rem;
-        font-weight: 400;
-        line-height: 1.60;
-        letter-spacing: normal;
-    }
-    .text-claude-body-lg {
-        font-size: 1.25rem;
-        font-weight: 400;
-        line-height: 1.60;
-        letter-spacing: normal;
-    }
-    .text-claude-body {
-        font-size: 1.06rem;
-        font-weight: 400;
-        line-height: 1.60;
-        letter-spacing: normal;
+    .text-nav-link {
+        font-size: 0.875rem;
+        font-weight: 500;
+        line-height: 1.4;
     }
 
-    /* Claude Color Utilities */
-    .bg-claude-parchment {
-        background-color: var(--claude-canvas);
+    /* Code surface primitives (consumed in Phase 3) */
+    .code-pane {
+        background-color: var(--canvas-soft);
+        color: var(--body);
+        font-family: var(--font-mono), "JetBrains Mono", monospace;
+        font-size: 0.8125rem;
+        line-height: 1.5;
+        border: 1px solid var(--hairline);
+        border-radius: 12px;
+        padding: 16px;
     }
-    .bg-claude-ivory {
-        background-color: var(--claude-canvas);
+    .code-pane-editable {
+        background-color: var(--canvas-soft);
+        color: var(--ink);
+        font-family: var(--font-mono), "JetBrains Mono", monospace;
+        font-size: 0.8125rem;
+        line-height: 1.5;
+        border: 1px solid var(--hairline);
+        border-radius: 12px;
+        padding: 16px;
+        caret-color: var(--primary);
+        accent-color: var(--primary);
     }
-    .bg-claude-warm-sand {
-        background-color: var(--claude-surface-card);
-    }
-    .bg-claude-terracotta {
-        background-color: var(--claude-primary);
-    }
-    .text-claude-near-black {
-        color: var(--claude-ink);
-    }
-    .text-claude-olive-gray {
-        color: var(--claude-muted);
-    }
-    .text-claude-stone-gray {
-        color: var(--claude-muted-soft);
-    }
-    .text-claude-terracotta {
-        color: var(--claude-primary);
-    }
-    .border-claude-border-cream {
-        border-color: var(--claude-hairline-soft);
-    }
-    .border-claude-border-warm {
-        border-color: var(--claude-hairline);
+    .code-pane-editable::selection,
+    .code-pane-editable *::selection {
+        background-color: rgba(245, 78, 0, 0.20);
     }
 
-    /* Geist Color Utilities */
-    .bg-ds-gray-100 {
-        background-color: var(--ds-gray-100);
+    /* Timeline pill primitives (DESIGN.md §AI Timeline) — primitives only;
+     * no host surface yet. Components consume these when an agent timeline lands. */
+    .timeline-pill {
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.6875rem;
+        font-weight: 600;
+        line-height: 1.4;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--ink);
+        border-radius: 9999px;
+        padding: 4px 10px;
     }
-    .bg-ds-gray-400 {
-        background-color: var(--ds-gray-400);
+    .timeline-pill-thinking {
+        background-color: var(--timeline-thinking);
     }
-    .bg-ds-gray-700 {
-        background-color: var(--ds-gray-700);
+    .timeline-pill-grep {
+        background-color: var(--timeline-grep);
     }
-    .bg-ds-gray-800 {
-        background-color: var(--ds-gray-800);
+    .timeline-pill-read {
+        background-color: var(--timeline-read);
     }
-    .bg-ds-gray-1000 {
-        background-color: var(--ds-gray-1000);
+    .timeline-pill-edit {
+        background-color: var(--timeline-edit);
     }
-
-    .text-ds-gray-100 {
-        color: var(--ds-gray-100);
-    }
-    .text-ds-gray-400 {
-        color: var(--ds-gray-400);
-    }
-    .text-ds-gray-700 {
-        color: var(--ds-gray-700);
-    }
-    .text-ds-gray-800 {
-        color: var(--ds-gray-800);
-    }
-    .text-ds-gray-1000 {
-        color: var(--ds-gray-1000);
-    }
-
-    .border-ds-gray-100 {
-        border-color: var(--ds-gray-100);
-    }
-    .border-ds-gray-400 {
-        border-color: var(--ds-gray-400);
-    }
-    .border-ds-gray-700 {
-        border-color: var(--ds-gray-700);
-    }
-    .border-ds-gray-800 {
-        border-color: var(--ds-gray-800);
-    }
-
-    .bg-ds-blue-700 {
-        background-color: var(--ds-blue-700);
-    }
-    .bg-ds-blue-800 {
-        background-color: var(--ds-blue-800);
-    }
-    .text-ds-blue-700 {
-        color: var(--ds-blue-700);
-    }
-    .text-ds-blue-800 {
-        color: var(--ds-blue-800);
-    }
-
-    .bg-ds-purple-700 {
-        background-color: var(--ds-purple-700);
-    }
-    .text-ds-purple-700 {
-        color: var(--ds-purple-700);
-    }
-
-    .bg-ds-pink-800 {
-        background-color: var(--ds-pink-800);
-    }
-    .text-ds-pink-800 {
-        color: var(--ds-pink-800);
-    }
-
-    .bg-ds-red-800 {
-        background-color: var(--ds-red-800);
-    }
-    .text-ds-red-800 {
-        color: var(--ds-red-800);
-    }
-
-    .bg-ds-amber-800 {
-        background-color: var(--ds-amber-800);
-    }
-    .text-ds-amber-800 {
-        color: var(--ds-amber-800);
-    }
-
-    .bg-ds-green-800 {
-        background-color: var(--ds-green-800);
-    }
-    .text-ds-green-800 {
-        color: var(--ds-green-800);
-    }
-
-    .bg-ds-teal-800 {
-        background-color: var(--ds-teal-800);
-    }
-    .text-ds-teal-800 {
-        color: var(--ds-teal-800);
-    }
-
-    /* Geist Grid System */
-    .grid-container {
-        display: grid;
-        grid-template-columns: repeat(var(--grid-columns, 12), 1fr);
-        gap: var(--grid-gap, 1rem);
-        max-width: var(--max-width, 1200px);
-        margin: 0 auto;
-        padding: 0 1rem;
-    }
-
-    .grid-full {
-        grid-column: 1 / -1;
-    }
-
-    .grid-half {
-        grid-column: span 6;
-    }
-
-    .grid-third {
-        grid-column: span 4;
-    }
-
-    .grid-quarter {
-        grid-column: span 3;
+    .timeline-pill-done {
+        background-color: var(--timeline-done);
+        color: #ffffff;
     }
 }

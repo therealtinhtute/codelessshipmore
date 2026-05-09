@@ -2,7 +2,7 @@ import { createOpenAI } from "@ai-sdk/openai"
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible"
 import { createAnthropic } from "@ai-sdk/anthropic"
 import { createGoogleGenerativeAI } from "@ai-sdk/google"
-import { generateText } from "ai"
+import { streamText } from "ai"
 import type { ProviderId, ProviderConfig } from "./providers"
 
 export interface TestResult {
@@ -79,10 +79,11 @@ export async function testConnection(
         return { success: false, message: "Unknown provider" }
     }
 
-    await generateText({
+    const result = streamText({
       model,
       prompt: "Say 'ok' in one word."
     })
+    await result.text
 
     const latencyMs = Date.now() - startTime
 

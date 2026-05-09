@@ -28,35 +28,30 @@ const features = [
     description: "Format and explore JSON data with interactive viewing capabilities including pretty print and tree view modes",
     href: "/json-viewer",
     icon: IconBraces,
-    color: "text-claude-teal"
   },
   {
     title: "SQL Placeholder",
     description: "Fill SQL query placeholders with parameter values from logs, converting JDBC-style ? placeholders to actual values",
     href: "/sql-placeholder",
     icon: IconDatabase,
-    color: "text-claude-primary"
   },
   {
     title: "Properties Converter",
     description: "Convert between YAML, Properties, Spring @Value annotations, and Environment variables formats",
     href: "/properties-converter",
     icon: IconAdjustments,
-    color: "text-claude-amber"
   },
   {
     title: "Record to Protobuf",
     description: "Convert Java record classes to Protocol Buffer definitions with multiple conversion options",
     href: "/record-protobuf",
     icon: IconFileCode,
-    color: "text-claude-primary"
   },
   {
     title: "TOTP Generator",
     description: "Generate the current 6-digit 2FA code from a raw Base32 secret",
     href: "/totp-generator",
     icon: IconKey,
-    color: "text-claude-teal"
   }
 ]
 
@@ -88,38 +83,38 @@ export default function HomePage() {
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-20 px-4 py-12 sm:px-6 lg:px-8">
       <section className="grid items-center gap-10 lg:grid-cols-[1fr_0.9fr]">
         <div>
-          <Badge variant="secondary" className="mb-6">
+          <Badge variant="default" className="mb-6 text-caption-uppercase">
             Developer utilities
           </Badge>
-          <h1 className="max-w-3xl text-5xl font-normal leading-[1.05] tracking-[-0.023em] sm:text-6xl">
+          <h1 className="max-w-3xl text-display-mega">
             CodelessShipMore
           </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-muted-foreground">
+          <p className="mt-6 max-w-2xl text-body-tracked text-body">
             A warm, focused workspace for JSON inspection, SQL parameter filling,
             properties conversion, Protobuf generation, TOTP codes, and prompt work.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
-            <Button variant="claude-primary" asChild>
-            <Link href="/json-viewer">
-              Get Started <IconArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
+            <Button variant="default" asChild>
+              <Link href="/json-viewer">
+                Get Started <IconArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
             <Button variant="outline" asChild>
               <Link href="/settings">Configure AI</Link>
-          </Button>
+            </Button>
           </div>
         </div>
 
-        <div className="rounded-xl bg-claude-dark p-6 text-claude-canvas">
-          <div className="mb-5 flex items-center gap-2 border-b border-white/10 pb-4">
-            <span className="size-3 rounded-full bg-claude-primary" />
-            <span className="size-3 rounded-full bg-claude-amber" />
-            <span className="size-3 rounded-full bg-claude-teal" />
-            <span className="ml-auto font-mono text-xs text-claude-muted-soft">
+        <div className="rounded-lg border border-hairline bg-canvas-soft p-6">
+          <div className="mb-5 flex items-center gap-2 border-b border-hairline pb-4">
+            <span className="size-2.5 rounded-full bg-timeline-thinking" />
+            <span className="size-2.5 rounded-full bg-timeline-grep" />
+            <span className="size-2.5 rounded-full bg-timeline-read" />
+            <span className="ml-auto text-code text-muted-soft">
               transform.ts
             </span>
           </div>
-          <pre className="overflow-hidden rounded-lg bg-claude-dark-soft p-5 text-sm text-claude-canvas">
+          <pre className="code-pane overflow-hidden">
             <code>{`const tools = [
   "json-viewer",
   "sql-placeholder",
@@ -130,11 +125,11 @@ export default function HomePage() {
 
 shipMore(tools, { storage: "local" })`}</code>
           </pre>
-          <div className="mt-5 rounded-lg bg-claude-dark-elevated p-4">
-            <div className="font-mono text-xs text-claude-muted-soft">
+          <div className="mt-5 rounded-md border border-hairline bg-card p-4">
+            <div className="text-caption-uppercase text-muted-soft">
               output
             </div>
-            <p className="mt-2 text-sm leading-6 text-claude-canvas">
+            <p className="mt-2 text-body-sm text-body">
               deterministic utilities, AI profile management, and browser-local
               workflows in one place.
             </p>
@@ -144,10 +139,10 @@ shipMore(tools, { storage: "local" })`}</code>
 
       <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
         {features.map((feature) => (
-          <Card key={feature.title} variant="claude">
+          <Card key={feature.title} variant="default">
             <CardHeader>
               <CardTitle variant="serif" className="flex items-center gap-3">
-                <feature.icon className={`h-6 w-6 ${feature.color}`} />
+                <feature.icon className="h-6 w-6 text-ink" />
                 {feature.title}
               </CardTitle>
               <CardDescription>
@@ -165,25 +160,25 @@ shipMore(tools, { storage: "local" })`}</code>
         ))}
       </section>
 
-      <section className="rounded-lg bg-claude-primary p-10 text-white md:p-12">
+      <section className="rounded-lg bg-primary p-10 text-on-primary md:p-12">
         <div className="grid gap-8 lg:grid-cols-[0.8fr_1fr] lg:items-end">
           <div>
-            <h2 className="text-4xl font-normal leading-tight tracking-[-0.011em] text-white">
+            <h2 className="text-display-lg text-on-primary">
               Built for repeated technical chores.
             </h2>
-            <p className="mt-4 max-w-xl text-sm leading-6 text-white/85">
+            <p className="mt-4 max-w-xl text-body-sm text-on-primary/85">
               The interface keeps the controls visible, the output inspectable,
               and the visual noise low.
             </p>
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {platformHighlights.map((highlight) => (
-              <div key={highlight.title} className="rounded-lg bg-white/12 p-5">
+              <div key={highlight.title} className="rounded-md bg-white/12 p-5">
                 <highlight.icon className="mb-4 h-5 w-5" />
-                <h3 className="font-sans text-base font-medium leading-snug text-white">
+                <h3 className="text-title-sm text-on-primary">
                   {highlight.title}
                 </h3>
-                <p className="mt-2 text-sm leading-6 text-white/80">
+                <p className="mt-2 text-body-sm text-on-primary/80">
                   {highlight.description}
                 </p>
               </div>

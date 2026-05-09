@@ -8,9 +8,9 @@ const cardVariants = cva(
   {
     variants: {
       variant: {
-        default: "border border-border bg-card text-card-foreground rounded-lg py-6 data-[size=sm]:gap-3 data-[size=sm]:py-4",
-        claude: "border border-transparent bg-claude-surface-card text-claude-ink rounded-lg py-8 data-[size=sm]:gap-3 data-[size=sm]:py-5",
-        dark: "border border-transparent bg-claude-dark text-claude-canvas rounded-lg py-8 data-[size=sm]:gap-3 data-[size=sm]:py-5",
+        default: "border border-hairline bg-card text-card-foreground rounded-lg py-6 data-[size=sm]:gap-3 data-[size=sm]:py-4",
+        claude: "border border-hairline bg-card text-ink rounded-lg py-8 data-[size=sm]:gap-3 data-[size=sm]:py-5",
+        dark: "border border-transparent bg-ink text-canvas rounded-lg py-8 data-[size=sm]:gap-3 data-[size=sm]:py-5",
       },
     },
     defaultVariants: {
@@ -55,8 +55,8 @@ function CardTitle({ className, variant, ...props }: React.ComponentProps<"div">
     <div
       data-slot="card-title"
       className={cn(
-        "text-lg font-medium text-foreground",
-        variant === "serif" && "font-serif text-2xl font-normal leading-tight tracking-[-0.011em]",
+        "text-lg font-semibold text-foreground",
+        variant === "serif" && "text-display-md",
         className
       )}
       {...props}

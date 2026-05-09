@@ -9,15 +9,15 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-claude-primary-active",
-        outline: "border-border bg-background text-foreground hover:bg-claude-surface-card aria-expanded:bg-muted aria-expanded:text-foreground",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-claude-surface-cream-strong aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
+        default: "bg-primary text-primary-foreground hover:bg-primary-active",
+        outline: "border-hairline-strong bg-card text-ink hover:bg-accent aria-expanded:bg-muted aria-expanded:text-foreground",
+        secondary: "bg-card text-ink border border-hairline-strong hover:bg-accent aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
         ghost: "hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 aria-expanded:bg-muted aria-expanded:text-foreground",
         destructive: "bg-destructive/10 hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/20 text-destructive focus-visible:border-destructive/40 dark:hover:bg-destructive/30",
         link: "text-primary underline-offset-4 hover:underline",
-        claude: "border-border bg-background text-foreground hover:bg-claude-surface-card",
-        "claude-primary": "bg-claude-primary text-white hover:bg-claude-primary-active",
-        "claude-dark": "bg-claude-dark-elevated text-claude-canvas hover:bg-claude-dark-soft",
+        claude: "border-hairline-strong bg-card text-ink hover:bg-accent",
+        "claude-primary": "bg-primary text-on-primary hover:bg-primary-active",
+        "claude-dark": "bg-ink text-canvas hover:bg-ink/90",
       },
       size: {
         default: "h-10 gap-2 px-5 has-data-[icon=inline-end]:pr-4 has-data-[icon=inline-start]:pl-4",

@@ -24,7 +24,7 @@ export function EnvOutputList({ output }: EnvOutputListProps) {
   }
 
   return (
-    <div className="max-h-[500px] overflow-y-auto rounded-lg border">
+    <div className="code-pane max-h-[500px] overflow-y-auto !p-0">
       {lines.map((line, index) => (
         <EnvLineItem
           key={`${line.key}-${index}`}

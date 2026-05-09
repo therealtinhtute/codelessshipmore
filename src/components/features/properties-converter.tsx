@@ -146,7 +146,7 @@ export function PropertiesConverter() {
                             ? "Enter Java properties..."
                             : "Enter YAML or properties..."
                       }
-                      className="min-h-[400px] font-mono text-sm"
+                      className="code-pane-editable min-h-[400px]"
                     />
                   </Field>
                 </FieldGroup>
@@ -210,7 +210,7 @@ export function PropertiesConverter() {
                     <Textarea
                       value={output}
                       readOnly
-                      className="min-h-[400px] font-mono text-sm"
+                      className="code-pane min-h-[400px]"
                     />
                   )
                 )}
@@ -224,12 +224,12 @@ export function PropertiesConverter() {
         <Card variant="claude">
           <CardContent className="flex items-center justify-between gap-4 pt-6">
             <div className="flex flex-col gap-1">
-              <h3 className="font-serif font-medium text-lg">Kubernetes Format</h3>
+              <h3 className="font-semibold text-lg">Kubernetes Format</h3>
               <p className="text-sm text-muted-foreground">
                 Convert the current YAML input into Kubernetes environment variable entries.
               </p>
             </div>
-            <Button variant="claude-primary" onClick={handleK8sConversion}>
+            <Button variant="default" onClick={handleK8sConversion}>
               <IconCloud data-icon="inline-start" />
               Convert to K8s
             </Button>
@@ -253,7 +253,7 @@ export function PropertiesConverter() {
                 <Textarea
                   value={k8sOutput}
                   readOnly
-                  className="min-h-[300px] font-mono text-sm"
+                  className="code-pane min-h-[300px]"
                 />
                 <div className="flex flex-wrap gap-2">
                   <Button variant="claude" onClick={() => copy(k8sOutput)}>

@@ -134,7 +134,7 @@ Return ONLY the enhanced prompt, nothing else.`
                 value={originalPrompt}
                 onChange={(event) => setOriginalPrompt(event.target.value)}
                 placeholder="Enter your prompt here..."
-                className="min-h-[160px] resize-none"
+                className="code-pane-editable min-h-[160px] resize-none"
               />
             </Field>
 
@@ -281,9 +281,9 @@ Return ONLY the enhanced prompt, nothing else.`
           </Button>
         </CardHeader>
         <CardContent className="flex flex-1 flex-col gap-4">
-          <div className="min-h-[400px] flex-1 overflow-y-auto rounded-lg border bg-muted/30 p-4">
+          <div className="code-pane min-h-[400px] flex-1 overflow-y-auto">
             {enhancedPrompt ? (
-              <pre className="whitespace-pre-wrap font-mono text-sm">{enhancedPrompt}</pre>
+              <pre className="whitespace-pre-wrap">{enhancedPrompt}</pre>
             ) : (
               <div className="flex h-full min-h-[360px] items-center justify-center text-center text-muted-foreground">
                 <p>Your enhanced prompt will appear here.</p>
