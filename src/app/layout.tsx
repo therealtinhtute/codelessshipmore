@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/contexts/auth-context";
@@ -8,21 +8,28 @@ import { AppSidebar } from "@/components/layout/sidebar";
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
-
 export const metadata: Metadata = {
   title: "CodelessShipMore - Developer Tools",
   description:
     "A collection of developer utilities for JSON, SQL, Protobuf, and Properties conversion",
 };
 
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  weight: ["400", "500"],
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-display",
+  weight: ["600"],
+});
+
 const jetBrainsMono = JetBrains_Mono({
   subsets: ["latin"],
-  variable: "--font-code",
-  weight: ["400", "500", "600", "700"],
+  variable: "--font-mono",
+  weight: ["400", "500", "600"],
 });
 
 export default function RootLayout({
@@ -35,6 +42,7 @@ export default function RootLayout({
       lang="en"
       className={cn(
         inter.variable,
+        spaceGrotesk.variable,
         jetBrainsMono.variable,
         "font-sans",
       )}

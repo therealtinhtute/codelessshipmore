@@ -78,24 +78,24 @@ export function RecordProtobuf() {
         <Button variant="default" onClick={() => handleConvert("clean")}>
           Clean
         </Button>
-        <Button variant="claude" onClick={() => handleConvert("record")}>
+        <Button variant="outline" onClick={() => handleConvert("record")}>
           Convert Record
         </Button>
-        <Button variant="claude" onClick={() => handleConvert("interface")}>
+        <Button variant="outline" onClick={() => handleConvert("interface")}>
           Convert Interface
         </Button>
-        <Button variant="claude" onClick={() => handleConvert("standardize")}>
+        <Button variant="outline" onClick={() => handleConvert("standardize")}>
           Standardize
         </Button>
-        <Button variant="claude" onClick={() => handleConvert("sort")}>
+        <Button variant="outline" onClick={() => handleConvert("sort")}>
           Sort
         </Button>
       </div>
 
       <div className="grid min-h-[600px] grid-cols-1 lg:grid-cols-2 gap-4">
-        <Card variant="claude">
+        <Card>
           <CardHeader>
-            <CardTitle variant="serif">Java Record Input</CardTitle>
+            <CardTitle>Java Record Input</CardTitle>
           </CardHeader>
           <CardContent>
             <Textarea
@@ -109,9 +109,9 @@ export function RecordProtobuf() {
 
         <div className="space-y-4">
           {cleanedJava && (
-            <Card variant="claude">
+            <Card>
               <CardHeader>
-                <CardTitle variant="serif">Cleaned Java</CardTitle>
+                <CardTitle>Cleaned Java</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <Textarea
@@ -127,9 +127,9 @@ export function RecordProtobuf() {
           )}
 
           {protoCode && (
-            <Card variant="claude">
+            <Card>
               <CardHeader>
-                <CardTitle variant="serif">Protocol Buffer Definition</CardTitle>
+                <CardTitle>Protocol Buffer Definition</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <Textarea

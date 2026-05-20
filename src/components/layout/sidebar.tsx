@@ -21,6 +21,7 @@ import {
 } from "@/components/layout/page-header-context";
 import { useAuth } from "@/contexts/auth-context";
 import { LoginDialog } from "@/components/auth/login-dialog";
+import { SidebarLogo } from "@/components/layout/sidebar-logo";
 import { cn } from "@/lib/utils";
 import {
   Sidebar,
@@ -112,11 +113,9 @@ function SidebarContentInner({
             href="/"
             className="flex items-center gap-2"
           >
-            <span className="flex size-8 items-center justify-center rounded-full bg-primary text-lg leading-none text-on-primary">
-              *
-            </span>
+            <SidebarLogo collapsed={isCollapsed} />
             {!isCollapsed && (
-              <span className="text-display-sm text-ink dark:text-canvas">
+              <span className="text-card-title text-foreground dark:dark:text-foreground">
                 CodelessShipMore
               </span>
             )}
@@ -135,7 +134,7 @@ function SidebarContentInner({
                     <SidebarMenuButton
                       asChild
                       isActive={pathname === item.href}
-                      className="data-active:bg-surface-strong data-active:text-ink data-active:font-medium hover:bg-accent font-normal"
+                      className="data-active:bg-accent data-active:text-foreground data-active:font-medium hover:bg-accent font-normal"
                     >
                       <Link href={item.href}>
                         <item.icon className="h-4 w-4" />
@@ -159,7 +158,7 @@ function SidebarContentInner({
                       <SidebarMenuButton
                         asChild
                         isActive={pathname === item.href}
-                        className="data-active:bg-surface-strong data-active:text-ink data-active:font-medium hover:bg-accent"
+                        className="data-active:bg-accent data-active:text-foreground data-active:font-medium hover:bg-accent"
                       >
                         <Link href={item.href}>
                           <item.icon className="h-4 w-4" />
@@ -217,7 +216,7 @@ function SidebarInsetContent({ children }: { children: React.ReactNode }) {
         <SidebarTrigger className="-ml-1" />
         {title && (
           <div className="flex-1">
-            <h1 className="text-display-md text-ink">{title}</h1>
+            <h1 className="text-display-sub text-foreground">{title}</h1>
             {description && (
               <p className="mt-1 text-sm text-muted-foreground">{description}</p>
             )}

@@ -137,7 +137,7 @@ export function ProfileSelector() {
               {currentProfile?.name || "No profile"}
             </span>
             {currentProfile?.isDefault && (
-              <span className="text-xs bg-surface-strong text-body px-2 py-1 rounded">
+              <span className="text-xs bg-accent text-muted-foreground px-2 py-1 rounded">
                 Default
               </span>
             )}
@@ -181,7 +181,7 @@ export function ProfileSelector() {
                     <span className="font-medium">
                       {profile.name}
                       {profile.isDefault && (
-                        <span className="text-xs bg-surface-strong text-body px-1.5 py-0.5 rounded ml-2">
+                        <span className="text-xs bg-accent text-muted-foreground px-1.5 py-0.5 rounded ml-2">
                           Default
                         </span>
                       )}

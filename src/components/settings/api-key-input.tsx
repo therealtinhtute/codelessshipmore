@@ -38,7 +38,7 @@ export function ApiKeyInput({
         <Button
           type="button"
           variant="ghost"
-          size="icon-sm"
+          size="icon"
           onClick={() => setShowKey(!showKey)}
           className="absolute right-1 top-1/2 -translate-y-1/2"
           disabled={disabled}

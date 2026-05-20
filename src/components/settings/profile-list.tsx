@@ -256,7 +256,7 @@ export function ProfileList({ onConfigureProfile }: ProfileListProps = {}) {
           {profilesWithProviders.map((profileWithProviders) => (
             <Card
               key={profileWithProviders.profile.id}
-              className={`relative transition-colors hover:bg-canvas-soft ${
+              className={`relative transition-colors hover:bg-accent ${
                 currentProfile?.id === profileWithProviders.profile.id
                   ? 'border-primary'
                   : ''

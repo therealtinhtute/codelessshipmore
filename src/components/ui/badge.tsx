@@ -5,15 +5,15 @@ import { Slot } from "radix-ui"
 import { cn } from "@/lib/utils"
 
 const badgeVariants = cva(
-  "h-6 gap-1 rounded-full border border-transparent px-3 py-1 text-[0.8125rem] font-medium transition-all has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 [&>svg]:size-3! inline-flex items-center justify-center w-fit whitespace-nowrap shrink-0 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/30 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-colors overflow-hidden group/badge",
+  "h-6 gap-1 rounded-sm border border-transparent px-3 py-1 text-xs font-medium transition-all has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 [&>svg]:size-3! inline-flex items-center justify-center w-fit whitespace-nowrap shrink-0 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/30 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-colors overflow-hidden group/badge",
   {
     variants: {
       variant: {
-        default: "bg-surface-strong text-ink [a]:hover:bg-accent",
-        primary: "bg-primary text-primary-foreground [a]:hover:bg-primary-active",
-        secondary: "bg-card text-secondary-foreground border border-hairline [a]:hover:bg-accent",
+        default: "bg-accent text-foreground [a]:hover:bg-accent/80",
+        primary: "bg-primary text-primary-foreground [a]:hover:bg-primary/90",
+        secondary: "bg-secondary text-secondary-foreground border border-border [a]:hover:bg-accent",
         destructive: "bg-destructive/10 [a]:hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 text-destructive dark:bg-destructive/20",
-        outline: "border-hairline text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground bg-card",
+        outline: "border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground bg-card",
         ghost: "hover:bg-muted hover:text-muted-foreground dark:hover:bg-muted/50",
         link: "text-primary underline-offset-4 hover:underline",
       },

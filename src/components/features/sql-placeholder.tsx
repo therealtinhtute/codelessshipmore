@@ -68,7 +68,7 @@ export function SqlPlaceholder() {
         <Button variant="default" onClick={handlePasteFromClipboard}>
           Paste then fill SQL
         </Button>
-        <Button variant="claude" onClick={fillQuery}>
+        <Button variant="outline" onClick={fillQuery}>
           Fill SQL Query
         </Button>
       </div>
@@ -78,9 +78,9 @@ export function SqlPlaceholder() {
         {/* Left Column - Input SQL (2/3) + Params SQL (1/3) */}
         <div className="flex flex-col gap-4 min-h-0">
           {/* Input SQL - 2/3 height */}
-          <Card variant="claude" className="flex-[2] flex flex-col overflow-hidden">
+          <Card className="flex-[2] flex flex-col overflow-hidden">
             <CardHeader>
-              <CardTitle variant="serif" className="text-base">Input SQL</CardTitle>
+              <CardTitle className="text-base">Input SQL</CardTitle>
             </CardHeader>
             <CardContent className="flex-1 min-h-0">
               <TextareaWithActions
@@ -93,9 +93,9 @@ export function SqlPlaceholder() {
           </Card>
 
           {/* Params SQL - 1/3 height */}
-          <Card variant="claude" className="flex-1 flex flex-col overflow-hidden">
+          <Card className="flex-1 flex flex-col overflow-hidden">
             <CardHeader>
-              <CardTitle variant="serif" className="text-base">Params SQL</CardTitle>
+              <CardTitle className="text-base">Params SQL</CardTitle>
             </CardHeader>
             <CardContent className="flex-1 min-h-0">
               <TextareaWithActions
@@ -109,9 +109,9 @@ export function SqlPlaceholder() {
         </div>
 
         {/* Right Column - Result (100% height) */}
-        <Card variant="claude" className="flex flex-col overflow-hidden">
+        <Card className="flex flex-col overflow-hidden">
           <CardHeader>
-            <CardTitle variant="serif" className="text-base">Result</CardTitle>
+            <CardTitle className="text-base">Result</CardTitle>
           </CardHeader>
           <CardContent className="flex-1 min-h-0">
             <TextareaWithActions

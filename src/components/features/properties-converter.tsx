@@ -108,11 +108,11 @@ export function PropertiesConverter() {
 
         <TabsContent value={mode} className="mt-4">
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-            <Card variant="claude">
+            <Card>
               <CardHeader className="gap-3">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex flex-col gap-1">
-                    <CardTitle variant="serif">Input</CardTitle>
+                    <CardTitle>Input</CardTitle>
                     <CardDescription>Paste YAML, Spring annotations, or Java properties and convert them with one click.</CardDescription>
                   </div>
                   {selectedExample && (
@@ -169,19 +169,19 @@ export function PropertiesConverter() {
               </CardContent>
             </Card>
 
-            <Card variant="claude">
+            <Card>
               <CardHeader className="gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div className="flex flex-col gap-1">
-                  <CardTitle variant="serif">Output</CardTitle>
+                  <CardTitle>Output</CardTitle>
                   <CardDescription>Copy the converted result or download it as a file when ready.</CardDescription>
                 </div>
                 {output && !asyncOperation.error && (
                   <div className="flex flex-wrap gap-2">
-                    <Button variant="claude" size="sm" onClick={() => copy(output)}>
+                    <Button variant="outline" size="sm" onClick={() => copy(output)}>
                       <IconCopy data-icon="inline-start" />
                       Copy All
                     </Button>
-                    <Button variant="claude" size="sm" onClick={() => handleDownload(output, outputFilename)}>
+                    <Button variant="outline" size="sm" onClick={() => handleDownload(output, outputFilename)}>
                       <IconDownload data-icon="inline-start" />
                       Download
                     </Button>
@@ -221,7 +221,7 @@ export function PropertiesConverter() {
       </Tabs>
 
       {showK8sButton && (
-        <Card variant="claude">
+        <Card>
           <CardContent className="flex items-center justify-between gap-4 pt-6">
             <div className="flex flex-col gap-1">
               <h3 className="font-semibold text-lg">Kubernetes Format</h3>
@@ -256,11 +256,11 @@ export function PropertiesConverter() {
                   className="code-pane min-h-[300px]"
                 />
                 <div className="flex flex-wrap gap-2">
-                  <Button variant="claude" onClick={() => copy(k8sOutput)}>
+                  <Button variant="outline" onClick={() => copy(k8sOutput)}>
                     <IconCopy data-icon="inline-start" />
                     Copy
                   </Button>
-                  <Button variant="claude" onClick={() => handleDownload(k8sOutput, getConversionOutputFilename(getK8sConversionMode()))}>
+                  <Button variant="outline" onClick={() => handleDownload(k8sOutput, getConversionOutputFilename(getK8sConversionMode()))}>
                     <IconDownload data-icon="inline-start" />
                     Download YAML
                   </Button>
