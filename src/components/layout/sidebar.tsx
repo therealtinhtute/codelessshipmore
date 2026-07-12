@@ -13,6 +13,7 @@ import {
   IconLogin,
   IconLogout,
   IconKey,
+  IconBrandGithub,
 } from "@tabler/icons-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import {
@@ -50,6 +51,7 @@ const navigation = [
   },
   { name: "Record to Protobuf", href: "/record-protobuf", icon: IconFileCode },
   { name: "TOTP Generator", href: "/totp-generator", icon: IconKey },
+  { name: "GitHub Directory", href: "/github-directory", icon: IconBrandGithub },
 ];
 
 const protectedNavigation = [
@@ -134,7 +136,7 @@ function SidebarContentInner({
                     <SidebarMenuButton
                       asChild
                       isActive={pathname === item.href}
-                      className="data-active:bg-accent data-active:text-foreground data-active:font-medium hover:bg-accent font-normal"
+                      className="data-active:bg-primary data-active:text-primary-foreground data-active:font-medium hover:bg-sidebar-accent hover:text-sidebar-accent-foreground font-normal"
                     >
                       <Link href={item.href}>
                         <item.icon className="h-4 w-4" />
@@ -158,7 +160,7 @@ function SidebarContentInner({
                       <SidebarMenuButton
                         asChild
                         isActive={pathname === item.href}
-                        className="data-active:bg-accent data-active:text-foreground data-active:font-medium hover:bg-accent"
+                        className="data-active:bg-primary data-active:text-primary-foreground data-active:font-medium hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                       >
                         <Link href={item.href}>
                           <item.icon className="h-4 w-4" />

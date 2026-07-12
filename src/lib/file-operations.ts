@@ -1,5 +1,4 @@
-export function downloadFile(content: string, filename: string, mimeType = "text/plain"): void {
-  const blob = new Blob([content], { type: mimeType })
+export function downloadBlob(blob: Blob, filename: string): void {
   const url = window.URL.createObjectURL(blob)
   const link = document.createElement("a")
   link.href = url
@@ -10,7 +9,11 @@ export function downloadFile(content: string, filename: string, mimeType = "text
   window.URL.revokeObjectURL(url)
 }
 
-export function downloadJsonFile(data: any, filename: string): void {
+export function downloadFile(content: string, filename: string, mimeType = "text/plain"): void {
+  downloadBlob(new Blob([content], { type: mimeType }), filename)
+}
+
+export function downloadJsonFile(data: unknown, filename: string): void {
   const content = JSON.stringify(data, null, 2)
   downloadFile(content, filename, "application/json")
 }

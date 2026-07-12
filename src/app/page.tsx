@@ -8,6 +8,7 @@ import {
   IconDeviceFloppy,
   IconFileCode,
   IconKey,
+  IconBrandGithub,
   IconSparkles,
   IconTerminal2,
 } from "@tabler/icons-react";
@@ -57,6 +58,13 @@ const features = [
       "Generate the current 6-digit 2FA code from a raw Base32 secret",
     href: "/totp-generator",
     icon: IconKey,
+  },
+  {
+    title: "GitHub Directory",
+    description:
+      "Download a single folder from a GitHub repo as a ZIP without cloning the whole tree",
+    href: "/github-directory",
+    icon: IconBrandGithub,
   },
 ];
 
