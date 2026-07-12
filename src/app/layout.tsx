@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Lora, Google_Sans_Code } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/contexts/auth-context";
@@ -14,19 +14,17 @@ export const metadata: Metadata = {
     "A collection of developer utilities for JSON, SQL, Protobuf, and Properties conversion",
 };
 
-const inter = Inter({
+const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
   variable: "--font-sans",
-  weight: ["400", "500"],
 });
 
-const spaceGrotesk = Space_Grotesk({
+const lora = Lora({
   subsets: ["latin"],
-  variable: "--font-display",
-  weight: ["600"],
+  variable: "--font-serif",
 });
 
-const jetBrainsMono = JetBrains_Mono({
+const googleSansCode = Google_Sans_Code({
   subsets: ["latin"],
   variable: "--font-mono",
   weight: ["400", "500", "600"],
@@ -41,9 +39,9 @@ export default function RootLayout({
     <html
       lang="en"
       className={cn(
-        inter.variable,
-        spaceGrotesk.variable,
-        jetBrainsMono.variable,
+        bricolage.variable,
+        lora.variable,
+        googleSansCode.variable,
         "font-sans",
       )}
       suppressHydrationWarning

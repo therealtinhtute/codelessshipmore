@@ -2,7 +2,7 @@
   "url": "https://console.supermemory.ai/",
   "title": "Supermemory Console",
   "description": "Interact with the Supermemory API",
-  "scrapedAt": "2026-05-20T13:34:44.590Z",
+  "scrapedAt": "2026-05-21T12:17:26.364Z",
   "colors": {
     "bg": "#faf9f4",
     "bgSecondary": "#f3f1ec",
@@ -16,21 +16,21 @@
         "hex": "#ffffff",
         "role": "button",
         "count": 1,
-        "area": 694219,
+        "area": 782846,
         "contrast": "dark"
       },
       {
         "hex": "#f3f1ec",
         "role": "section",
         "count": 1,
-        "area": 239778,
+        "area": 271556,
         "contrast": "dark"
       },
       {
         "hex": "#faf9f4",
         "role": "block",
         "count": 1,
-        "area": 74680,
+        "area": 83319,
         "contrast": "dark"
       },
       {
@@ -53,33 +53,18 @@
     "headingFont": {
       "family": "\"Space Grotesk\", Inter, ui-sans-serif, system-ui, sans-serif",
       "cleanFamily": "Space Grotesk",
-      "weights": [
-        "600"
-      ],
+      "weights": ["600"],
       "usedFor": "heading",
       "fallback": "sans-serif"
     },
     "bodyFont": {
       "family": "Inter, ui-sans-serif, system-ui, sans-serif",
       "cleanFamily": "Inter",
-      "weights": [
-        "400"
-      ],
+      "weights": ["400"],
       "usedFor": "body",
       "fallback": "sans-serif"
     },
-    "fontSizes": [
-      24,
-      20,
-      18,
-      16,
-      14,
-      12,
-      11.2,
-      10.2,
-      10,
-      9.6
-    ],
+    "fontSizes": [24, 20, 18, 16, 14, 12, 11.2, 10.2, 10, 9.6],
     "lineHeights": [],
     "details": [
       {
@@ -891,14 +876,7 @@
       "category": "other"
     }
   ],
-  "tags": [
-    "light",
-    "soft",
-    "accented",
-    "compact",
-    "monospace",
-    "sans-serif"
-  ],
+  "tags": ["light", "soft", "accented", "compact", "monospace", "sans-serif"],
   "mood": "Clean, minimal, and product-focused with deliberate use of whitespace.",
   "heroHeadline": "Overview",
   "heroSubtitle": "",

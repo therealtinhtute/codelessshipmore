@@ -5,10 +5,9 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ============================================================================
- * Supermemory Console Design System
- * Source: design-tokens-console-supermemory-ai.json
- * Fonts: Space Grotesk (headings, 600) + Inter (body, 400/500)
- * Code: JetBrains Mono
+ * supercyan theme (tweakcn)
+ * Source: https://tweakcn.com/r/themes/cmrekixiw000004jlgh1708sp
+ * Fonts: Bricolage Grotesque (sans/display) + Lora (serif) + Google Sans Code (mono)
  * ========================================================================== */
 
 @theme inline {
@@ -28,6 +27,7 @@
     --color-accent: var(--accent);
     --color-accent-foreground: var(--accent-foreground);
     --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
     --color-border: var(--border);
     --color-input: var(--input);
     --color-ring: var(--ring);
@@ -44,62 +44,132 @@
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-ring: var(--sidebar-ring);
+    --color-shadow-color: var(--shadow-color);
 
-    /* Fonts */
-    --font-sans: var(--font-sans), "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    --font-display: var(--font-display), "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
-    --font-mono: var(--font-mono);
+    /* Fonts — prefer next/font CSS vars, registry names as fallback */
+    --font-sans: var(--font-sans), "Bricolage Grotesque", ui-sans-serif, sans-serif, system-ui;
+    --font-display: var(--font-sans), "Bricolage Grotesque", ui-sans-serif, sans-serif, system-ui;
+    --font-serif: var(--font-serif), Lora, ui-serif, serif;
+    --font-mono: var(--font-mono), "Google Sans Code", ui-monospace, monospace;
 
-    /* Supermemory design primitives */
+    /* App design primitives (aliases → theme semantics) */
     --color-ink: var(--text-strong);
     --color-body: var(--text-secondary);
     --color-canvas: var(--bg-primary);
-    --color-on-primary: var(--accent-foreground);
+    --color-on-primary: var(--primary-foreground);
     --color-hairline: var(--border);
     --color-hairline-strong: var(--border);
     --color-surface-card: var(--bg-elevated);
     --color-surface-strong: var(--bg-muted);
     --color-muted-fg: var(--text-muted);
 
-    /* Radius scale — 0px (sharp corners) */
-    --radius-xs: 0px;
-    --radius-sm: 0px;
-    --radius-md: 0px;
-    --radius-lg: 0px;
-    --radius-xl: 0px;
-    --radius-pill: 0px;
+    /* Radius scale from theme --radius (0.35rem) */
+    --radius-xs: calc(var(--radius) * 0.5);
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+    --radius-2xl: calc(var(--radius) * 1.8);
+    --radius-3xl: calc(var(--radius) * 2.2);
+    --radius-4xl: calc(var(--radius) * 2.6);
+    --radius-pill: 9999px;
+
+    /* Tracking + shadow theme tokens */
+    --tracking-tighter: calc(var(--tracking-normal) - 0.05em);
+    --tracking-tight: calc(var(--tracking-normal) - 0.025em);
+    --tracking-wide: calc(var(--tracking-normal) + 0.025em);
+    --tracking-wider: calc(var(--tracking-normal) + 0.05em);
+    --tracking-widest: calc(var(--tracking-normal) + 0.1em);
+    --shadow-2xs: var(--shadow-2xs);
+    --shadow-xs: var(--shadow-xs);
+    --shadow-sm: var(--shadow-sm);
+    --shadow: var(--shadow);
+    --shadow-md: var(--shadow-md);
+    --shadow-lg: var(--shadow-lg);
+    --shadow-xl: var(--shadow-xl);
+    --shadow-2xl: var(--shadow-2xl);
 }
 
 :root {
-    /* Supermemory background surfaces */
-    --bg-primary: #faf9f4;
-    --bg-secondary: #f3f1ec;
-    --bg-muted: #e8e5e0;
-    --bg-elevated: #fff;
-    --bg-overlay: #faf9f4b3;
+    /* —— supercyan shadcn semantic — light —— */
+    --background: oklch(0.9743 0.0062 75.4070);
+    --foreground: oklch(0.0847 0 0);
+    --card: oklch(1.0000 0 0);
+    --card-foreground: oklch(0.0847 0 0);
+    --popover: oklch(1.0000 0 0);
+    --popover-foreground: oklch(0.0847 0 0);
+    --primary: oklch(0.5200 0.1050 223.1280);
+    --primary-foreground: oklch(1.0000 0 0);
+    --secondary: oklch(0.9536 0.0091 78.2811);
+    --secondary-foreground: oklch(0.0847 0 0);
+    --muted: oklch(0.9142 0.0092 78.2792);
+    --muted-foreground: oklch(0.3867 0 0);
+    --accent: oklch(0.5200 0.1050 223.1280);
+    --accent-foreground: oklch(1.0000 0 0);
+    /* Darker red so white label hits ≥4.5:1 on small buttons */
+    --destructive: oklch(0.52 0.20 25);
+    --destructive-foreground: oklch(1.0000 0 0);
+    /* Stronger hairlines for UI controls (~3:1 vs background) */
+    --border: oklch(0.63 0.016 84.57);
+    --input: oklch(0.63 0.016 84.57);
+    --ring: oklch(0.5200 0.1050 223.1280);
+    --chart-1: oklch(0.5683 0.2216 260.9091);
+    --chart-2: oklch(0.5781 0.1515 152.1876);
+    --chart-3: oklch(0.8246 0.1611 77.2797);
+    --chart-4: oklch(0.6177 0.2585 304.9426);
+    --chart-5: oklch(0.6992 0.1871 22.1497);
+    --radius: 0.35rem;
+    --sidebar: oklch(0.9536 0.0091 78.2811);
+    --sidebar-foreground: oklch(0.0847 0 0);
+    --sidebar-primary: oklch(0.5200 0.1050 223.1280);
+    --sidebar-primary-foreground: oklch(1.0000 0 0);
+    --sidebar-accent: oklch(0.9142 0.0092 78.2792);
+    --sidebar-accent-foreground: oklch(0.0847 0 0);
+    --sidebar-border: oklch(0.63 0.016 84.57);
+    --sidebar-ring: oklch(0.5200 0.1050 223.1280);
 
-    /* Accent system */
-    --accent-start: #0e7490;
-    --accent-mid: #06b6d4;
-    --accent-end: #cffafe;
+    /* Theme meta */
+    --letter-spacing: 0em;
+    --tracking-normal: 0em;
+    --spacing: 0.25rem;
+    --shadow-color: oklch(0 0 0);
+    --shadow-opacity: 0.1;
+    --shadow-blur: 3px;
+    --shadow-spread: 0px;
+    --shadow-offset-x: 0;
+    --shadow-offset-y: 1px;
+    --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+    --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+    --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
+    --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
+    --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 2px 4px -1px hsl(0 0% 0% / 0.10);
+    --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 4px 6px -1px hsl(0 0% 0% / 0.10);
+    --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 8px 10px -1px hsl(0 0% 0% / 0.10);
+    --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
+    --shadow-focus: 0 0 0 2px var(--ring), 0 0 0 4px color-mix(in oklch, var(--ring) 30%, transparent);
+
+    /* App aliases → theme (keep button / code-pane / prism working) */
+    --bg-primary: var(--background);
+    --bg-secondary: var(--secondary);
+    --bg-muted: var(--muted);
+    --bg-elevated: var(--card);
+    --bg-overlay: color-mix(in oklch, var(--background) 70%, transparent);
+    --accent-start: var(--primary);
+    --accent-mid: color-mix(in oklch, var(--primary) 70%, white);
+    --accent-end: color-mix(in oklch, var(--primary) 25%, white);
     --accent-gradient: linear-gradient(135deg, var(--accent-start), var(--accent-mid), var(--accent-end));
-    --accent-color: #0e7490;
-    --accent-foreground: #fff;
-    --accent-hover: #0c6379;
-    --accent-muted: #cffafe;
+    --accent-color: var(--primary);
+    --accent-hover: color-mix(in oklch, var(--primary) 82%, black);
+    --accent-muted: color-mix(in oklch, var(--primary) 18%, var(--background));
+    --text-strong: var(--foreground);
+    --text-primary: var(--foreground);
+    --text-secondary: var(--muted-foreground);
+    --text-muted: color-mix(in oklch, var(--muted-foreground) 65%, var(--background));
+    --text-inverse: var(--primary-foreground);
+    --border-color: var(--border);
+    --border-muted: color-mix(in oklch, var(--border) 60%, var(--background));
 
-    /* Text */
-    --text-strong: #000;
-    --text-primary: #0a0a0a;
-    --text-secondary: #525252;
-    --text-muted: #a3a3a3;
-    --text-inverse: #fff;
-
-    /* Borders */
-    --border-color: #e3e0db;
-    --border-muted: #f0ede8;
-
-    /* Status colors */
+    /* Status colors (not provided by theme) */
     --success: #4ade80;
     --success-muted: #4ade802e;
     --error: #f87171;
@@ -109,108 +179,88 @@
     --info: #60a5fa;
     --info-muted: #60a5fa2e;
     --danger: #ef4444;
-
-    /* Shadows */
-    --shadow-sm: 0 1px 2px 0 #0000000d;
-    --shadow-md: 0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a;
-    --shadow-lg: 0 10px 15px -3px #0000001a, 0 4px 6px -4px #0000001a;
-    --shadow-focus: 0 0 0 2px var(--accent-color), 0 0 0 4px #0e749033;
-
-    /* shadcn semantic — light */
-    --background: #fff;
-    --foreground: #0a0a0a;
-    --card: #fff;
-    --card-foreground: #0a0a0a;
-    --popover: #fff;
-    --popover-foreground: #0a0a0a;
-    --primary: #0e7490;
-    --primary-foreground: #fff;
-    --secondary: #f3f1ec;
-    --secondary-foreground: #0a0a0a;
-    --muted: #f3f1ec;
-    --muted-foreground: #525252;
-    --accent: #e8e5e0;
-    --accent-foreground: #0a0a0a;
-    --destructive: #ef4444;
-    --border: #e3e0db;
-    --input: #e3e0db;
-    --ring: #0e7490;
-
-    /* Charts */
-    --chart-1: #0e7490;
-    --chart-2: #0891b2;
-    --chart-3: #4ade80;
-    --chart-4: #fbbf24;
-    --chart-5: #f87171;
-
-    /* Sidebar */
-    --sidebar: #f3f1ec;
-    --sidebar-foreground: #525252;
-    --sidebar-primary: #0e7490;
-    --sidebar-primary-foreground: #fff;
-    --sidebar-accent: #e8e5e0;
-    --sidebar-accent-foreground: #0a0a0a;
-    --sidebar-border: #e3e0db;
-    --sidebar-ring: #0e7490;
 }
 
 .dark {
-    /* Supermemory dark surfaces */
-    --bg-primary: #111110;
-    --bg-secondary: #1a1917;
-    --bg-muted: #2a2926;
-    --bg-elevated: #1a1917;
-    --bg-overlay: #111110b3;
+    /* —— supercyan shadcn semantic — dark —— */
+    --background: oklch(0.2679 0.0036 106.6427);
+    --foreground: oklch(0.8074 0.0142 93.0137);
+    --card: oklch(0.2679 0.0036 106.6427);
+    --card-foreground: oklch(0.9818 0.0054 95.0986);
+    --popover: oklch(0.3085 0.0035 106.6039);
+    --popover-foreground: oklch(0.9211 0.0040 106.4781);
+    /* Lighter teal so text-primary on dark bg stays ≥4.5:1; white-on-primary still AA */
+    --primary: oklch(0.72 0.11 223.1280);
+    --primary-foreground: oklch(0.18 0.03 223);
+    --secondary: oklch(0.9818 0.0054 95.0986);
+    --secondary-foreground: oklch(0.3085 0.0035 106.6039);
+    --muted: oklch(0.2213 0.0038 106.7070);
+    --muted-foreground: oklch(0.7713 0.0169 99.0657);
+    --accent: oklch(0.2130 0.0078 95.4245);
+    --accent-foreground: oklch(0.9663 0.0080 98.8792);
+    /* Darker red so white label hits ≥4.5:1 */
+    --destructive: oklch(0.52 0.20 25);
+    --destructive-foreground: oklch(1.0000 0 0);
+    /* Stronger border for UI component edges (~3:1 vs background) */
+    --border: oklch(0.55 0.012 106.9);
+    --input: oklch(0.55 0.012 106.9);
+    --ring: oklch(0.72 0.11 223.1280);
+    --chart-1: oklch(0.5583 0.1276 42.9956);
+    --chart-2: oklch(0.6898 0.1581 290.4107);
+    --chart-3: oklch(0.2130 0.0078 95.4245);
+    --chart-4: oklch(0.3074 0.0516 289.3230);
+    --chart-5: oklch(0.5608 0.1348 42.0584);
+    --radius: 0.35rem;
+    --sidebar: oklch(0.2357 0.0024 67.7077);
+    --sidebar-foreground: oklch(0.8074 0.0142 93.0137);
+    /* Align active nav with primary for consistent light/dark active states */
+    --sidebar-primary: oklch(0.72 0.11 223.1280);
+    --sidebar-primary-foreground: oklch(0.18 0.03 223);
+    --sidebar-accent: oklch(0.1680 0.0020 106.6177);
+    --sidebar-accent-foreground: oklch(0.8074 0.0142 93.0137);
+    --sidebar-border: oklch(0.9401 0 0);
+    --sidebar-ring: oklch(0.7731 0 0);
 
-    /* Accent — slightly lighter in dark mode */
-    --accent-color: #22d3ee;
-    --accent-foreground: #fff;
-    --accent-hover: #67e8f9;
-    --accent-muted: #164e63;
+    /* Theme meta (same shadow system) */
+    --letter-spacing: 0em;
+    --tracking-normal: 0em;
+    --spacing: 0.25rem;
+    --shadow-color: oklch(0 0 0);
+    --shadow-opacity: 0.1;
+    --shadow-blur: 3px;
+    --shadow-spread: 0px;
+    --shadow-offset-x: 0;
+    --shadow-offset-y: 1px;
+    --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+    --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+    --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
+    --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
+    --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 2px 4px -1px hsl(0 0% 0% / 0.10);
+    --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 4px 6px -1px hsl(0 0% 0% / 0.10);
+    --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 8px 10px -1px hsl(0 0% 0% / 0.10);
+    --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
+    --shadow-focus: 0 0 0 2px var(--ring), 0 0 0 4px color-mix(in oklch, var(--ring) 30%, transparent);
 
-    /* Text — dark mode */
-    --text-strong: #fafaf9;
-    --text-primary: #e8e5e0;
-    --text-secondary: #a3a3a3;
-    --text-muted: #666666;
-    --text-inverse: #0a0a0a;
-
-    /* Borders — dark */
-    --border-color: #2a2926;
-    --border-muted: #1f1e1b;
-
-    /* Shadows — dark */
-    --shadow-sm: 0 1px 2px 0 #00000033;
-    --shadow-md: 0 4px 6px -1px #00000040, 0 2px 4px -2px #00000040;
-    --shadow-lg: 0 10px 15px -3px #00000040, 0 4px 6px -4px #00000040;
-    --shadow-focus: 0 0 0 2px var(--accent-color), 0 0 0 4px #22d3ee33;
-
-    /* shadcn semantic — dark */
-    --background: #111110;
-    --foreground: #e8e5e0;
-    --card: #1a1917;
-    --card-foreground: #e8e5e0;
-    --popover: #1a1917;
-    --popover-foreground: #e8e5e0;
-    --primary: #22d3ee;
-    --primary-foreground: #fff;
-    --secondary: #1a1917;
-    --secondary-foreground: #e8e5e0;
-    --muted: #2a2926;
-    --muted-foreground: #a3a3a3;
-    --accent: #2a2926;
-    --accent-foreground: #e8e5e0;
-    --destructive: #ef4444;
-    --border: #2a2926;
-    --input: #2a2926;
-    --ring: #22d3ee;
-
-    /* Sidebar — dark */
-    --sidebar: #111110;
-    --sidebar-foreground: #a3a3a3;
-    --sidebar-accent: #2a2926;
-    --sidebar-accent-foreground: #e8e5e0;
-    --sidebar-border: #2a2926;
+    /* App aliases — dark */
+    --bg-primary: var(--background);
+    --bg-secondary: var(--muted);
+    --bg-muted: var(--muted);
+    --bg-elevated: var(--card);
+    --bg-overlay: color-mix(in oklch, var(--background) 70%, transparent);
+    --accent-start: var(--primary);
+    --accent-mid: color-mix(in oklch, var(--primary) 70%, white);
+    --accent-end: color-mix(in oklch, var(--primary) 25%, var(--background));
+    --accent-gradient: linear-gradient(135deg, var(--accent-start), var(--accent-mid), var(--accent-end));
+    --accent-color: var(--primary);
+    --accent-hover: color-mix(in oklch, var(--primary) 75%, white);
+    --accent-muted: color-mix(in oklch, var(--primary) 22%, var(--background));
+    --text-strong: var(--card-foreground);
+    --text-primary: var(--foreground);
+    --text-secondary: var(--muted-foreground);
+    --text-muted: color-mix(in oklch, var(--muted-foreground) 55%, var(--background));
+    --text-inverse: var(--primary-foreground);
+    --border-color: var(--border);
+    --border-muted: color-mix(in oklch, var(--border) 60%, var(--background));
 }
 
 @layer base {
@@ -226,10 +276,11 @@
     body {
         @apply bg-background text-foreground;
         color: var(--text-secondary);
-        font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
         font-size: 14px;
         font-weight: 400;
         line-height: 1.5;
+        letter-spacing: var(--tracking-normal);
     }
     h1 {
         color: var(--text-primary);
@@ -272,7 +323,7 @@
     pre,
     .font-mono {
         @apply font-normal;
-        font-family: var(--font-mono), "JetBrains Mono", monospace;
+        font-family: var(--font-mono), "Google Sans Code", ui-monospace, monospace;
         font-size: 0.8125rem;
         line-height: 1.5;
     }
@@ -318,7 +369,7 @@
 }
 
 @layer utilities {
-    /* Supermemory typography utilities */
+    /* Typography utilities */
     .text-display-hero {
         font-family: var(--font-display);
         font-size: 24px;
@@ -370,21 +421,21 @@
     .code-pane {
         background-color: var(--bg-secondary);
         color: var(--foreground);
-        font-family: var(--font-mono), "JetBrains Mono", monospace;
+        font-family: var(--font-mono), "Google Sans Code", ui-monospace, monospace;
         font-size: 0.8125rem;
         line-height: 1.5;
         border: 1px solid var(--border);
-        border-radius: 4px;
+        border-radius: var(--radius);
         padding: 16px;
     }
     .code-pane-editable {
         background-color: var(--bg-secondary);
         color: var(--foreground);
-        font-family: var(--font-mono), "JetBrains Mono", monospace;
+        font-family: var(--font-mono), "Google Sans Code", ui-monospace, monospace;
         font-size: 0.8125rem;
         line-height: 1.5;
         border: 1px solid var(--border);
-        border-radius: 4px;
+        border-radius: var(--radius);
         padding: 16px;
         caret-color: var(--foreground);
     }
